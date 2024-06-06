@@ -31,20 +31,23 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
+      console.log(`Fetching redirect for topic: ${topic}`);
       const redirect = await kv.get<Redirect>(topic);
 
       if (!redirect) {
+        console.log(`Redirect for topic ${topic} not found`);
         return NextResponse.next();
       }
 
       // Increment the hit count
       redirect.hits += 1;
       await kv.set(topic, redirect);
+      console.log(`Updated hits for topic ${topic}: ${redirect.hits}`);
 
       // Redirect to the specified URL
       return NextResponse.redirect(redirect.url);
     } catch (error) {
-      console.error(error);
+      console.error(`Error handling redirect for topic ${topic}:`, error);
       return NextResponse.json(
         { error: "Internal Server Error" },
         { status: 500 }
