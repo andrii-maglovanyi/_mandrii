@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = url.hostname;
 
-  if (url.pathname.startsWith("/api/admin")) {
+  if (url.pathname.startsWith("/api/ref")) {
     const apiKey = request.headers.get("x-api-key");
 
     if (!apiKey || apiKey !== ADMIN_API_KEY) {
