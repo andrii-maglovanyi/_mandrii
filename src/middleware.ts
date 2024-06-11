@@ -13,45 +13,34 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = url.hostname;
 
-  // Protect admin routes with an API key
   if (url.pathname.startsWith("/api/admin")) {
     const apiKey = request.headers.get("x-api-key");
 
     if (!apiKey || apiKey !== ADMIN_API_KEY) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
 
-  // Handle subdomain redirects
-  if (hostname === "ref.mandrii.com") {
-    const topic = url.pathname.slice(1); // Extract the topic from the URL
+  if (hostname.startsWith("ref.")) {
+    const topic = url.pathname.slice(1);
 
     if (!topic) {
       return NextResponse.next();
     }
 
     try {
-      console.log(`Fetching redirect for topic: ${topic}`);
-      const redirect = await kv.get<Redirect>(topic);
+      const redirect = await kv.get<Redirect>(`ref:${topic}`);
 
       if (!redirect) {
-        console.log(`Redirect for topic ${topic} not found`);
         return NextResponse.next();
       }
 
-      // Increment the hit count
       redirect.hits += 1;
-      await kv.set(topic, redirect);
-      console.log(`Updated hits for topic ${topic}: ${redirect.hits}`);
+      await kv.set(`ref:${topic}`, redirect);
 
-      // Redirect to the specified URL
-      return NextResponse.redirect(redirect.url);
+      return Response.redirect(redirect.url);
     } catch (error) {
-      console.error(`Error handling redirect for topic ${topic}:`, error);
-      return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 }
-      );
+      return Response.json({ error: "Internal Server Error" }, { status: 500 });
     }
   }
 
