@@ -39,12 +39,12 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="fixed top-20 left-0 flex h-24 w-full items-end justify-center  dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
+        <div className="fixed top-28 flex w-full items-end justify-center lg:static lg:h-auto lg:w-auto lg:bg-none">
           <div className="relative h-16 w-16 lg:h-24 lg:w-24">
             <Image
               src="/mandrii.png"
               alt="Mandrii"
-              className="dark:invert rounded-full border-2 border-black"
+              className="rounded-full border-2 border-black dark:border-white"
               fill
               priority
             />

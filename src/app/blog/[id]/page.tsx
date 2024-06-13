@@ -39,7 +39,7 @@ export default async function Post({ params }: Props) {
       </div>
 
       <div
-        className="text-gray-800 mt-8"
+        className="opacity-90 mt-8"
         dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
       />
     </div>

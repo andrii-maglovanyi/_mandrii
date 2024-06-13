@@ -16,7 +16,6 @@ export const SocialLink = ({ href, title, icon }: SocialLinkProps) => (
     <Image
       src={`/icons/${icon}.svg`}
       alt={`${title} ${icon}`}
-      className="dark:invert"
       width={22}
       height={22}
       priority

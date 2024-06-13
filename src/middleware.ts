@@ -22,11 +22,13 @@ export async function middleware(request: NextRequest) {
   }
 
   if (hostname.startsWith("ref.")) {
-    const topic = url.pathname.slice(1);
+    const rawTopic = url.pathname.slice(1);
 
-    if (!topic) {
+    if (!rawTopic) {
       return NextResponse.next();
     }
+
+    const topic = decodeURI(rawTopic);
 
     try {
       const redirect = await kv.get<Redirect>(`ref:${topic}`);

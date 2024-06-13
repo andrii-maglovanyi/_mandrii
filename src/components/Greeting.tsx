@@ -35,7 +35,7 @@ export const Greeting = () => {
   return (
     <div className="text-center">
       <h1 className="text-9xl">{greeting}</h1>
-      <h3 className="text-xl text-gray-700">мандруй / мрій / дій</h3>
+      <h3 className="text-xl opacity-50">мандруй / мрій / дій</h3>
     </div>
   );
 };
