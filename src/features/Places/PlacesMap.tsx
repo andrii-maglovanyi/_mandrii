@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Column,
   Input,
@@ -21,7 +21,7 @@ import { FORM_ID, LONDON_COORDINATES, PROGRESS_BAR_WIDTH } from "./constants";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { sendToMixpanel } from "@/lib/mixpanel";
 
 type Location = google.maps.LatLngLiteral | undefined;
@@ -32,7 +32,6 @@ type Map = google.maps.Map;
 
 export const PlacesMap = () => {
   const { dict, lang } = useLanguage();
-  const pathname = usePathname();
   const { allCategories, school, library, restaurant } = dict.map.categories;
 
   const CATEGORY: Array<NameValueObject<string>> = [
@@ -209,7 +208,7 @@ export const PlacesMap = () => {
     if (selectedPlaceId && selectedPlaceIdRef.current) {
       selectedPlaceIdRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "start",
       });
     }
   }, [selectedPlaceId]);
@@ -347,7 +346,7 @@ export const PlacesMap = () => {
 
       <Row className={classNames("w-full h-full", showProgress && "hidden")}>
         {data.length ? (
-          <Column className="hidden lg:flex w-[50vw] md:overflow-hidden h-[calc(100vh-194px)] overflow-scroll px-3">
+          <Column className="hidden lg:flex w-[50vw] md:overflow-scroll h-[calc(100vh-194px)] overflow-hidden px-3">
             {placeCards}
           </Column>
         ) : null}

@@ -25,11 +25,11 @@ export const PlaceCardComponent = (
       ref={selectedId === _id ? ref : null}
       key={_id}
       className={classNames(
-        " rounded-md bg-primary-0 overflow-hidden min-h-36 w-full mb-3 border-2",
+        " rounded-md bg-primary-0 overflow-hidden w-full mb-3 border-2 min-h-fit",
         selectedId === _id ? "border-primary-1000" : "border-transparent"
       )}
     >
-      <Column className="relative grow">
+      <Column className="relative w-1/3">
         <ImageCarousel
           images={images.map(
             (image) =>
@@ -37,7 +37,7 @@ export const PlaceCardComponent = (
           )}
         />
       </Column>
-      <Column className="grow">
+      <Column className="w-2/3">
         <Column className="p-4">
           <H3 className="mt-0 mb-1">{name}</H3>
           <Phrase>{description[lang]}</Phrase>
