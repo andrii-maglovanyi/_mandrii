@@ -31,7 +31,10 @@ export const PlaceCardComponent = (
     >
       <Column className="relative grow">
         <ImageCarousel
-          images={images.map((image) => `/assets/places/images/${image}`)}
+          images={images.map(
+            (image) =>
+              `https://z9bwg0saanmopyjs.public.blob.vercel-storage.com/${image}`
+          )}
         />
       </Column>
       <Column className="grow">
