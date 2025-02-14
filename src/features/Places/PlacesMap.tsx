@@ -134,7 +134,7 @@ export const PlacesMap = () => {
     }
   };
 
-  const getLocation = useCallback(() => {
+  const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -154,7 +154,7 @@ export const PlacesMap = () => {
         header: dict.map.errors.locationNotFound.header,
       });
     }
-  }, [showError]);
+  };
 
   useEffect(() => {
     sendToMixpanel("page_view");
