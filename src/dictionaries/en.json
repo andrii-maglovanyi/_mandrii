@@ -1,0 +1,61 @@
+{
+  "mandrii": "Mandrii",
+  "landingPage": {
+    "title": "Let's unite, Ukrainians!",
+    "body": "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe. Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community.",
+    "goalFindPlace": "Find places owned by Ukrainians",
+    "goalSupportPlace": "Support Ukrainian businesses and initiatives",
+    "goalStayConnected": "Help each other grow and stay connected",
+    "button": "Explore the map now!",
+    "missedPlace": "Know a missed place?",
+    "shareLocation": "Share a location",
+    "supportProject": "Please support this project with",
+    "or": "or",
+    "thankYou": "thank you"
+  },
+  "map": {
+    "location": "Location",
+    "category": "Category",
+    "distance": "Distance",
+    "exit": "Exit",
+    "findMe": "Find me",
+    "showing": "Showing",
+    "result": "result",
+    "nothingFound": "Nothing found",
+    "totalAdded": "Added",
+    "place": "place",
+    "categories": {
+      "allCategories": "All categories",
+      "library": "Library",
+      "restaurant": "Restaurant",
+      "school": "School"
+    },
+    "errors": {
+      "locationNotFound": {
+        "header": "Location not found",
+        "body": "We couldn’t find your location. Try searching!"
+      }
+    },
+    "km": "km"
+  },
+  "menu": {
+    "posts": "Posts"
+  },
+  "messages": {
+    "error": {
+      "over_query_limit": {
+        "header": "Whoa, slow down!",
+        "message": "You've made too many searches in a short time. Please wait a minute and try again."
+      }
+    }
+  },
+  "place": {
+    "copy": {
+      "copied": "Copied",
+      "address": "Copy address",
+      "email": "Copy email",
+      "phone": "Copy phone number",
+      "web": "Copy website"
+    }
+  }
+}

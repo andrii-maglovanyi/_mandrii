@@ -1,54 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { kv } from "@vercel/kv";
 
-const ADMIN_API_KEY = process.env.ADMIN_API_KEY!;
-
-interface Redirect {
-  url: string;
-  hits: number;
-}
+import { i18n } from "./dictionaries/i18n-config";
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
-  const hostname = url.hostname;
+  const { pathname } = url;
+  const { locales, defaultLocale } = i18n;
 
-  if (url.pathname.startsWith("/api/ref")) {
-    const apiKey = request.headers.get("x-api-key");
+  const pathnameHasLocale = locales.find(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
 
-    if (!apiKey || apiKey !== ADMIN_API_KEY) {
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+  if (pathnameHasLocale) return;
 
-  if (hostname.startsWith("ref.")) {
-    const rawTopic = url.pathname.slice(1);
-
-    if (!rawTopic) {
-      return NextResponse.next();
-    }
-
-    const topic = decodeURI(rawTopic);
-
-    try {
-      const redirect = await kv.get<Redirect>(`ref:${topic}`);
-
-      if (!redirect) {
-        return NextResponse.next();
-      }
-
-      redirect.hits += 1;
-      await kv.set(`ref:${topic}`, redirect);
-
-      return Response.redirect(redirect.url);
-    } catch (error) {
-      return Response.json({ error: "Internal Server Error" }, { status: 500 });
-    }
-  }
-
-  return NextResponse.next();
+  return NextResponse.redirect(
+    new URL(
+      `/${defaultLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+      request.url
+    )
+  );
 }
 
 export const config = {
-  matcher: ["/api/admin/:path*", "/:topic*"],
+  matcher: ["/((?!api|qr|_next|assets|favicon.ico).*)"],
 };

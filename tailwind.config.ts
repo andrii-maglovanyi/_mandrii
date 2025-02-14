@@ -1,17 +1,19 @@
+import { COLORS } from "./src/components/constants";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{ts,tsx,mdx}",
+    "./src/components/**/*.{ts,tsx,mdx}",
+    "./src/features/**/*.{ts,tsx,mdx}",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: COLORS,
+      backgroundColors: COLORS,
+      fontFamily: {
+        nunito: "var(--font-nunito)",
+        leOsler: "var(--font-leOsler)",
       },
     },
   },

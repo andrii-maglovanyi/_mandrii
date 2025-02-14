@@ -13,7 +13,7 @@ const scanAllKeys = async (): Promise<string[]> => {
 
   do {
     const [nextCursor, keys] = await kv.scan(cursor, { match: "ref:*" });
-    cursor = nextCursor;
+    cursor = Number(nextCursor);
     allKeys.push(...keys);
   } while (cursor !== 0);
 

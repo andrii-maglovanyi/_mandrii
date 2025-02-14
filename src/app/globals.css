@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 234, 239, 240;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -25,6 +25,14 @@ body {
     )
     rgb(var(--background-start-rgb));
   min-height: 100vh;
+}
+
+p {
+  @apply mb-3;
+}
+
+img[src$=".webp"] {
+  @apply p-1.5 bg-white bg-opacity-30;
 }
 
 @layer utilities {
