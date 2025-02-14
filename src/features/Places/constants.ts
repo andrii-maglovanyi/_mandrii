@@ -1,4 +1,4 @@
-export const PROGRESS_BAR_WIDTH = 500;
+export const PROGRESS_BAR_WIDTH = 300;
 
 export const LONDON_COORDINATES = {
   lat: 51.509865,

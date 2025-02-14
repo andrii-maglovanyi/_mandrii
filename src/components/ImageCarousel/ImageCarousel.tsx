@@ -19,13 +19,13 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden min-w-40">
+    <div className="relative w-full h-full overflow-hidden min-w-20 md:min-w-40">
       <Image
         src={images[index]}
         alt={`Image ${index + 1}`}
         fill
         className="object-cover"
-        sizes="350px"
+        sizes="(min-width: 1024px) 350px, 250px"
       />
 
       <button

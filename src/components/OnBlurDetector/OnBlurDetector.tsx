@@ -26,7 +26,7 @@ const PlainBlurDetector = ({ children, ignore, onBlur }: BlurDetectorProps) => {
         onBlur();
       }
     },
-    [ignore, onBlur],
+    [ignore, onBlur]
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const StackedBlurDetector = ({
 }: BlurDetectorProps) => {
   const wrapper = useRef<HTMLDivElement>(null);
   const [detectorId] = useState(
-    (detectorsStack[detectorsStack.length - 1] || 0) + 1,
+    (detectorsStack[detectorsStack.length - 1] || 0) + 1
   );
 
   useEffect(() => {

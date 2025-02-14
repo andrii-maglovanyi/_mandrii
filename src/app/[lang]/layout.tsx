@@ -54,6 +54,7 @@ export default async function RootLayout({
         lang={lang}
         className={`${nunito.variable} font-nunito ${leOsler.variable} font-leOsler min-h-screen flex flex-col`}
       >
+        {/* <div className="border border-red-500">ewf</div> */}
         <LanguageProvider lang={lang} dict={dict}>
           <NotificationsProvider>
             <Heading />

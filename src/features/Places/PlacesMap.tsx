@@ -21,7 +21,6 @@ import { FORM_ID, LONDON_COORDINATES, PROGRESS_BAR_WIDTH } from "./constants";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
-import { useRouter } from "next/navigation";
 import { sendToMixpanel } from "@/lib/mixpanel";
 
 type Location = google.maps.LatLngLiteral | undefined;
@@ -64,7 +63,6 @@ export const PlacesMap = () => {
     useProgress(PROGRESS_BAR_WIDTH);
 
   const { showError } = useNotifications();
-  const router = useRouter();
 
   const {
     isLoading: isLoadingPlaces,
@@ -228,6 +226,7 @@ export const PlacesMap = () => {
         }}
         key={place._id}
         selectedId={selectedPlaceId}
+        ref={place._id === selectedPlaceId ? selectedPlaceIdRef : null}
         place={place}
       />
     );
@@ -241,8 +240,8 @@ export const PlacesMap = () => {
 
   return (
     <Column className="grow items-center w-full h-auto">
-      <Row className="max-w-screen-xl w-full grow px-8 py-2">
-        <Column className="grow">
+      <Column className="max-w-screen-xl w-full grow px-4 md:px-8 py-2 md:flex-row">
+        <Column className="grow ">
           <Input
             disabled={showProgress}
             label={dict.map.location}
@@ -257,35 +256,37 @@ export const PlacesMap = () => {
             onChange={(e) => setInputValue(e.target.value)}
           />
         </Column>
-        <Column className="ml-2">
-          <Select
-            disabled={showProgress}
-            name="category"
-            items={CATEGORY}
-            label={dict.map.category}
-            defaultValue={category}
-            onChange={({ value }) => {
-              sendToMixpanel("changed_category", { category: value });
-              setCategory(value);
-            }}
-          />
-        </Column>
-        <Column className="ml-2">
-          <Select
-            disabled={showProgress}
-            name="distance"
-            items={DISTANCE}
-            label={dict.map.distance}
-            defaultValue={distance}
-            onChange={({ value }) => {
-              sendToMixpanel("changed_distance", { distance: value });
-              setDistance(value);
-            }}
-          />
-        </Column>
-      </Row>
-      <Row className="justify-between max-w-screen-xl w-full grow px-8 mb-2">
-        <Row className="items-center grow basis-0 flex-nowrap">
+        <Row className="mt-2 md:mt-0 ">
+          <Column className="ml-0 md:ml-2 mr-1 grow">
+            <Select
+              disabled={showProgress}
+              name="category"
+              items={CATEGORY}
+              label={dict.map.category}
+              defaultValue={category}
+              onChange={({ value }) => {
+                sendToMixpanel("changed_category", { category: value });
+                setCategory(value);
+              }}
+            />
+          </Column>
+          <Column className="ml-1 grow">
+            <Select
+              disabled={showProgress}
+              name="distance"
+              items={DISTANCE}
+              label={dict.map.distance}
+              defaultValue={distance}
+              onChange={({ value }) => {
+                sendToMixpanel("changed_distance", { distance: value });
+                setDistance(value);
+              }}
+            />
+          </Column>
+        </Row>
+      </Column>
+      <Row className="justify-between max-w-screen-xl w-full grow px-4 md:px-8 mb-2">
+        <Row className="justify-between md:justify-normal items-center grow basis-0 flex-nowrap">
           <Button
             icon="pin-solid"
             size="condensed"
@@ -298,7 +299,7 @@ export const PlacesMap = () => {
             label={dict.map.findMe}
           />
           <a
-            className="ml-3 mr-12 text-cta-600 hover:underline font-bold text-nowrap"
+            className="mx-3 text-cta-600 hover:underline font-bold text-nowrap"
             target="_blank"
             href={`https://forms.gle/${FORM_ID[lang]}`}
             onClick={() => {
@@ -310,7 +311,7 @@ export const PlacesMap = () => {
         </Row>
         <Row
           className={classNames(
-            "items-center grow basis-0 justify-center",
+            "hidden sm:flex items-center grow basis-0 justify-end text-nowrap",
             showProgress && "hidden"
           )}
         >
@@ -318,18 +319,6 @@ export const PlacesMap = () => {
           <strong className="ml-1 text-lg">
             {maybePluralize(totalPlacesCount, dict.map.place, lang)}
           </strong>
-        </Row>
-        <Row className="grow basis-0 justify-end">
-          <Button
-            icon="exit-line"
-            size="condensed"
-            layout="filled"
-            onClick={() => {
-              router.push(`/${lang}`);
-              sendToMixpanel("map_closed");
-            }}
-            label={dict.map.exit}
-          />
         </Row>
       </Row>
 
@@ -346,11 +335,14 @@ export const PlacesMap = () => {
 
       <Row className={classNames("w-full h-full", showProgress && "hidden")}>
         {data.length ? (
-          <Column className="hidden lg:flex w-[50vw] md:overflow-scroll h-[calc(100vh-194px)] overflow-hidden px-3">
+          <Column className="relative hidden lg:flex w-[50vw] overflow-auto h-[calc(100vh-194px)] px-3">
             {placeCards}
           </Column>
         ) : null}
-        <Column className={data.length ? "w-screen lg:w-[50vw] " : "w-full"}>
+        <Column
+          onClick={() => setSelectedPlaceId(null)}
+          className={data.length ? "w-screen lg:w-[50vw] " : "w-full"}
+        >
           <Map
             ref={mapRef}
             onLoadedAction={setMapIsLoaded}
@@ -374,7 +366,11 @@ export const PlacesMap = () => {
                 : dict.map.nothingFound}
             </Phrase>
           </Row>
-          <Row className="grow px-[10%] bottom-4 absolute w-full box-border justify-center lg:hidden">
+
+          <Row
+            className="grow px-4 md:px-8 bottom-4 absolute w-full box-border justify-center lg:hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
             {selectedCard}
           </Row>
         </Column>

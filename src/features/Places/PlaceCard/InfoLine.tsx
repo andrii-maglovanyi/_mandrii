@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon, Phrase, Row, Tooltip } from "@/components";
+import { Column, Icon, Phrase, Row, Tooltip } from "@/components";
 import { IconType } from "@/components/Icon/Icon";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -37,22 +37,26 @@ export const InfoLine = ({
         className="hover:bg-primary-50 py-1 px-4 cursor-pointer items-center"
         onClick={copyData}
       >
-        <Icon size="small" type={icon} />
-        {isLink ? (
-          <a
-            className="ml-3 hover:underline text-cta-500"
-            href={text}
-            target="_black"
-            onClick={(e) => {
-              e.stopPropagation();
-              sendToMixpanel("clicked_place_web", { address: text });
-            }}
-          >
-            {text}
-          </a>
-        ) : (
-          <Phrase className="ml-3">{text}</Phrase>
-        )}
+        <Column>
+          <Icon customSize={16} type={icon} />
+        </Column>
+        <Column className="hidden sm:flex">
+          {isLink ? (
+            <a
+              className="ml-3 hover:underline text-cta-500"
+              href={text}
+              target="_black"
+              onClick={(e) => {
+                e.stopPropagation();
+                sendToMixpanel("clicked_place_web", { address: text });
+              }}
+            >
+              {text}
+            </a>
+          ) : (
+            <Phrase className="ml-3">{text}</Phrase>
+          )}
+        </Column>
       </Row>
     </Tooltip>
   ) : null;

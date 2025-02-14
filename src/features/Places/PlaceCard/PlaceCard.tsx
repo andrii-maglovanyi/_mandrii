@@ -22,14 +22,14 @@ export const PlaceCardComponent = (
   return (
     <Row
       onClick={onClick}
-      ref={selectedId === _id ? ref : null}
+      ref={ref}
       key={_id}
       className={classNames(
-        " rounded-md bg-primary-0 overflow-hidden w-full mb-3 border-2 min-h-fit",
+        "text-sm md:text-md lg:text-base rounded-md bg-primary-0 w-full mb-3 border-2 min-h-fit",
         selectedId === _id ? "border-primary-1000" : "border-transparent"
       )}
     >
-      <Column className="relative w-1/3">
+      <Column className="relative w-1/3 z-10 overflow-hidden rounded-l-md">
         <ImageCarousel
           images={images.map(
             (image) =>
@@ -38,16 +38,17 @@ export const PlaceCardComponent = (
         />
       </Column>
       <Column className="w-2/3">
-        <Column className="p-4">
+        <Column className="p-2 md:p-4">
           <H3 className="mt-0 mb-1">{name}</H3>
           <p
+            className="line-clamp-2 md:line-clamp-4 lg:line-clamp-none"
             dangerouslySetInnerHTML={{
               __html: description[lang].replaceAll("\n", "<br />"),
             }}
           />
         </Column>
-        <Column
-          className="text-sm h-full justify-end pb-1"
+        <Row
+          className="sm:flex-col text-sm h-full justify-center sm:justify-end pb-1"
           onClick={(e) => e.stopPropagation()}
         >
           <InfoLine
@@ -71,7 +72,7 @@ export const PlaceCardComponent = (
             text={address}
             tooltipText={dict.place.copy.address}
           />
-        </Column>
+        </Row>
       </Column>
     </Row>
   );
