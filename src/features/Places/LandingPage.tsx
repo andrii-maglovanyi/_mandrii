@@ -67,6 +67,9 @@ export const LandingPage = () => {
               className="ml-2 text-cta-600 hover:underline font-bold"
               target="_blank"
               href={`https://forms.gle/${FORM_ID[lang]}`}
+              onClick={() => {
+                sendToMixpanel("share_location_landing", { lang });
+              }}
             >
               {lp.shareLocation}
             </a>
@@ -83,6 +86,11 @@ export const LandingPage = () => {
               className="mx-1 text-cta-600 hover:underline font-bold"
               target="_blank"
               href="https://patreon.com/Mandrii"
+              onClick={() => {
+                sendToMixpanel("followed_social_link", {
+                  social: "Patreon",
+                });
+              }}
             >
               Patreon
             </a>
@@ -91,6 +99,11 @@ export const LandingPage = () => {
               className="ml-1 text-cta-600 hover:underline font-bold"
               target="_blank"
               href="https://buymeacoffee.com/mandrii"
+              onClick={() => {
+                sendToMixpanel("followed_social_link", {
+                  social: "Buy Me a Coffee",
+                });
+              }}
             >
               Buy me a coffee
             </a>

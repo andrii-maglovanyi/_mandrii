@@ -302,6 +302,9 @@ export const PlacesMap = () => {
             className="ml-3 mr-12 text-cta-600 hover:underline font-bold text-nowrap"
             target="_blank"
             href={`https://forms.gle/${FORM_ID[lang]}`}
+            onClick={() => {
+              sendToMixpanel("share_location_places_map", { lang });
+            }}
           >
             {dict.landingPage.shareLocation}
           </a>
