@@ -40,7 +40,11 @@ export const PlaceCardComponent = (
       <Column className="w-2/3">
         <Column className="p-4">
           <H3 className="mt-0 mb-1">{name}</H3>
-          <Phrase>{description[lang]}</Phrase>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: description[lang].replaceAll("\n", "<br />"),
+            }}
+          />
         </Column>
         <Column
           className="text-sm h-full justify-end pb-1"
