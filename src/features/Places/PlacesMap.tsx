@@ -369,7 +369,7 @@ export const PlacesMap = () => {
           </Row>
 
           <Row
-            className="grow px-4 md:px-8 bottom-4 absolute w-full box-border justify-center lg:hidden"
+            className="grow px-1 md:px-2 bottom-0 absolute w-full box-border justify-center lg:hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {selectedCard}

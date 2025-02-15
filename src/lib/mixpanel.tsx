@@ -2,8 +2,9 @@ import { nanoid } from "nanoid";
 
 interface LocationData {
   city?: string;
-  region_name?: string;
-  country_name?: string;
+  regionName?: string;
+  country?: string;
+  continent?: string;
 }
 
 interface EventProperties {
@@ -70,8 +71,9 @@ export const sendToMixpanel = (
       $browser: userAgent,
       $browser_version: navigator?.appVersion ?? "Unknown",
       $city: locationData?.city ?? "Unknown",
-      $region: locationData?.region_name ?? "Unknown",
-      mp_country_code: locationData?.country_name ?? "Unknown",
+      $region: locationData?.regionName ?? "Unknown",
+      $continent: locationData?.continent ?? "Unknown",
+      mp_country_code: locationData?.country ?? "Unknown",
       $current_url: window.location.href,
       $device: platform,
       $device_id: userAgent,

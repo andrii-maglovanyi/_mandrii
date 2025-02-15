@@ -121,6 +121,10 @@ const MapComponent = (
       const contentDiv = document.createElement("div");
       contentDiv.style.cursor = "pointer";
 
+      const words = name.split(" ");
+      const numWords = words.length;
+      const maxNumWords = 3;
+
       const labelSpan = document.createElement("span");
       labelSpan.style.borderRadius = "5px";
       labelSpan.style.color = "white";
@@ -128,30 +132,33 @@ const MapComponent = (
       labelSpan.style.padding = "4px 8px";
       labelSpan.style.position = "relative";
       labelSpan.style.whiteSpace = "nowrap";
-      labelSpan.textContent = name;
+      labelSpan.textContent =
+        numWords > maxNumWords
+          ? `${words.splice(0, maxNumWords).join(" ")}...`
+          : name;
 
       if (_id === selectedPlaceId) {
-        labelSpan.style.backgroundColor = "#000000ff";
+        labelSpan.style.backgroundColor = "#000000";
       } else {
-        labelSpan.style.backgroundColor = "#00000088";
+        labelSpan.style.backgroundColor = "#444444";
       }
 
       labelSpan.onmouseover = () => {
-        labelSpan.style.backgroundColor = "#000000ff";
-        arrowDiv.style.borderTop = "4px solid #000000ff";
+        labelSpan.style.backgroundColor = "#000000";
+        arrowDiv.style.borderTop = "4px solid #000000";
       };
 
       labelSpan.onmouseout = () => {
         if (_id !== selectedPlaceId) {
-          labelSpan.style.backgroundColor = "#00000088";
-          arrowDiv.style.borderTop = "4px solid #00000088";
+          labelSpan.style.backgroundColor = "#444444";
+          arrowDiv.style.borderTop = "4px solid #444444";
         }
       };
 
       const arrowDiv = document.createElement("div");
       arrowDiv.style.borderLeft = "4px solid transparent";
       arrowDiv.style.borderRight = "4px solid transparent";
-      arrowDiv.style.borderTop = "4px solid #00000099";
+      arrowDiv.style.borderTop = "4px solid #444444";
       arrowDiv.style.bottom = "-4px";
       arrowDiv.style.height = "0";
       arrowDiv.style.left = "50%";

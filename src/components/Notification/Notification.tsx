@@ -71,7 +71,7 @@ export const Notification = memo(function Snackbar({
     open && (
       <div
         className={`
-          fixed bottom-4 left-0 right-0 z-50 mx-auto flex w-max transform
+          fixed bottom-4 left-0 right-0 z-50 mx-auto flex max-w-[90%] transform
           items-center justify-between rounded-lg bg-primary-1000 p-4
           text-primary-0 drop-shadow-base transition-transform
 
@@ -88,7 +88,7 @@ export const Notification = memo(function Snackbar({
           {header ? (
             <div className="mb-1 font-semibold text-lg">{header}</div>
           ) : null}
-          <div className="max-w-5xl truncate">{message}</div>
+          <div className="truncate">{message}</div>
         </div>
         {dismissible && (
           <div className="ml-4 border-l border-primary-200 pl-2">

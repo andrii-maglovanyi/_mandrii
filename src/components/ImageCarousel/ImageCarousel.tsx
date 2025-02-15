@@ -28,19 +28,23 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
         sizes="(min-width: 1024px) 350px, 250px"
       />
 
-      <button
-        onClick={prevImage}
-        className="absolute font-leOsler text-2xl left-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
-      >
-        ←
-      </button>
+      {images.length > 1 ? (
+        <>
+          <button
+            onClick={prevImage}
+            className="absolute font-leOsler text-2xl left-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
+          >
+            ←
+          </button>
 
-      <button
-        onClick={nextImage}
-        className="absolute font-leOsler text-2xl  right-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
-      >
-        →
-      </button>
+          <button
+            onClick={nextImage}
+            className="absolute font-leOsler text-2xl  right-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
+          >
+            →
+          </button>
+        </>
+      ) : null}
     </div>
   );
 };
