@@ -38,18 +38,31 @@ export const LandingPage = () => {
         <H1 className="font-leOsler font-bold mb-28 text-primary-0 text-7xl sm:text-8xl md:text-9xl mt-32 sm:mt-10 md:mt-20 px-4">
           {lp.title}
         </H1>
-        <Column className="text-md md:text-lg mx-8">
-          <Phrase className="font-semibold">{lp.body}</Phrase>
+        <Column className="text-md md:text-lg mx-8 ">
+          <Phrase className="font-semibold dark:text-primary-1000">
+            {lp.body}
+          </Phrase>
 
           <Column className="text-left">
-            <Row className="mt-8 ">💙 {lp.goalFindPlace}</Row>
-            <Row>💛 {lp.goalSupportPlace}</Row>
-            <Row>🤝 {lp.goalStayConnected}</Row>
+            <Phrase className="mt-8 dark:text-primary-1000">
+              💙 {lp.goalFindPlace}
+            </Phrase>
+            <Phrase className="dark:text-primary-1000">
+              💛 {lp.goalSupportPlace}
+            </Phrase>
+            <Phrase className="dark:text-primary-1000">
+              🤝 {lp.goalStayConnected}
+            </Phrase>
           </Column>
           <Button
-            icon="rocket-solid"
             size="expanded"
-            className="mt-8"
+            className="mt-8 
+            dark:text-primary-0
+            dark:bg-primary-950
+            dark:hover:bg-primary-800
+            dark:active:bg-primary-700
+            dark:disabled:bg-primary-100
+            dark:disabled:text-primary-300"
             layout="filled"
             onClick={() => {
               router.push(`/${lang}/map`);
@@ -59,8 +72,8 @@ export const LandingPage = () => {
             {lp.button}
           </Button>
 
-          <Column className="mt-12 mb-4 text-primary-700 text-sm sm:flex-row">
-            <Phrase className="text-nowrap">
+          <Column className="mt-12 mb-4 text-sm sm:flex-row">
+            <Phrase className="text-nowrap text-primary-700 dark:text-primary-700">
               <Icon
                 size="small"
                 type="pin-solid"
@@ -69,7 +82,7 @@ export const LandingPage = () => {
               {lp.missedPlace}
             </Phrase>
             <a
-              className="ml-2 text-cta-600 hover:underline font-bold"
+              className="ml-2 text-cta-600  hover:underline font-bold"
               target="_blank"
               href={`https://forms.gle/${FORM_ID[lang]}`}
               onClick={() => {
@@ -80,8 +93,8 @@ export const LandingPage = () => {
             </a>
             .
           </Column>
-          <Column className="text-primary-700 text-sm sm:flex-row">
-            <Phrase className="text-nowrap">
+          <Column className=" text-sm sm:flex-row">
+            <Phrase className="text-nowrap text-primary-700 dark:text-primary-700">
               <Icon
                 size="small"
                 type="heart-solid"
@@ -89,7 +102,7 @@ export const LandingPage = () => {
               />{" "}
               {lp.supportProject}
             </Phrase>{" "}
-            <Phrase className="text-nowrap">
+            <Phrase className="text-nowrap text-primary-700 dark:text-primary-700">
               <a
                 className="mx-1 text-cta-600 hover:underline font-bold"
                 target="_blank"

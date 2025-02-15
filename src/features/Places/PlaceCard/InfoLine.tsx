@@ -34,7 +34,7 @@ export const InfoLine = ({
   return text ? (
     <Tooltip text={tooltipText}>
       <Row
-        className="hover:bg-primary-50 py-1 px-4 cursor-pointer items-center"
+        className="hover:bg-primary-50 dark:hover:bg-slate-950 py-1 px-4 cursor-pointer items-center"
         onClick={copyData}
       >
         <Column>

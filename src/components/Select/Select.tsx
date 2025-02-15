@@ -133,7 +133,7 @@ export const Select = <T extends string | number>({
     ? ""
     : "border-primary-950 dark:border-primary-0";
   const buttonStyles = `justify-start w-full truncate relative overflow-x-hidden
-   pl-4 pr-10 h-10 mt-0.5 bg-primary-0 dark:bg-primary-1000 dark:text-primary-0 
+   pl-4 pr-10 h-10 mt-0.5 bg-primary-0 dark:bg-primary-950/50 dark:text-primary-0 
    text-left ${borderStyles} border hover:bg-primary-0 hover:border-primary-950 
    dark:hover:border-white dark:hover:bg-primary-1000 rounded-md 
    focus:outline-none active:bg-primary-0 dark:active:bg-primary-1000

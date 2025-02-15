@@ -27,7 +27,7 @@ export const Heading = () => {
   ];
 
   return (
-    <div className="w-screen flex bg-slate-700 px-5 lg:px-20 justify-center ">
+    <div className="w-screen flex bg-slate-700 px-5 lg:px-20 justify-center">
       <Row className="h-14 lg:h-20 content-center w-screen max-w-screen-xl">
         <Column className="relative items-start w-20 lg:w-32 h-max mt-1 lg:mt-2 min-w-min">
           <Row className="items-start">
@@ -48,7 +48,9 @@ export const Heading = () => {
                 <h1
                   className={classNames(
                     "text-md lg:text-xl font-leOsler mt-1 lg:mt-2",
-                    isRootRoute ? "text-primary-0" : "text-slate-700"
+                    isRootRoute
+                      ? "text-primary-0"
+                      : "text-slate-700 dark:text-primary-0"
                   )}
                 >
                   → {dict.mandrii} ←
@@ -81,7 +83,9 @@ export const Heading = () => {
           <h1
             className={classNames(
               "text-md group-hover:font-bold lg:text-lg cursor-default font-leOsler mt-1 lg:mt-2 -ml-3 -lg:ml-4 mr-6",
-              isRootRoute ? "text-primary-0" : "text-slate-700"
+              isRootRoute
+                ? "text-primary-0"
+                : "text-slate-700 dark:text-primary-0"
             )}
           >
             мандруй / мрій / дій

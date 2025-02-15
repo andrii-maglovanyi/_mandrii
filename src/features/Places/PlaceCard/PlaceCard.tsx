@@ -2,7 +2,6 @@ import { Column, H3, ImageCarousel, Phrase, Row } from "@/components";
 
 import { PlaceData } from "@/types";
 import { classNames } from "@/utils";
-import { forwardRef, Ref } from "react";
 import { InfoLine } from "./InfoLine";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -12,24 +11,23 @@ interface PlaceCardProps {
   selectedId: number | null;
 }
 
-export const PlaceCardComponent = (
-  { place, selectedId, onClick }: PlaceCardProps,
-  ref: Ref<HTMLDivElement>
-) => {
+export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
   const { _id, images, name, description, address, phone, email, web } = place;
   const { dict, lang } = useLanguage();
 
   return (
     <Row
+      id={String(_id)}
       onClick={onClick}
-      ref={ref}
       key={_id}
       className={classNames(
-        "text-sm md:text-md lg:text-base rounded-md bg-primary-0 w-full mb-3 border-2 min-h-fit",
-        selectedId === _id ? "border-primary-1000" : "border-transparent"
+        "border-2 text-sm md:text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-slate-800 w-full mb-3 h-min flex-shrink-0",
+        selectedId === _id
+          ? "border-primary-1000 dark:border-primary-0"
+          : "border-transparent"
       )}
     >
-      <Column className="relative w-1/3 z-10 overflow-hidden rounded-l-md">
+      <Column className="relative w-1/3 ">
         <ImageCarousel
           images={images.map(
             (image) =>
@@ -40,7 +38,7 @@ export const PlaceCardComponent = (
       <Column className="w-2/3">
         <Column className="p-2 md:p-4">
           <H3 className="mt-0 mb-1">{name}</H3>
-          <p
+          <Phrase
             className="line-clamp-2 md:line-clamp-4 lg:line-clamp-none"
             dangerouslySetInnerHTML={{
               __html: description[lang].replaceAll("\n", "<br />"),
@@ -77,5 +75,3 @@ export const PlaceCardComponent = (
     </Row>
   );
 };
-
-export const PlaceCard = forwardRef(PlaceCardComponent);

@@ -27,7 +27,8 @@
       "allCategories": "All categories",
       "library": "Library",
       "restaurant": "Restaurant",
-      "school": "School"
+      "club": "Club",
+      "church": "Church"
     },
     "errors": {
       "locationNotFound": {

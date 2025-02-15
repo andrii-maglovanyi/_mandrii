@@ -28,7 +28,7 @@ export const SocialLink = ({ href, title, icon }: SocialLinkProps) => (
       className="cursor-pointer flex hover:underline mx-2 lg:mx-3 transition-transform hover:scale-125 motion-reduce:transform-none relative w-4 h-4 my-2"
     >
       <Icon
-        className="fill-primary-0 dark:fill-primary-1000"
+        className="fill-primary-0 "
         connotation="primary"
         size="small"
         data-testid={`icon-${icon}`}

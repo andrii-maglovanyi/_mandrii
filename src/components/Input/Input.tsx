@@ -39,9 +39,9 @@ const getInputStyle = (hasError: boolean, disabled: boolean) => {
   if (hasError) {
     return "border-alert-500 bg-alert-50 dark:border-alert-400 dark:bg-alert-900";
   } else if (disabled) {
-    return "border-primary-300";
+    return "border-primary-300 dark:disabled:border-primary-600 dark:disabled:bg-primary-900";
   } else {
-    return "border-primary-950 dark:border-primary-300 placeholder-gray-300";
+    return "border-primary-950 dark:border-primary-0 placeholder-gray-300";
   }
 };
 
@@ -133,7 +133,7 @@ export const Input = <T extends string>({
     ? "bg-primary-100 text-primary-300 cursor-not-allowed"
     : "";
 
-  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} dark:bg-primary-950 dark:text-primary-0 h-10 border rounded-lg focus:outline-none
+  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} dark:bg-primary-950/50 dark:text-primary-0 h-10 border rounded-lg focus:outline-none
   ${getInputStyle(hasError, disabled)}
   ${focusStyle}
   ${disabledStyle}

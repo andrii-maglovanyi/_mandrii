@@ -31,13 +31,15 @@ type Map = google.maps.Map;
 
 export const PlacesMap = () => {
   const { dict, lang } = useLanguage();
-  const { allCategories, school, library, restaurant } = dict.map.categories;
+  const { allCategories, club, church, library, restaurant } =
+    dict.map.categories;
 
   const CATEGORY: Array<NameValueObject<string>> = [
     { name: allCategories, value: "all" },
     { name: library, value: "library" },
     { name: restaurant, value: "restaurant" },
-    { name: school, value: "school" },
+    { name: club, value: "club" },
+    { name: church, value: "church" },
   ];
 
   const DISTANCE: Array<NameValueObject<number>> = [
@@ -54,7 +56,6 @@ export const PlacesMap = () => {
   const [location, setLocation] = useState<Location>(LONDON_COORDINATES);
   const [predictions, setPredictions] = useState<Array<Prediction>>([]);
 
-  const selectedPlaceIdRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<GoogleMapRef | null>(null);
   const serviceRef = useRef<AutocompleteService>(null);
   const sessionTokenRef = useRef<AutocompleteToken>(null);
@@ -135,6 +136,7 @@ export const PlacesMap = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          setDistance(distance / 4);
           setLocation({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -203,8 +205,8 @@ export const PlacesMap = () => {
   }, [inputValue]);
 
   useEffect(() => {
-    if (selectedPlaceId && selectedPlaceIdRef.current) {
-      selectedPlaceIdRef.current.scrollIntoView({
+    if (selectedPlaceId) {
+      document.getElementById(String(selectedPlaceId))?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
@@ -226,7 +228,6 @@ export const PlacesMap = () => {
         }}
         key={place._id}
         selectedId={selectedPlaceId}
-        ref={place._id === selectedPlaceId ? selectedPlaceIdRef : null}
         place={place}
       />
     );
@@ -289,8 +290,7 @@ export const PlacesMap = () => {
         <Row className="justify-between md:justify-normal items-center grow basis-0 flex-nowrap">
           <Button
             icon="pin-solid"
-            size="condensed"
-            trailingIcon
+            size="super-condensed"
             layout="filled"
             onClick={() => {
               getLocation();
@@ -299,7 +299,7 @@ export const PlacesMap = () => {
             label={dict.map.findMe}
           />
           <a
-            className="mx-3 text-cta-600 hover:underline font-bold text-nowrap"
+            className="mx-3 text-cta-600 dark:text-cta-300 hover:underline font-bold text-nowrap"
             target="_blank"
             href={`https://forms.gle/${FORM_ID[lang]}`}
             onClick={() => {
@@ -335,7 +335,7 @@ export const PlacesMap = () => {
 
       <Row className={classNames("w-full h-full", showProgress && "hidden")}>
         {data.length ? (
-          <Column className="relative hidden lg:flex w-[50vw] overflow-auto h-[calc(100vh-194px)] px-3">
+          <Column className="hidden lg:flex w-[50vw] overflow-y-scroll h-[calc(100vh-230px)] px-3">
             {placeCards}
           </Column>
         ) : null}

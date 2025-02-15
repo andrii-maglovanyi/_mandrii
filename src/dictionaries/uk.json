@@ -27,7 +27,8 @@
       "allCategories": "Всі категорії",
       "library": "Бібліотека",
       "restaurant": "Ресторан",
-      "school": "Школа"
+      "club": "Клуб",
+      "church": "Церква"
     },
     "errors": {
       "locationNotFound": {
