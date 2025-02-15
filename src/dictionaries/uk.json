@@ -28,7 +28,8 @@
       "library": "Бібліотека",
       "restaurant": "Ресторан",
       "club": "Клуб",
-      "church": "Церква"
+      "church": "Церква",
+      "school": "Школа"
     },
     "errors": {
       "locationNotFound": {

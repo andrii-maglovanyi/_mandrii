@@ -28,7 +28,8 @@
       "library": "Library",
       "restaurant": "Restaurant",
       "club": "Club",
-      "church": "Church"
+      "church": "Church",
+      "school": "School"
     },
     "errors": {
       "locationNotFound": {

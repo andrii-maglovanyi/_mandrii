@@ -31,7 +31,7 @@ type Map = google.maps.Map;
 
 export const PlacesMap = () => {
   const { dict, lang } = useLanguage();
-  const { allCategories, club, church, library, restaurant } =
+  const { allCategories, club, church, library, restaurant, school } =
     dict.map.categories;
 
   const CATEGORY: Array<NameValueObject<string>> = [
@@ -39,6 +39,7 @@ export const PlacesMap = () => {
     { name: library, value: "library" },
     { name: restaurant, value: "restaurant" },
     { name: club, value: "club" },
+    { name: school, value: "school" },
     { name: church, value: "church" },
   ];
 
