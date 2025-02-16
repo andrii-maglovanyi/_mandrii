@@ -7,6 +7,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
   useCallback,
+  useMemo,
 } from "react";
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { createDashedCirclePolyline } from "./utils";
@@ -32,7 +33,7 @@ export interface GoogleMapRef {
 }
 
 type AdvancedMarkerElement = google.maps.marker.AdvancedMarkerElement;
-type Map = google.maps.Map;
+type GoogleMapInstance = google.maps.Map;
 type Polyline = google.maps.Polyline;
 
 const OPTIONS = {
@@ -62,11 +63,13 @@ const MapComponent = (
     libraries,
   });
 
-  const mapRef = useRef<Map | null>(null);
+  const mapRef = useRef<GoogleMapInstance | null>(null);
   const dashedCircleRef = useRef<Polyline | null>(null);
-  const markersRef = useRef<Array<AdvancedMarkerElement>>([]);
 
-  const onLoad = useCallback((map: Map) => {
+  const markersRef = useRef<Map<number, AdvancedMarkerElement>>(new Map());
+  const labelSpansRef = useRef<Map<number, HTMLSpanElement>>(new Map());
+
+  const onLoad = useCallback((map: GoogleMapInstance) => {
     mapRef.current = map;
   }, []);
 
@@ -84,15 +87,12 @@ const MapComponent = (
       location,
       distance
     );
-
     if (dashedCircleRef.current) {
       const path = dashedCircleRef.current.getPath();
-
       const bounds = new google.maps.LatLngBounds();
       for (let i = 0; i < path.getLength(); i++) {
         bounds.extend(path.getAt(i));
       }
-
       map.fitBounds(bounds, 50);
     }
   }, [distance, location]);
@@ -112,54 +112,39 @@ const MapComponent = (
 
     const map = mapRef.current;
 
-    if (markersRef.current.length) {
-      markersRef.current.forEach((marker) => (marker.map = null));
-      markersRef.current = [];
-    }
+    markersRef.current.forEach((marker) => {
+      marker.map = null;
+    });
+    markersRef.current.clear();
+    labelSpansRef.current.clear();
 
     locations.forEach(({ _id, name, geo }) => {
       const contentDiv = document.createElement("div");
       contentDiv.style.cursor = "pointer";
 
       const words = name.split(" ");
-      const numWords = words.length;
       const maxNumWords = 3;
-
-      const labelSpan = document.createElement("span");
-      labelSpan.style.borderRadius = "5px";
-      labelSpan.style.color = "white";
-      labelSpan.style.fontFamily = "nunito";
-      labelSpan.style.padding = "4px 8px";
-      labelSpan.style.position = "relative";
-      labelSpan.style.whiteSpace = "nowrap";
-      labelSpan.textContent =
-        numWords > maxNumWords
-          ? `${words.splice(0, maxNumWords).join(" ")}...`
+      const textContent =
+        words.length > maxNumWords
+          ? `${words.slice(0, maxNumWords).join(" ")}...`
           : name;
 
-      if (_id === selectedPlaceId) {
-        labelSpan.style.backgroundColor = "#000000";
-      } else {
-        labelSpan.style.backgroundColor = "#444444";
-      }
-
-      labelSpan.onmouseover = () => {
-        labelSpan.style.backgroundColor = "#000000";
-        arrowDiv.style.borderTop = "4px solid #000000";
-      };
-
-      labelSpan.onmouseout = () => {
-        if (_id !== selectedPlaceId) {
-          labelSpan.style.backgroundColor = "#444444";
-          arrowDiv.style.borderTop = "4px solid #444444";
-        }
-      };
+      const labelSpan = document.createElement("span");
+      labelSpan.setAttribute("id", String(_id));
+      labelSpan.style.borderRadius = "30px";
+      labelSpan.style.backgroundColor = "#444444";
+      labelSpan.style.color = "white";
+      labelSpan.style.fontFamily = "nunito";
+      labelSpan.style.position = "relative";
+      labelSpan.style.whiteSpace = "nowrap";
+      labelSpan.style.padding = "4px 8px";
+      labelSpan.innerHTML = textContent;
 
       const arrowDiv = document.createElement("div");
       arrowDiv.style.borderLeft = "4px solid transparent";
       arrowDiv.style.borderRight = "4px solid transparent";
       arrowDiv.style.borderTop = "4px solid #444444";
-      arrowDiv.style.bottom = "-4px";
+      arrowDiv.style.bottom = "-3px";
       arrowDiv.style.height = "0";
       arrowDiv.style.left = "50%";
       arrowDiv.style.position = "absolute";
@@ -187,13 +172,58 @@ const MapComponent = (
         onPlaceSelectedAction(_id);
       });
 
-      markersRef.current.push(advancedMarker);
+      labelSpan.onmouseover = () => {
+        if (_id !== selectedPlaceId) {
+          labelSpan.style.backgroundColor = "#000000";
+          arrowDiv.style.borderTop = "4px solid #000000";
+          advancedMarker.element.classList.add("selected");
+        }
+      };
+
+      labelSpan.onmouseout = () => {
+        if (_id !== selectedPlaceId) {
+          advancedMarker.element.classList.remove("selected");
+
+          advancedMarker.element.classList.add("advanced-marker");
+          labelSpan.style.backgroundColor = "#444444";
+          arrowDiv.style.borderTop = "4px solid #444444";
+        }
+      };
+
+      markersRef.current.set(_id, advancedMarker);
+      labelSpansRef.current.set(_id, labelSpan);
     });
-  }, [isLoaded, locations, selectedPlaceId, onPlaceSelectedAction]);
+  }, [isLoaded, locations, onPlaceSelectedAction]);
+
+  useEffect(() => {
+    labelSpansRef.current.forEach((labelSpan, id) => {
+      const arrowDiv = labelSpan.lastElementChild as HTMLDivElement;
+
+      if (id === selectedPlaceId) {
+        labelSpan.style.backgroundColor = "#007BFF";
+        arrowDiv.style.borderTop = "4px solid #007BFF";
+      } else {
+        labelSpan.style.backgroundColor = "#444444";
+        arrowDiv.style.borderTop = "4px solid #444444";
+      }
+    });
+  }, [selectedPlaceId]);
+
+  useEffect(() => {
+    markersRef.current.forEach((marker, id) => {
+      if (!marker.element) return;
+
+      marker.element.classList.remove("selected");
+      marker.element.classList.add("advanced-marker");
+
+      if (id === selectedPlaceId) {
+        marker.element.classList.add("selected");
+      }
+    });
+  }, [selectedPlaceId]);
 
   useEffect(() => {
     if (!isLoaded) return;
-
     setTimeout(drawDashedCircle, 500);
   }, [isLoaded, location, distance, drawDashedCircle]);
 
@@ -203,6 +233,7 @@ const MapComponent = (
     const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
       map: mapRef.current,
       position: location,
+      zIndex: 10,
     });
 
     return () => {
@@ -211,6 +242,11 @@ const MapComponent = (
       }
     };
   }, [location]);
+
+  const options = useMemo(
+    () => ({ ...OPTIONS, mapId: googleMapsMapId }),
+    [googleMapsApiKey]
+  );
 
   if (!isLoaded) {
     return (
@@ -225,10 +261,10 @@ const MapComponent = (
       onLoad={onLoad}
       center={location}
       zoom={zoom}
-      options={{ ...OPTIONS, mapId: googleMapsMapId }}
+      options={options}
       mapContainerStyle={mapContainerStyle}
     />
   );
 };
 
-export const Map = forwardRef(MapComponent);
+export const GeoMap = forwardRef(MapComponent);

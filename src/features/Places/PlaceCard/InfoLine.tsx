@@ -34,13 +34,13 @@ export const InfoLine = ({
   return text ? (
     <Tooltip text={tooltipText}>
       <Row
-        className="hover:bg-primary-50 dark:hover:bg-slate-950 py-1 px-4 cursor-pointer items-center"
+        className="hover:bg-primary-50 dark:hover:bg-slate-950 py-1 px-4 cursor-pointer items-center text-sm md:text-base"
         onClick={copyData}
       >
         <Column>
           <Icon customSize={16} type={icon} />
         </Column>
-        <Column className="hidden sm:flex">
+        <Column>
           {isLink ? (
             <a
               className="ml-3 hover:underline text-cta-500"

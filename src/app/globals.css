@@ -40,3 +40,16 @@ img[src$=".webp"] {
     text-wrap: balance;
   }
 }
+
+
+.advanced-marker {
+  z-index: 1; 
+}
+
+.advanced-marker.selected {
+  z-index: 2; 
+}
+
+.advanced-marker:hover {
+  z-index: 3; 
+}

@@ -3,7 +3,7 @@ export { Row } from "./Row/Row";
 export { Select } from "./Select/Select";
 export { Phrase } from "./Phrase/Phrase";
 export { Icon } from "./Icon/Icon";
-export { Map } from "./Map/Map";
+export { GeoMap } from "./Map/Map";
 export { Notification } from "./Notification/Notification";
 export { Input } from "./Input/Input";
 export { Tooltip } from "./Tooltip/Tooltip";

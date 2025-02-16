@@ -5,7 +5,7 @@ import {
   Column,
   Input,
   LinearProgress,
-  Map,
+  GeoMap,
   Phrase,
   Row,
   Select,
@@ -22,12 +22,12 @@ import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
 import { sendToMixpanel } from "@/lib/mixpanel";
+import { PlaceSlideCard } from "./PlaceCard/PlaceSlideCard";
 
 type Location = google.maps.LatLngLiteral | undefined;
 type Prediction = google.maps.places.AutocompletePrediction;
 type AutocompleteService = google.maps.places.AutocompleteService | null;
 type AutocompleteToken = google.maps.places.AutocompleteSessionToken | null;
-type Map = google.maps.Map;
 
 export const PlacesMap = () => {
   const { dict, lang } = useLanguage();
@@ -242,7 +242,18 @@ export const PlacesMap = () => {
     );
 
     if (place._id === selectedPlaceId) {
-      selectedCard = card;
+      selectedCard = (
+        <PlaceSlideCard
+          onClick={() => {
+            sendToMixpanel("selected_place_card_mobile", {
+              id: place._id,
+              name: place.name,
+            });
+            setSelectedPlaceId(place._id);
+          }}
+          place={place}
+        />
+      );
     }
 
     placeCards.push(card);
@@ -318,17 +329,19 @@ export const PlacesMap = () => {
             {dict.landingPage.shareLocation}
           </a>
         </Row>
-        <Row
-          className={classNames(
-            "hidden sm:flex items-center grow basis-0 justify-end text-nowrap",
-            showProgress && "hidden"
-          )}
-        >
-          {dict.map.totalAdded}
-          <strong className="ml-1 text-lg">
-            {maybePluralize(totalPlacesCount, dict.map.place, lang)}
-          </strong>
-        </Row>
+        {mapIsLoaded && !isLoadingPlaces ? (
+          <Row
+            className={classNames(
+              "hidden sm:flex items-center grow basis-0 justify-end text-nowrap",
+              showProgress && "hidden"
+            )}
+          >
+            {dict.map.totalAdded}
+            <strong className="ml-1 text-lg">
+              {maybePluralize(totalPlacesCount, dict.map.place, lang)}
+            </strong>
+          </Row>
+        ) : null}
       </Row>
 
       {showProgress && (
@@ -352,10 +365,12 @@ export const PlacesMap = () => {
           onClick={() => setSelectedPlaceId(null)}
           className={data.length ? "w-screen lg:w-[50vw] " : "w-full"}
         >
-          <Map
+          <GeoMap
             ref={mapRef}
             onLoadedAction={setMapIsLoaded}
-            onPlaceSelectedAction={setSelectedPlaceId}
+            onPlaceSelectedAction={(id) => {
+              setSelectedPlaceId(id);
+            }}
             selectedPlaceId={selectedPlaceId}
             zoom={14}
             distance={distance}
@@ -377,7 +392,7 @@ export const PlacesMap = () => {
           </Row>
 
           <Row
-            className="grow px-1 md:px-2 bottom-0 absolute w-full box-border justify-center lg:hidden"
+            className="grow bottom-0 absolute w-full box-border justify-center lg:hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {selectedCard}

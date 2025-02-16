@@ -12,10 +12,12 @@ export async function GET(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db("mandrii");
 
-    const query: Record<string, unknown> = {};
+    const query: Record<string, unknown> = { active: true };
+
     if (category) {
       query.category = category;
     }
+
     query.geo = {
       $near: {
         $geometry: {
