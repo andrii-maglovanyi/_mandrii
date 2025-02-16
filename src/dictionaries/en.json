@@ -29,7 +29,8 @@
       "restaurant": "Restaurant",
       "club": "Club",
       "church": "Church",
-      "school": "School"
+      "school": "School",
+      "dentalClinic": "Dental clinic"
     },
     "errors": {
       "locationNotFound": {

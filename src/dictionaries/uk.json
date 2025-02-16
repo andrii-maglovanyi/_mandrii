@@ -29,7 +29,8 @@
       "restaurant": "Ресторан",
       "club": "Клуб",
       "church": "Церква",
-      "school": "Школа"
+      "school": "Школа",
+      "dentalClinic": "Стоматологічна клініка"
     },
     "errors": {
       "locationNotFound": {
