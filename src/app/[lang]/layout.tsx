@@ -36,6 +36,9 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Мандрій",
   description: "мандруй / мрій / дій",
+  openGraph: {
+    images: ["/assets/logo/mandrii.jpg"],
+  },
 };
 
 export default async function RootLayout({

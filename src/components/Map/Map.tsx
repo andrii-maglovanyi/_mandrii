@@ -193,7 +193,7 @@ const MapComponent = (
       markersRef.current.set(_id, advancedMarker);
       labelSpansRef.current.set(_id, labelSpan);
     });
-  }, [isLoaded, locations, onPlaceSelectedAction]);
+  }, [isLoaded, locations, onPlaceSelectedAction, selectedPlaceId]);
 
   useEffect(() => {
     labelSpansRef.current.forEach((labelSpan, id) => {
@@ -245,7 +245,7 @@ const MapComponent = (
 
   const options = useMemo(
     () => ({ ...OPTIONS, mapId: googleMapsMapId }),
-    [googleMapsApiKey]
+    [googleMapsMapId]
   );
 
   if (!isLoaded) {
