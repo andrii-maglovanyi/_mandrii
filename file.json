@@ -1,28 +1,31 @@
 {
-  "_id": { "$oid": "67af985fe59d39670b27e0c6" },
-  "name": "The Heritage Bookshelf (Книжкова Спадщина)",
-  "address": "2HMS Thalia, Clockhouse Community Centre, London SE18 5QL, United Kingdom",
-  "category": "library",
+  "_id": { "$oid": "67b3509aa152f010053d4380" },
+  "name": "Wasabi Takeaway",
+  "address": "57B Mostyn Ave, Llandudno LL30 1DZ, United Kingdom",
+  "category": "restaurant",
   "geo": {
     "type": "Point",
     "coordinates": [
-      { "$numberDouble": "0.053735" },
-      { "$numberDouble": "51.493727" }
+      { "$numberDouble": "-3.807873" },
+      { "$numberDouble": "53.320633" }
     ]
   },
   "images": [
-    "the-heritage-bookshelf-1-9Robt80VDulb4a0OEnFPrRmQwU5U5z.webp",
-    "the-heritage-bookshelf-2-rI7LEUuP1V0qZgTnj3LwzEdD8HMcW0.webp",
-    "the-heritage-bookshelf-3-ZM59YIkQESisuJAf4RP5mNly5vmyYn.webp",
-    "the-heritage-bookshelf-4-zztDwYANc5VHgMQmJRxZlUpIx7LFGG.webp"
+    "wasabi-takeaway-1-PTzvIFEWsuAOoHqnM9GNqCng1uLDsx.webp",
+    "wasabi-takeaway-2-hzcq8c2NY445TqlnPox1Una6myDbqS.webp",
+    "wasabi-takeaway-3-whJYL2d1VLwN7UxWDWH0fe7OEKGJPI.webp"
   ],
   "description": {
-    "en": "Up to 300 books for children, teenagers, and adults, and our collection is constantly growing.\n\n🔹 Free access to Ukrainian literature – borrow up to 2 books for 2 weeks.\n🔹 Cultural meetings and events for registered visitors.\n🕐 09:00 to 15:00, Monday – Friday.",
-    "uk": "До 300 книжок для дітей, підлітків та дорослих і наша колекція постійно зростає\n\n🔹 Безкоштовний доступ до української літератури - беріть до 2х книг на 2 тижні\n🔹 Культурні зустрічі та події для зареєстрованих відвідувачів\n🕐 з 09:00 до 15:00 Понеділок - П’ятниця"
+    "en": "We are a family from Ukraine, Uliana and Edvard, proudly bringing our love for sushi to Llandudno. With Ukraine ranking 2nd in sushi popularity, we have gained unique knowledge, allowing us to craft perfect dishes.",
+    "uk": "Ми – сім'я з України, Уляна та Едвард, з гордістю привозимо нашу любов до суші в Лландудно. Україна займає 2-е місце за популярністю суші, і ми здобули унікальні знання, які дозволяють нам створювати ідеальні страви."
   },
-  "web": "https://nascic.org.uk/heritage-bookshelf",
-  "createdAd": { "$date": { "$numberLong": "1739537935656" } },
-  "updatedAt": { "$date": { "$numberLong": "1739558460361" } },
+  "phone": ["+447519084086"],
+  "email": "wasabitakeaway.uk@gmail.com",
+  "web": "https://www.wasabitakeaway.uk",
   "active": true,
-  "slug": "the-heritage-bookshelf"
+  "slug": "wasabi-takeaway-llandudno"
 }
+
+
+  // "createdAt": { "$date": { "$numberLong": "1739704341" } },
+  // "updatedAt": { "$date": { "$numberLong": "1739704341" } },

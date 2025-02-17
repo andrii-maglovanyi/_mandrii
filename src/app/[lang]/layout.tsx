@@ -9,6 +9,7 @@ import { Language } from "@/types";
 import { getDictionary } from "@/dictionaries";
 import { Heading } from "@/features/Heading/Heading";
 import { Column } from "@/components";
+import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
 
 const leOsler = localFont({
   display: "swap",
@@ -34,10 +35,12 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mandrii.com"),
   title: "Мандрій",
   description: "мандруй / мрій / дій",
   openGraph: {
     images: ["/assets/logo/mandrii.png"],
+    type: "website",
   },
 };
 
@@ -63,6 +66,7 @@ export default async function RootLayout({
             <Column className="relative flex-1">{children}</Column>
             <NotificationsTicker />
           </NotificationsProvider>
+          <CookieConsentBar />
         </LanguageProvider>
       </body>
     </html>

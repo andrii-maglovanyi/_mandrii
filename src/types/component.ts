@@ -6,9 +6,9 @@ export interface BaseComponentProps {
   onClick?: (...args: any) => void | Promise<void>;
   className?: string;
   "data-testid"?: string;
-  draggable?: boolean;
-  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onTouchStart?: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchMove?: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchEnd?: (e: React.TouchEvent<HTMLDivElement>) => void;
 }
 
 export type WithChildren<T = {}> = T & {

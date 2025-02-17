@@ -1,5 +1,9 @@
 {
   "mandrii": "Mandrii",
+  "cookies": {
+    "iUseCookies": "I use cookies",
+    "whatDoesItMean": "What does it mean?"
+  },
   "landingPage": {
     "title": "Let's unite, Ukrainians!",
     "body": "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe. Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community.",

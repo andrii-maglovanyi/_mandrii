@@ -2,7 +2,7 @@ import { PlaceData } from "@/types";
 import { classNames } from "@/utils";
 import { InfoLine } from "./InfoLine";
 import { useLanguage } from "@/hooks/useLanguage";
-import { Column, H1, H2, H3, ImageCarousel, Phrase, Row } from "@/components";
+import { Column, H3, ImageCarousel, Phrase, Row } from "@/components";
 import { useRef, useState } from "react";
 
 interface PlaceSlideCardProps {
@@ -13,28 +13,57 @@ interface PlaceSlideCardProps {
 export const PlaceSlideCard = ({ place, onClick }: PlaceSlideCardProps) => {
   const { _id, images, name, description, address, phone, email, web } = place;
   const { dict, lang } = useLanguage();
+
   const [expanded, setExpanded] = useState(false);
-  const startYRef = useRef<number | null>(null);
+
+  const startYRef = useRef(0);
+  const endYRef = useRef(0);
+
+  const clickDetected = useRef(false);
+
+  const touchStartTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchEndTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const maxCarouselExpand = window.screen.height > 700 ? "h-96" : "h-72";
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData("text/plain", "");
-
-    startYRef.current = e.clientY;
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    clickDetected.current = false;
+    touchStartTimeout.current = setTimeout(() => {
+      if (clickDetected.current) return;
+      startYRef.current = e.touches[0].clientY;
+    }, 50);
   };
 
-  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    if (startYRef.current !== null) {
-      const endY = e.clientY;
-      const startY = startYRef.current;
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    endYRef.current = e.touches[0].clientY;
+  };
 
-      if (endY < startY) {
+  const handleTouchEnd = () => {
+    clickDetected.current = false;
+    touchEndTimeout.current = setTimeout(() => {
+      if (clickDetected.current) return;
+
+      const deltaY = startYRef.current - endYRef.current;
+
+      if (deltaY > 50) {
         setExpanded(true);
-      } else if (endY > startY) {
+      } else if (deltaY < -50) {
         setExpanded(false);
       }
-    }
+    }, 50);
+  };
+
+  const handleClick = () => {
+    clickDetected.current = true;
+
+    touchStartTimeout.current && clearTimeout(touchStartTimeout.current);
+    touchEndTimeout.current && clearTimeout(touchEndTimeout.current);
+
+    setExpanded(!expanded);
+
+    setTimeout(() => {
+      clickDetected.current = false;
+    }, 100);
   };
 
   return (
@@ -46,11 +75,12 @@ export const PlaceSlideCard = ({ place, onClick }: PlaceSlideCardProps) => {
       }
     >
       <Row
-        className="justify-center py-2 cursor-pointer"
-        onClick={() => setExpanded(!expanded)}
-        draggable
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+        className="justify-center py-3 cursor-pointer"
+        onClick={handleClick}
+        // draggable
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div className="w-[20%] rounded-lg border-2 border-primary-400"></div>
       </Row>

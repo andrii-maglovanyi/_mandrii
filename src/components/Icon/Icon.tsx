@@ -6,6 +6,7 @@ export const svgImportKeys = [
   "email-line",
   "call-line",
   "close-line",
+  "close-small-solid",
   "globe-line",
   "heart-line",
   "heart-solid",
