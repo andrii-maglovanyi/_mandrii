@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   title: "Мандрій",
   description: "мандруй / мрій / дій",
   openGraph: {
-    images: ["/assets/logo/mandrii.jpg"],
+    images: ["/assets/logo/mandrii.png"],
   },
 };
 
