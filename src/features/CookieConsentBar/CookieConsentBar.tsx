@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/Button/Button";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -8,9 +8,11 @@ import { useLanguage } from "@/hooks/useLanguage";
 export const CookieConsentBar = () => {
   const { dict } = useLanguage();
 
-  const [isPanelClosed, setIsPanelClosed] = useState(
-    Boolean(localStorage.getItem("mndr.gdpr-panel-closed"))
-  );
+  const [isPanelClosed, setIsPanelClosed] = useState(true);
+
+  useEffect(() => {
+    setIsPanelClosed(Boolean(localStorage.getItem("mndr.gdpr-panel-closed")));
+  }, []);
 
   const consentCookie = () => {
     setIsPanelClosed(true);
@@ -28,7 +30,7 @@ export const CookieConsentBar = () => {
           {dict.cookies.whatDoesItMean}
         </Link>
         <Button
-          className="absolute right-2 invert"
+          className="absolute right-2 invert dark:invert"
           icon="close-small-solid"
           onClick={consentCookie}
           aria-label="Close cookie consent bar"
