@@ -34,7 +34,7 @@ export default async function HowIUseCookies({ params }: Props) {
             <ul className="list-disc list-inside text-gray-700 mt-2 space-y-2">
               <li>
                 To collect statistics with Mixpanel - it helps me understand how
-                many visitors are there and what I'm doing right and wrong.
+                many visitors are there and what I&apos;m doing right and wrong.
               </li>
               <li>
                 So far this is the only usage of cookies on this website. 🤔
@@ -42,11 +42,11 @@ export default async function HowIUseCookies({ params }: Props) {
             </ul>
 
             <h2 className="text-2xl font-semibold mt-6 mb-3">
-              What if you don't want to use cookies?
+              What if you don&apos;t want to use cookies?
             </h2>
             <p className="text-gray-700">
-              You can disable them in your browser's security settings. It is
-              important to understand that you must apply the settings in all
+              You can disable them in your browser&apos;s security settings. It
+              is important to understand that you must apply the settings in all
               browsers you use (on your computer and your phone). If you decide
               to disable cookies, keep in mind that some features will no longer
               be available to you or may work unpredictably.
