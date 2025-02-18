@@ -1,3 +1,4 @@
+import { H1, H2 } from "@/components";
 import { Language } from "@/types";
 import { Metadata } from "next";
 
@@ -18,7 +19,7 @@ export default async function HowIUseCookies({ params }: Props) {
       <section className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 ">
         {lang === "en" ? (
           <article>
-            <h1 className="text-3xl font-bold mb-4">What is a cookie?</h1>
+            <H1 className="text-3xl font-bold mb-4">What is a cookie?</H1>
             <p className="text-gray-700 mb-4">
               🍪 A <strong>cookie</strong> is a tiny file, stored on your
               computer or phone. It contains the website address and some data
@@ -27,9 +28,9 @@ export default async function HowIUseCookies({ params }: Props) {
               personal information or anything dangerous.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-6 mb-3">
+            <H2 className="text-2xl font-semibold mt-6 mb-3">
               Why do I use cookies?
-            </h2>
+            </H2>
             <p className="text-gray-700">For a few different purposes:</p>
             <ul className="list-disc list-inside text-gray-700 mt-2 space-y-2">
               <li>
@@ -41,9 +42,9 @@ export default async function HowIUseCookies({ params }: Props) {
               </li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-6 mb-3">
+            <H2 className="text-2xl font-semibold mt-6 mb-3">
               What if you don&apos;t want to use cookies?
-            </h2>
+            </H2>
             <p className="text-gray-700">
               You can disable them in your browser&apos;s security settings. It
               is important to understand that you must apply the settings in all
@@ -54,7 +55,7 @@ export default async function HowIUseCookies({ params }: Props) {
           </article>
         ) : (
           <article>
-            <h1 className="text-3xl font-bold mb-4">Що таке cookies?</h1>
+            <H1 className="text-3xl font-bold mb-4">Що таке cookies?</H1>
             <p className="text-gray-700 mb-4">
               🍪 <strong>Cookie</strong> - це крихітний файл, який зберігається
               на вашому комп’ютері або телефоні. Він містить адресу вебсайту та
@@ -64,9 +65,9 @@ export default async function HowIUseCookies({ params }: Props) {
               небезпечного.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-6 mb-3">
+            <H2 className="text-2xl font-semibold mt-6 mb-3">
               Чому я використовую cookies?
-            </h2>
+            </H2>
             <p className="text-gray-700">З кількох причин:</p>
             <ul className="list-disc list-inside text-gray-700 mt-2 space-y-2">
               <li>
@@ -77,9 +78,9 @@ export default async function HowIUseCookies({ params }: Props) {
               <li>Поки що це єдине використання cookies на цьому сайті. 🤔</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-6 mb-3">
+            <H2 className="text-2xl font-semibold mt-6 mb-3">
               Що робити, якщо ви не хочете використовувати cookies?
-            </h2>
+            </H2>
             <p className="text-gray-700">
               Ви можете вимкнути їх у налаштуваннях безпеки вашого браузера.
               Важливо розуміти, що ці налаштування потрібно застосувати у всіх
