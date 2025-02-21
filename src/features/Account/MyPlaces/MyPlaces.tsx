@@ -79,6 +79,12 @@ const List = () => {
         <ShareLocationLink asButton />
       </Row>
       <Table
+        emptyStateHeading={dict["No places added yet"]}
+        emptyStateBodyMessage={
+          dict[
+            "You haven't added any locations yet. Click the button above to add your first location and start managing your places!"
+          ]
+        }
         columns={COLUMNS}
         dataSource={data}
         loading={isLoading}

@@ -11,5 +11,9 @@ export default async function ProtectedPage() {
     redirect("/api/auth/signin");
   }
 
+  if (!session.user.isAdmin) {
+    redirect("/");
+  }
+
   return <Admin />;
 }

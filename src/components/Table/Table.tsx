@@ -50,6 +50,8 @@ interface TableProps<T> extends BaseComponentProps {
   };
   loading?: boolean;
   onSort?: (params: SortParams) => void;
+  emptyStateHeading?: string;
+  emptyStateBodyMessage?: string;
   pagination?: PaginatorProps;
   rowKey: string;
   size?: "condensed";
@@ -115,6 +117,8 @@ export const Table = <T extends DataRecord>({
   expandable,
   loading,
   onSort,
+  emptyStateHeading,
+  emptyStateBodyMessage,
   pagination,
   rowKey,
   size,
@@ -420,7 +424,11 @@ export const Table = <T extends DataRecord>({
       {!loading && !dataSource?.length && (
         <div className="mt-6 flex items-center justify-center">
           <EmptyState
-            body="No data"
+            heading={emptyStateHeading ?? "Empty"}
+            body={
+              emptyStateBodyMessage ??
+              "There is no data to display at the moment"
+            }
             data-testid="empty-state"
             icon="file-search-line"
           />

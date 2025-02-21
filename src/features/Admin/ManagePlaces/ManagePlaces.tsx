@@ -261,8 +261,6 @@ const ManagePlaces = () => {
     }
   };
 
-  const deactivatePlace = async (id: ObjectId, name: string) => {};
-
   return (
     <Table
       expandable={{

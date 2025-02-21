@@ -65,5 +65,7 @@
   "Back": "Назад",
   "Great! Location submitted successfully!": "Чудово! Місце успішно надіслано!",
   "Oops! Something went wrong. Please try again.": "Ой! Щось пішло не так. Будь ласка, спробуйте ще раз.",
-  "Name and address are required.": "Ім'я та адреса є обов'язковими."
+  "Name and address are required.": "Ім'я та адреса є обов'язковими.",
+  "No places added yet": "Ще не додано жодного місця",
+  "You haven't added any locations yet. Click the button above to add your first location and start managing your places!": "Ви ще не додали жодної локації. Натисніть кнопку вище, щоб додати свою першу локацію та почати керувати своїми місцями!"
 }

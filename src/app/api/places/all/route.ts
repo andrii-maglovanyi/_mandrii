@@ -21,6 +21,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    if (!session.user.isAdmin) {
+      return NextResponse.json({ error: "No permissions" }, { status: 403 });
+    }
+
     const client = await clientPromise;
     const db = client.db("mandrii");
 

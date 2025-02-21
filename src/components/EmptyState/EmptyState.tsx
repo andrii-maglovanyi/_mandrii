@@ -30,7 +30,7 @@ export const EmptyState = ({
 
           dark:fill-primary-900
         `}
-        customSize={52}
+        customSize={36}
         data-testid={`icon-${icon}`}
         type={icon}
       />
