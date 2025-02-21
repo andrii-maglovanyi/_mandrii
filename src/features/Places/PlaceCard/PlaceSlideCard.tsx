@@ -1,4 +1,4 @@
-import { PlaceData } from "@/types";
+import { PlaceEntry } from "@/types";
 import { classNames } from "@/utils";
 import { InfoLine } from "./InfoLine";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -6,7 +6,7 @@ import { Column, H3, ImageCarousel, Phrase, Row } from "@/components";
 import { useRef, useState } from "react";
 
 interface PlaceSlideCardProps {
-  place: PlaceData;
+  place: PlaceEntry;
   onClick: () => void;
 }
 
@@ -69,7 +69,7 @@ export const PlaceSlideCard = ({ place, onClick }: PlaceSlideCardProps) => {
   return (
     <Column
       onClick={onClick}
-      key={_id}
+      key={_id.toString()}
       className={
         "transition-all duration-500 ease-in-out text-md lg:text-base overflow-x-hidden rounded-t-2xl  bg-primary-0 dark:bg-slate-800 w-[calc(100%+4px)] h-min flex-shrink-0 border-t-2 border-l-2 border-r-2 border-primary-1000 absolute bottom-0"
       }
@@ -116,23 +116,23 @@ export const PlaceSlideCard = ({ place, onClick }: PlaceSlideCardProps) => {
           <InfoLine
             icon="globe-line"
             text={web}
-            tooltipText={dict.place.copy.web}
+            tooltipText={dict["Copy website"]}
             isLink
           />
           <InfoLine
             icon="email-line"
             text={email}
-            tooltipText={dict.place.copy.email}
+            tooltipText={dict["Copy email"]}
           />
           <InfoLine
             icon="call-line"
             text={phone?.join(", ")}
-            tooltipText={dict.place.copy.phone}
+            tooltipText={dict["Copy phone number"]}
           />
           <InfoLine
             icon="pin-line"
             text={address}
-            tooltipText={dict.place.copy.address}
+            tooltipText={dict["Copy address"]}
           />
         </Column>
       }

@@ -27,7 +27,7 @@ export const InfoLine = ({
       sendToMixpanel("copied_data", { data: text });
 
       navigator.clipboard.writeText(text);
-      showSuccess(text, { header: dict.place.copy.copied });
+      showSuccess(text, { header: dict["Copied"] });
     }
   };
 

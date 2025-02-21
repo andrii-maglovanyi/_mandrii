@@ -12,16 +12,18 @@ export async function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (pathnameHasLocale) return;
+  if (!pathnameHasLocale) {
+    return NextResponse.redirect(
+      new URL(
+        `/${defaultLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+        request.url
+      )
+    );
+  }
 
-  return NextResponse.redirect(
-    new URL(
-      `/${defaultLocale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-      request.url
-    )
-  );
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|qr|images|_next|assets|favicon.ico).*)"],
+  matcher: ["/((?!api|admin|auth|qr|images|_next|assets|favicon.ico).*)"],
 };

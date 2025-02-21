@@ -1,4 +1,4 @@
-import { H1, H2, Phrase } from "@/components";
+import { Card, H1, H2, Phrase } from "@/components";
 import { Language } from "@/types";
 import { Metadata } from "next";
 
@@ -16,7 +16,7 @@ export default async function HowIUseCookies({ params }: Props) {
 
   return (
     <main className="flex flex-col grow h-full py-8 md:py-12 px-3 md:px-6 justify-center">
-      <section className="max-w-3xl mx-auto bg-primary-0 dark:bg-primary-900 shadow-lg rounded-lg p-6 ">
+      <Card>
         {lang === "en" ? (
           <article>
             <H1>What is a cookie?</H1>
@@ -82,7 +82,7 @@ export default async function HowIUseCookies({ params }: Props) {
             </Phrase>
           </article>
         )}
-      </section>
+      </Card>
     </main>
   );
 }

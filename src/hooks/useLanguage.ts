@@ -7,5 +7,6 @@ export const useLanguage = () => {
   if (!context) {
     throw new Error("Language context is missing");
   }
+
   return context;
 };

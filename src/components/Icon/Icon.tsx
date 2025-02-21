@@ -1,12 +1,16 @@
 import type { BaseComponentProps, Connotations } from "../../types";
 
 export const svgImportKeys = [
+  "arrow-left-line",
   "buymeacoffee",
   "chevron-down-line",
   "email-line",
   "call-line",
   "close-line",
   "close-small-solid",
+  "file-search-line",
+  "fullscreen-line",
+  "fullscreen-off-line",
   "globe-line",
   "heart-line",
   "heart-solid",
@@ -16,6 +20,9 @@ export const svgImportKeys = [
   "pin-line",
   "pin-solid",
   "rocket-solid",
+  "sort-line",
+  "sort-asc-line",
+  "sort-desc-line",
   "telegram",
   "youtube",
 ] as const;

@@ -1,14 +1,15 @@
 import { Column, H3, ImageCarousel, Phrase, Row } from "@/components";
 
-import { PlaceData } from "@/types";
+import { PlaceEntry } from "@/types";
 import { classNames } from "@/utils";
 import { InfoLine } from "./InfoLine";
 import { useLanguage } from "@/hooks/useLanguage";
+import { ObjectId } from "mongodb";
 
 interface PlaceCardProps {
-  place: PlaceData;
+  place: PlaceEntry;
   onClick: () => void;
-  selectedId: number | null;
+  selectedId: ObjectId | null;
 }
 
 export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
@@ -19,7 +20,7 @@ export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
     <Row
       id={String(_id)}
       onClick={onClick}
-      key={_id}
+      key={_id.toString()}
       className={classNames(
         "border-2 text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-slate-800 w-full mb-3 h-min flex-shrink-0",
         selectedId === _id
@@ -51,23 +52,23 @@ export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
           <InfoLine
             icon="globe-line"
             text={web}
-            tooltipText={dict.place.copy.web}
+            tooltipText={dict["Copy website"]}
             isLink
           />
           <InfoLine
             icon="email-line"
             text={email}
-            tooltipText={dict.place.copy.email}
+            tooltipText={dict["Copy email"]}
           />
           <InfoLine
             icon="call-line"
             text={phone?.join(", ")}
-            tooltipText={dict.place.copy.phone}
+            tooltipText={dict["Copy phone number"]}
           />
           <InfoLine
             icon="pin-line"
             text={address}
-            tooltipText={dict.place.copy.address}
+            tooltipText={dict["Copy address"]}
           />
         </Column>
       </Column>

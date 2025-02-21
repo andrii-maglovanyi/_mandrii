@@ -1,4 +1,4 @@
-import { PlaceData } from "@/types";
+import { PlaceEntry } from "@/types";
 import { useEffect, useState } from "react";
 
 interface UseSearchPlacesParams {
@@ -16,7 +16,7 @@ export const useSearchPlaces = ({
   category,
 }: UseSearchPlacesParams) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<Array<PlaceData>>([]);
+  const [data, setData] = useState<Array<PlaceEntry>>([]);
   const [totalPlacesCount, setTotalPlacesCount] = useState(0);
 
   useEffect(() => {

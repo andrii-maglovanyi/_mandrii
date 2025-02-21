@@ -1,20 +1,20 @@
 "use client";
 
-import { Column, H1, Icon, Phrase, Row } from "@/components";
-import { Button } from "@/components/Button/Button";
+import { Button, Column, H1, Icon, Phrase, Row } from "@/components";
 import { FORM_ID } from "./constants";
 import { useLanguage } from "@/hooks/useLanguage";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { sendToMixpanel } from "@/lib/mixpanel";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import ShareLocationLink from "../ShareLocationLink/ShareLocationLink";
 
 export const LandingPage = () => {
   const { lang, dict } = useLanguage();
   const router = useRouter();
-
-  const { landingPage: lp } = dict;
 
   useEffect(() => {
     sendToMixpanel("page_view");
@@ -36,22 +36,26 @@ export const LandingPage = () => {
 
       <Column className="max-w-screen-md text-center items-center justify-center pb-12 md:pb-24 box-border">
         <H1 className="font-leOsler font-bold mb-28 text-primary-0 text-7xl sm:text-8xl md:text-9xl mt-32 sm:mt-10 md:mt-20 px-4">
-          {lp.title}
+          {dict["Let's unite, Ukrainians!"]}
         </H1>
         <Column className="text-md md:text-lg mx-8 ">
           <Phrase className="font-semibold dark:text-primary-1000">
-            {lp.body}
+            {
+              dict[
+                "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe. Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community."
+              ]
+            }
           </Phrase>
 
           <Column className="text-left">
             <Phrase className="mt-8 dark:text-primary-1000">
-              💙 {lp.goalFindPlace}
+              💙 {dict["Find places owned by Ukrainians"]}
             </Phrase>
             <Phrase className="dark:text-primary-1000">
-              💛 {lp.goalSupportPlace}
+              💛 {dict["Support Ukrainian businesses and initiatives"]}
             </Phrase>
             <Phrase className="dark:text-primary-1000">
-              🤝 {lp.goalStayConnected}
+              🤝 {dict["Help each other grow and stay connected"]}
             </Phrase>
           </Column>
           <Button
@@ -69,7 +73,7 @@ export const LandingPage = () => {
               sendToMixpanel("map_opened");
             }}
           >
-            {lp.button}
+            {dict["Explore the map now!"]}
           </Button>
 
           <Column className="mt-12 mb-4 text-sm sm:flex-row">
@@ -79,19 +83,9 @@ export const LandingPage = () => {
                 type="pin-solid"
                 className="mr-2 animate-bounce"
               />{" "}
-              {lp.missedPlace}
+              {dict["Know a missed place?"]}
             </Phrase>
-            <a
-              className="ml-2 text-cta-600  hover:underline font-bold"
-              target="_blank"
-              href={`https://forms.gle/${FORM_ID[lang]}`}
-              onClick={() => {
-                sendToMixpanel("share_location_landing", { lang });
-              }}
-            >
-              {lp.shareLocation}
-            </a>
-            .
+            <ShareLocationLink />.
           </Column>
           <Column className=" text-sm sm:flex-row">
             <Phrase className="text-nowrap text-primary-700 dark:text-primary-700">
@@ -100,7 +94,7 @@ export const LandingPage = () => {
                 type="heart-solid"
                 className="mr-2 animate-pulse"
               />{" "}
-              {lp.supportProject}
+              {dict["Please support this project with"]}
             </Phrase>{" "}
             <Phrase className="text-nowrap text-primary-700 dark:text-primary-700">
               <a
@@ -115,7 +109,7 @@ export const LandingPage = () => {
               >
                 Patreon
               </a>
-              {lp.or}
+              {dict["or"]}
               <a
                 className="ml-1 text-cta-600 hover:underline font-bold text-nowrap"
                 target="_blank"
@@ -128,7 +122,7 @@ export const LandingPage = () => {
               >
                 Buy me a coffee
               </a>
-              , {lp.thankYou}!
+              , {dict["thank you"]}!
             </Phrase>
           </Column>
         </Column>

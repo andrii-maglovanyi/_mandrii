@@ -11,18 +11,19 @@ import React, {
 } from "react";
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { createDashedCirclePolyline } from "./utils";
-import { PlaceData } from "@/types";
+import { PlaceEntry } from "@/types";
 import { Row } from "../Row/Row";
 import { sendToMixpanel } from "@/lib/mixpanel";
+import { ObjectId } from "mongodb";
 
 interface MapProps {
   zoom: number;
   onLoadedAction: (isLoaded: boolean) => void;
-  selectedPlaceId: number | null;
-  onPlaceSelectedAction: (id: number) => void;
+  selectedPlaceId: ObjectId | null;
+  onPlaceSelectedAction: (id: ObjectId) => void;
   distance: number;
   location: google.maps.LatLngLiteral | undefined;
-  locations: Array<PlaceData>;
+  locations: Array<PlaceEntry>;
   mapContainerStyle?: React.CSSProperties;
   googleMapsApiKey: string;
   googleMapsMapId: string;
@@ -66,8 +67,8 @@ const MapComponent = (
   const mapRef = useRef<GoogleMapInstance | null>(null);
   const dashedCircleRef = useRef<Polyline | null>(null);
 
-  const markersRef = useRef<Map<number, AdvancedMarkerElement>>(new Map());
-  const labelSpansRef = useRef<Map<number, HTMLSpanElement>>(new Map());
+  const markersRef = useRef<Map<ObjectId, AdvancedMarkerElement>>(new Map());
+  const labelSpansRef = useRef<Map<ObjectId, HTMLSpanElement>>(new Map());
 
   const onLoad = useCallback((map: GoogleMapInstance) => {
     mapRef.current = map;

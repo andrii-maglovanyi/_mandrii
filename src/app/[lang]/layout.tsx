@@ -10,6 +10,7 @@ import { getDictionary } from "@/dictionaries";
 import { Heading } from "@/features/Heading/Heading";
 import { Column } from "@/components";
 import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
+import Providers from "@/components/Providers";
 
 const leOsler = localFont({
   display: "swap",
@@ -60,14 +61,16 @@ export default async function RootLayout({
         lang={lang}
         className={`${nunito.variable}  font-nunito ${leOsler.variable} font-leOsler min-h-screen flex flex-col`}
       >
-        <LanguageProvider lang={lang} dict={dict}>
-          <NotificationsProvider>
-            <Heading />
-            <Column className="relative flex-1">{children}</Column>
-            <NotificationsTicker />
-          </NotificationsProvider>
-          <CookieConsentBar />
-        </LanguageProvider>
+        <Providers>
+          <LanguageProvider lang={lang} dict={dict}>
+            <NotificationsProvider>
+              <Heading />
+              <Column className="relative flex-1">{children}</Column>
+              <NotificationsTicker />
+            </NotificationsProvider>
+            <CookieConsentBar />
+          </LanguageProvider>
+        </Providers>
       </body>
     </html>
   );

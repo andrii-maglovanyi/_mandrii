@@ -53,3 +53,45 @@ img[src$=".webp"] {
 .advanced-marker:hover {
   z-index: 3; 
 }
+
+@keyframes slide-infinite-1 {
+  0% {
+    opacity: 1;
+    transform: translate(-100%);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate(300%);
+  }
+
+  70.01% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(300%);
+  }
+}
+
+@keyframes slide-infinite-2 {
+  0% {
+    opacity: 0;
+    transform: translate(-150%);
+  }
+
+  29.99% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+    transform: translate(-150%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(166.66%);
+  }
+}

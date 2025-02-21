@@ -10,6 +10,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { classNames } from "@/utils";
+import AuthButton from "./components/AuthButton";
 
 export const Heading = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ export const Heading = () => {
 
   const MENU_ITEMS = [
     {
-      title: dict.menu.posts,
+      title: dict["Posts"],
       href: `${lang}/posts`,
     },
   ];
@@ -36,7 +37,7 @@ export const Heading = () => {
                 <div className="relative h-12 w-12 lg:h-16 lg:w-16">
                   <Image
                     src="/assets/logo/mandrii.png"
-                    alt={dict.mandrii}
+                    alt={dict["Mandrii"]}
                     className="rounded-full border-2 group-hover:scale-105 border-white "
                     fill
                     priority
@@ -53,7 +54,7 @@ export const Heading = () => {
                       : "text-slate-700 dark:text-primary-0"
                   )}
                 >
-                  → {dict.mandrii} ←
+                  → {dict["Mandrii"]} ←
                 </h1>
               </Row>
             </Column>
@@ -78,6 +79,9 @@ export const Heading = () => {
             ))}
             <div className="ml-5">
               <LanguageSwitcher />
+            </div>
+            <div className="ml-5">
+              <AuthButton />
             </div>
           </Row>
           <h1

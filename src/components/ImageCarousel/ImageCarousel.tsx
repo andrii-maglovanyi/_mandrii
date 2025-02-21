@@ -31,6 +31,7 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
       {images.length > 1 ? (
         <>
           <button
+            type="button"
             onClick={prevImage}
             className="absolute font-leOsler text-2xl left-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
           >
@@ -38,6 +39,7 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
           </button>
 
           <button
+            type="button"
             onClick={nextImage}
             className="absolute font-leOsler text-2xl  right-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
           >

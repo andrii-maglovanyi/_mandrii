@@ -22,12 +22,12 @@ export const CookieConsentBar = () => {
   return isPanelClosed ? null : (
     <div className="fixed bottom-0 left-0 right-0 w-full bg-primary-800 text-white text-center p-3 animate-slide-in">
       <div className="container mx-auto flex justify-center items-center gap-2 ">
-        <span>{dict.cookies.cookiesUsed}</span>
+        <span>{dict["Cookies are used."]}</span>
         <Link
           href="/how-i-use-cookies"
           className="text-cta-400 hover:underline"
         >
-          {dict.cookies.whatDoesItMean}
+          {dict["What does it mean?"]}
         </Link>
         <Button
           className="absolute right-2 invert dark:invert"

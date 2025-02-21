@@ -13,16 +13,20 @@ import {
 } from "@/components";
 
 import { classNames, maybePluralize } from "@/utils";
-import { useSearchPlaces } from "./useSearchPlaces";
-import { useNotifications } from "@/hooks/useNotifications";
+
 import { NameValueObject } from "@/types";
 import { PlaceCard } from "./PlaceCard/PlaceCard";
-import { FORM_ID, LONDON_COORDINATES, PROGRESS_BAR_WIDTH } from "./constants";
+import { FORM_ID, PROGRESS_BAR_WIDTH } from "./constants";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
 import { sendToMixpanel } from "@/lib/mixpanel";
 import { PlaceSlideCard } from "./PlaceCard/PlaceSlideCard";
+import { CATEGORIES, LONDON_COORDINATES } from "@/constants";
+import { useNotifications, useSearchPlaces } from "@/hooks";
+import { Dictionary } from "@/dictionaries";
+import ShareLocationLink from "../ShareLocationLink/ShareLocationLink";
+import { ObjectId } from "mongodb";
 
 type Location = google.maps.LatLngLiteral | undefined;
 type Prediction = google.maps.places.AutocompletePrediction;
@@ -31,37 +35,29 @@ type AutocompleteToken = google.maps.places.AutocompleteSessionToken | null;
 
 export const PlacesMap = () => {
   const { dict, lang } = useLanguage();
-  const {
-    allCategories,
-    club,
-    church,
-    library,
-    restaurant,
-    school,
-    dentalClinic,
-  } = dict.map.categories;
 
-  const CATEGORY: Array<NameValueObject<string>> = [
-    { name: allCategories, value: "all" },
-    { name: library, value: "library" },
-    { name: restaurant, value: "restaurant" },
-    { name: club, value: "club" },
-    { name: school, value: "school" },
-    { name: church, value: "church" },
-    { name: dentalClinic, value: "dental_clinic" },
-  ];
+  const categoryOptions: Array<NameValueObject<string>> = CATEGORIES.reduce(
+    (options, category) => [
+      ...options,
+      {
+        name: dict[category as keyof Dictionary],
+        value: category,
+      },
+    ],
+    [{ name: dict["All categories"], value: "all" }]
+  );
 
   const DISTANCE: Array<NameValueObject<number>> = [
     1000, 2000, 5000, 10000, 25000, 100000,
-  ].map((value) => ({ name: `${value / 1000}${dict.map.km}`, value }));
+  ].map((value) => ({ name: `${value / 1000}${dict["km"]}`, value }));
 
   const [inputValue, setInputValue] = useState("");
-  const [category, setCategory] = useState<string>(CATEGORY[0].value);
+  const [category, setCategory] = useState<string>(categoryOptions[0].value);
   const [distance, setDistance] = useState(DISTANCE[DISTANCE.length - 1].value);
 
   const [mapIsLoaded, setMapIsLoaded] = useState(false);
 
-  const [selectedPlaceId, setSelectedPlaceId] = useState<number | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<ObjectId | null>(null);
   const [location, setLocation] = useState<Location>(LONDON_COORDINATES);
   const [predictions, setPredictions] = useState<Array<Prediction>>([]);
 
@@ -133,8 +129,12 @@ export const PlacesMap = () => {
       if (error instanceof Error) {
         showError(error.message);
       } else if (error === "OVER_QUERY_LIMIT") {
-        const { message, header } = dict.messages.error.over_query_limit;
-        showError(message, { header });
+        showError(
+          dict[
+            "You've made too many searches in a short time. Please wait a minute and try again."
+          ],
+          { header: dict["Whoa, slow down!"] }
+        );
       } else {
         showError("Oops, try again");
       }
@@ -152,14 +152,14 @@ export const PlacesMap = () => {
           });
         },
         (_) => {
-          showError(dict.map.errors.locationNotFound.body, {
-            header: dict.map.errors.locationNotFound.header,
+          showError(dict["We couldn’t find your location. Try searching!"], {
+            header: dict["Location not found"],
           });
         }
       );
     } else {
-      showError(dict.map.errors.locationNotFound.body, {
-        header: dict.map.errors.locationNotFound.header,
+      showError(dict["We couldn’t find your location. Try searching!"], {
+        header: dict["Location not found"],
       });
     }
   };
@@ -235,7 +235,7 @@ export const PlacesMap = () => {
           });
           setSelectedPlaceId(place._id);
         }}
-        key={place._id}
+        key={place._id.toString()}
         selectedId={selectedPlaceId}
         place={place}
       />
@@ -265,7 +265,7 @@ export const PlacesMap = () => {
         <Column className="grow ">
           <Input
             disabled={showProgress}
-            label={dict.map.location}
+            label={dict["Location"]}
             name="location"
             onFocus={handleFocus}
             withClearButton
@@ -282,8 +282,8 @@ export const PlacesMap = () => {
             <Select
               disabled={showProgress}
               name="category"
-              items={CATEGORY}
-              label={dict.map.category}
+              items={categoryOptions}
+              label={dict["Category"]}
               defaultValue={category}
               onChange={({ value }) => {
                 sendToMixpanel("changed_category", { category: value });
@@ -296,7 +296,7 @@ export const PlacesMap = () => {
               disabled={showProgress}
               name="distance"
               items={DISTANCE}
-              label={dict.map.distance}
+              label={dict["Distance"]}
               defaultValue={distance}
               onChange={({ value }) => {
                 sendToMixpanel("changed_distance", { distance: value });
@@ -307,7 +307,7 @@ export const PlacesMap = () => {
         </Row>
       </Column>
       <Row className="justify-between max-w-screen-xl w-full grow px-4 md:px-8 mb-2">
-        <Row className="justify-between md:justify-normal items-center grow basis-0 flex-nowrap">
+        <Row className="justify-between md:justify-normal items-center grow basis-0 flex-nowrap h-7">
           <Button
             icon="pin-solid"
             size="super-condensed"
@@ -316,29 +316,20 @@ export const PlacesMap = () => {
               getLocation();
               sendToMixpanel("find_me_clicked");
             }}
-            label={dict.map.findMe}
+            label={dict["Find me"]}
           />
-          <a
-            className="mx-3 text-cta-600 dark:text-cta-300 hover:underline font-bold text-nowrap"
-            target="_blank"
-            href={`https://forms.gle/${FORM_ID[lang]}`}
-            onClick={() => {
-              sendToMixpanel("share_location_places_map", { lang });
-            }}
-          >
-            {dict.landingPage.shareLocation}
-          </a>
+          <ShareLocationLink />
         </Row>
         {mapIsLoaded && !isLoadingPlaces ? (
           <Row
             className={classNames(
-              "hidden sm:flex items-center grow basis-0 justify-end text-nowrap",
+              "hidden sm:flex items-center grow basis-0 justify-end text-nowrap h-7",
               showProgress && "hidden"
             )}
           >
-            {dict.map.totalAdded}
+            {dict["Added"]}
             <strong className="ml-1 text-lg">
-              {maybePluralize(totalPlacesCount, dict.map.place, lang)}
+              {maybePluralize(totalPlacesCount, dict["place"], lang)}
             </strong>
           </Row>
         ) : null}
@@ -382,12 +373,12 @@ export const PlacesMap = () => {
           <Row className="absolute ml-3 mt-3">
             <Phrase className="bg-primary-1000/70 px-3 py-1 text-sm rounded-md text-primary-0">
               {placeCards.length
-                ? `${dict.map.showing} ${maybePluralize(
+                ? `${dict["Showing"]} ${maybePluralize(
                     placeCards.length,
-                    dict.map.result,
+                    dict["result"],
                     lang
                   )}`
-                : dict.map.nothingFound}
+                : dict["Nothing found"]}
             </Phrase>
           </Row>
 

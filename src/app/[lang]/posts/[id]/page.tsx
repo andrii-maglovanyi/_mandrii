@@ -36,7 +36,7 @@ export default async function Post({ params }: Props) {
     <div className="flex flex-col max-w-screen-xl px-5 lg:px-24 py-16 m-auto font-nunito">
       <Breadcrumbs
         items={[
-          { title: dict.menu.posts, url: `/${lang}/posts` },
+          { title: dict["Posts"], url: `/${lang}/posts` },
           { title: postData.title },
         ]}
       />
