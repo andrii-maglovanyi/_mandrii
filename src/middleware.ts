@@ -5,8 +5,12 @@ import { i18n } from "./dictionaries/i18n-config";
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
-  const { pathname } = url;
+  const { pathname, hostname } = url;
   const { locales, defaultLocale } = i18n;
+
+  if (["admin.mandrii.com", "ref.mandrii.com"].includes(hostname)) {
+    return NextResponse.next();
+  }
 
   const pathnameHasLocale = locales.find(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
