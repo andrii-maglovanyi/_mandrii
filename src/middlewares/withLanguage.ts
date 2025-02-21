@@ -20,15 +20,7 @@ export const withLanguage: MiddlewareFactory = (next) => {
     const { pathname } = url;
     const { locales, defaultLocale } = i18n;
 
-    if (["/profile"]?.some((path) => pathname.startsWith(path))) {
-      const userId = request.cookies.get("userId");
-      if (!userId) {
-        const url = new URL(`/auth/login`, request.url);
-        return NextResponse.redirect(url);
-      }
-    }
-
-    if (!excludedRoutes.some((path) => pathname.startsWith(path))) {
+    if (!excludedRoutes.some((path) => pathname.startsWith(`/${path}`))) {
       const pathnameHasLocale = locales.find(
         (locale) =>
           pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
