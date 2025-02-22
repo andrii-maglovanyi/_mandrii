@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface ImageCarouselProps {
@@ -9,24 +9,38 @@ interface ImageCarouselProps {
 
 export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   const [index, setIndex] = useState(0);
+  const [error, setError] = useState(false);
 
   const nextImage = () => {
     setIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setError(false);
   };
 
   const prevImage = () => {
     setIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setError(false);
   };
 
+  useEffect(() => {
+    setError(false);
+  }, [index]);
+
   return (
-    <div className="relative w-full h-full overflow-hidden min-w-20 md:min-w-40">
-      <Image
-        src={images[index]}
-        alt={`Image ${index + 1}`}
-        fill
-        className="object-cover"
-        sizes="(min-width: 1024px) 350px, 250px"
-      />
+    <div className="relative w-full h-full overflow-hidden min-w-20 md:min-w-40 flex items-center justify-center bg-gray-200">
+      {!error ? (
+        <Image
+          onError={() => setError(true)}
+          src={images[index]}
+          alt={`Image ${index + 1}`}
+          fill
+          className="object-cover"
+          sizes="(min-width: 1024px) 350px, 250px"
+        />
+      ) : (
+        <svg className="w-full h-full" aria-hidden="true" role="img">
+          <use href="/assets/sprite.svg#mill" />
+        </svg>
+      )}
 
       {images.length > 1 ? (
         <>
