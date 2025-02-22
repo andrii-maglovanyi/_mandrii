@@ -194,7 +194,7 @@ export const PlacesMap = () => {
         const request: google.maps.places.AutocompletionRequest = {
           input: inputValue,
           sessionToken: sessionTokenRef.current ?? undefined,
-          componentRestrictions: { country: ["uk"] },
+          componentRestrictions: { country: ["uk", "nl"] },
         };
 
         serviceRef.current.getPlacePredictions(request, (result, status) => {
