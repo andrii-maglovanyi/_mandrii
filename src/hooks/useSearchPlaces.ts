@@ -8,12 +8,14 @@ interface UseSearchPlacesParams {
   };
   distance: number;
   category: string;
+  slug?: string;
 }
 
 export const useSearchPlaces = ({
   location,
   distance,
   category,
+  slug,
 }: UseSearchPlacesParams) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Array<PlaceEntry>>([]);
@@ -27,12 +29,16 @@ export const useSearchPlaces = ({
       }
 
       try {
-        const queryParams = new URLSearchParams({
-          lat: location.lat.toString(),
-          lng: location.lng.toString(),
-          category: category === "all" ? "" : category,
-          distance: distance.toString(),
-        });
+        const queryParams = new URLSearchParams(
+          slug
+            ? { slug }
+            : {
+                lat: location.lat.toString(),
+                lng: location.lng.toString(),
+                category: category === "all" ? "" : category,
+                distance: distance.toString(),
+              }
+        );
         const response = await fetch(`/api/places?${queryParams}`);
         const data = await response.json();
 
@@ -47,7 +53,7 @@ export const useSearchPlaces = ({
     };
 
     handleSearchPlaces();
-  }, [location, distance, category]);
+  }, [location, distance, category, slug]);
 
   return { isLoading, data, totalPlacesCount };
 };

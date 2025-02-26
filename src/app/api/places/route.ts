@@ -8,25 +8,32 @@ export async function GET(req: NextRequest) {
     const lng = parseFloat(url.searchParams.get("lng") || "0");
     const category = url.searchParams.get("category") || "";
     const distance = parseFloat(url.searchParams.get("distance") || "1000");
+    const slug = url.searchParams.get("slug") || "";
 
     const client = await clientPromise;
     const db = client.db("mandrii");
 
     const query: Record<string, unknown> = { status: "active" };
 
-    if (category) {
-      query.category = category;
-    }
+    if (slug) {
+      query.slug = slug;
+    } else {
+      if (category) {
+        query.category = category;
+      }
 
-    query.geo = {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: [lng, lat],
-        },
-        $maxDistance: distance,
-      },
-    };
+      if (lng && lat) {
+        query.geo = {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [lng, lat],
+            },
+            $maxDistance: distance,
+          },
+        };
+      }
+    }
 
     const places = await db.collection("places").find(query).toArray();
     const totalPlacesCount = await db.collection("places").countDocuments();

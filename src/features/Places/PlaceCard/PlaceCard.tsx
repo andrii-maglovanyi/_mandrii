@@ -1,10 +1,20 @@
-import { Column, H3, ImageCarousel, Phrase, Row } from "@/components";
+import {
+  Button,
+  Column,
+  H3,
+  ImageCarousel,
+  Phrase,
+  Row,
+  Tooltip,
+} from "@/components";
 
 import { PlaceEntry } from "@/types";
 import { classNames } from "@/utils";
 import { InfoLine } from "./InfoLine";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ObjectId } from "mongodb";
+import { sendToMixpanel } from "@/lib";
+import { useNotifications } from "@/hooks";
 
 interface PlaceCardProps {
   place: PlaceEntry;
@@ -13,8 +23,10 @@ interface PlaceCardProps {
 }
 
 export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
-  const { _id, images, name, description, address, phone, email, web } = place;
+  const { _id, images, name, description, address, phone, email, web, slug } =
+    place;
   const { dict, lang } = useLanguage();
+  const { showSuccess } = useNotifications();
 
   return (
     <Column id={String(_id)} key={_id.toString()} className="pt-[2px] pb-2">
@@ -36,6 +48,20 @@ export const PlaceCard = ({ place, selectedId, onClick }: PlaceCardProps) => {
           />
         </Column>
         <Column className="w-2/3">
+          <Row className="justify-end">
+            <Tooltip placement="left" text={dict["Share place"]}>
+              <Button
+                icon="share-solid"
+                onClick={() => {
+                  const url = `${window.location.origin}/map/${slug}`;
+                  sendToMixpanel("shared_place", { slug });
+
+                  navigator.clipboard.writeText(url);
+                  showSuccess(url, { header: dict["Copied"] });
+                }}
+              />
+            </Tooltip>
+          </Row>
           <Column className="p-4">
             <H3 className="mt-0 mb-1">{name}</H3>
             <Phrase

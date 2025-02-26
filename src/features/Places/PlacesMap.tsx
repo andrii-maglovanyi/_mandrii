@@ -33,7 +33,11 @@ type Prediction = google.maps.places.AutocompletePrediction;
 type AutocompleteService = google.maps.places.AutocompleteService | null;
 type AutocompleteToken = google.maps.places.AutocompleteSessionToken | null;
 
-export const PlacesMap = () => {
+interface PlacesMapProps {
+  slug?: string;
+}
+
+export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const { dict, lang } = useLanguage();
 
   const categoryOptions: Array<NameValueObject<string>> = CATEGORIES.reduce(
@@ -52,6 +56,7 @@ export const PlacesMap = () => {
   ].map((value) => ({ name: `${value / 1000}${dict["km"]}`, value }));
 
   const [inputValue, setInputValue] = useState("");
+  const [placeSlug, setPlaceSlug] = useState(slug);
   const [category, setCategory] = useState<string>(categoryOptions[0].value);
   const [distance, setDistance] = useState(DISTANCE[DISTANCE.length - 1].value);
 
@@ -78,6 +83,7 @@ export const PlacesMap = () => {
     location,
     category,
     distance,
+    slug: placeSlug,
   });
 
   const handleFocus = () => {
@@ -124,6 +130,7 @@ export const PlacesMap = () => {
 
       if (lat && lng) {
         setLocation({ lat: lat(), lng: lng() });
+        setPlaceSlug("");
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -182,6 +189,17 @@ export const PlacesMap = () => {
       startProgress();
     }
   }, [mapIsLoaded, isLoadingPlaces, finishProgress, startProgress]);
+
+  useEffect(() => {
+    if (slug && data.length === 1 && data[0].slug === slug) {
+      const place = data[0];
+      setLocation({
+        lat: place.geo.coordinates[1],
+        lng: place.geo.coordinates[0],
+      });
+      setDistance(1000);
+    }
+  }, [slug, data.length, data[0]?.slug]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

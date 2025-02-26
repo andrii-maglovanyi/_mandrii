@@ -24,6 +24,7 @@ export const svgImportKeys = [
   "pin-line",
   "pin-solid",
   "rocket-solid",
+  "share-solid",
   "sort-line",
   "sort-asc-line",
   "sort-desc-line",

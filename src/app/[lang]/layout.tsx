@@ -8,7 +8,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { Language } from "@/types";
 import { getDictionary } from "@/dictionaries";
 import { Heading } from "@/features/Heading/Heading";
-import { Column, Row } from "@/components";
+import { Column } from "@/components";
 import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
 import Providers from "@/components/Providers";
 

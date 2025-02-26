@@ -42,6 +42,9 @@ export async function GET(req: NextRequest) {
       })
       .toArray();
 
+    console.log("query", query);
+    console.log("places", places);
+
     return NextResponse.json({ places });
   } catch (err) {
     return NextResponse.json(
