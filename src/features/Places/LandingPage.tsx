@@ -18,7 +18,7 @@ export const LandingPage = () => {
   const [screenHeight, setScreenHeight] = useState(1);
 
   useEffect(() => {
-    sendToMixpanel("page_view");
+    sendToMixpanel("page_view", { page: "Landing Page" });
   }, []);
 
   useEffect(() => {

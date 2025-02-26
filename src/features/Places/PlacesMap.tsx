@@ -165,7 +165,7 @@ export const PlacesMap = () => {
   };
 
   useEffect(() => {
-    sendToMixpanel("page_view");
+    sendToMixpanel("page_view", { page: "Places Map" });
   }, []);
 
   useEffect(() => {
@@ -194,7 +194,7 @@ export const PlacesMap = () => {
         const request: google.maps.places.AutocompletionRequest = {
           input: inputValue,
           sessionToken: sessionTokenRef.current ?? undefined,
-          componentRestrictions: { country: ["uk", "nl"] },
+          componentRestrictions: { country: ["uk", "nl", "ge"] },
         };
 
         serviceRef.current.getPlacePredictions(request, (result, status) => {
