@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Nunito } from "next/font/google";
+import { Arsenal, Nunito } from "next/font/google";
 import "../globals.css";
 import { NotificationsProvider } from "@/context/NotificationsContext";
 import { NotificationsTicker } from "@/features/NotificationsTicker/NotificationsTicker";
@@ -8,9 +8,21 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { Language } from "@/types";
 import { getDictionary } from "@/dictionaries";
 import { Heading } from "@/features/Heading/Heading";
-import { Column } from "@/components";
+import { Column, Row } from "@/components";
 import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
 import Providers from "@/components/Providers";
+
+const kyivType = localFont({
+  display: "swap",
+  preload: true,
+  src: [
+    {
+      path: "../../../public/assets/fonts/KyivTypeSans-Bold-.ttf",
+      weight: "700",
+    },
+  ],
+  variable: "--font-kyivType",
+});
 
 const leOsler = localFont({
   display: "swap",
@@ -26,6 +38,14 @@ const leOsler = localFont({
     },
   ],
   variable: "--font-leOsler",
+});
+
+const arsenal = Arsenal({
+  display: "swap",
+  preload: true,
+  weight: ["400", "700"],
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-arsenal",
 });
 
 const nunito = Nunito({
@@ -59,13 +79,16 @@ export default async function RootLayout({
     <html>
       <body
         lang={lang}
-        className={`${nunito.variable}  font-nunito ${leOsler.variable} font-leOsler min-h-screen flex flex-col`}
+        className={`font-kyivType ${kyivType.variable} ${nunito.variable} font-nunito ${leOsler.variable} font-arsenal ${arsenal.variable} font-leOsler min-h-screen flex flex-col`}
       >
         <Providers>
           <LanguageProvider lang={lang} dict={dict}>
             <NotificationsProvider>
+              <Column className="relative flex-1 mt-14 sm:mt-16 md:mt-20 max-w-screen overflow-x-clip">
+                {children}
+              </Column>
               <Heading />
-              <Column className="relative flex-1">{children}</Column>
+
               <NotificationsTicker />
             </NotificationsProvider>
             <CookieConsentBar />

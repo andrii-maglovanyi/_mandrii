@@ -161,12 +161,11 @@ export const Tooltip = ({
           {text}
           <div
             className={`
-              absolute h-0 w-0 border-4 border-transparent
+              fixed h-0 w-0 border-4 border-transparent
 
               ${getArrowClasses()}
-
-              z-50
             `}
+            style={{ zIndex: 1000 }}
           />
         </div>
       )}

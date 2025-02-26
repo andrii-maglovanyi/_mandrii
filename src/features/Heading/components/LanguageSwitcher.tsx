@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components";
 import { sendToMixpanel } from "@/lib/mixpanel";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -22,11 +23,13 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <button
-      className="border-2 border-amber-400 rounded-full text-amber-400 h-10 w-10 uppercase text-xl font-bold font-leOsler pointer "
+    <Button
+      layout="ghost"
+      size="condensed"
+      className="text-yellow-400 active:bg-yellow-300/10 hover:text-yellow-400 h-8 w-8 text-base uppercase border border-yellow-400 font-semibold bg-transparent hover:bg-primary-0/10 font-leOsler"
       onClick={switchLanguage}
     >
       {currentLang === "uk" ? "en" : "uk"}
-    </button>
+    </Button>
   );
 }

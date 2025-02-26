@@ -20,7 +20,10 @@ export const CookieConsentBar = () => {
   };
 
   return isPanelClosed ? null : (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-primary-800 text-white text-center p-3 animate-slide-in">
+    <div
+      className="fixed bottom-0 left-0 right-0 w-full bg-primary-800 text-white text-center p-3 animate-slide-in"
+      style={{ zIndex: 10 }}
+    >
       <div className="container mx-auto flex justify-center items-center gap-2 ">
         <span>{dict["Cookies are used."]}</span>
         <Link

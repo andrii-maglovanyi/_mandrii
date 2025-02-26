@@ -14,6 +14,8 @@ const config: Config = {
       fontFamily: {
         nunito: "var(--font-nunito)",
         leOsler: "var(--font-leOsler)",
+        kyivType: "var(--font-kyivType)",
+        arsenal: "var(--font-arsenal)",
       },
     },
   },

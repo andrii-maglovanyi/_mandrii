@@ -58,53 +58,6 @@ const THEME_COLORS = {
         dark:disabled:text-primary-600
         `,
   },
-  announcement: {
-    filled: `
-        bg-announcement-500
-        text-primary-0
-        hover:bg-announcement-600
-        active:bg-announcement-700
-        disabled:bg-primary-100
-        disabled:text-primary-300
-        dark:text-primary-1000
-        dark:bg-announcement-400
-        dark:hover:bg-announcement-300
-        dark:active:bg-announcement-200
-        dark:disabled:bg-primary-800
-        dark:disabled:text-primary-600
-        `,
-    ghost: `
-        bg-transparent
-        text-announcement-600
-        hover:bg-announcement-50
-        active:bg-announcement-100
-        hover:text-announcement-700
-        disabled:bg-transparent
-        disabled:text-primary-300
-        dark:text-announcement-300
-        dark:hover:bg-announcement-900
-        dark:active:bg-announcement-800
-        dark:hover:text-announcement-200
-        dark:disabled:text-primary-600
-        `,
-    outlined: `
-        border
-        border-announcement-600
-        bg-transparent 
-        text-announcement-600
-        hover:bg-announcement-50
-        active:bg-announcement-100
-        disabled:bg-transparent
-        disabled:border-primary-300
-        disabled:text-primary-300
-        dark:border-announcement-200
-        dark:text-announcement-200
-        dark:hover:bg-announcement-900
-        dark:active:bg-announcement-800
-        dark:disabled:bg-transparent
-        dark:disabled:text-primary-600
-        `,
-  },
   cta: {
     filled: `
         bg-cta-500
@@ -148,53 +101,6 @@ const THEME_COLORS = {
         dark:text-cta-200
         dark:hover:bg-cta-900
         dark:active:bg-cta-800
-        dark:disabled:bg-transparent
-        dark:disabled:text-primary-600
-        `,
-  },
-  info: {
-    filled: `
-        bg-info-500
-        text-primary-0
-        hover:bg-info-600
-        active:bg-info-700
-        disabled:bg-primary-100
-        disabled:text-primary-300
-        dark:text-primary-1000
-        dark:bg-info-400
-        dark:hover:bg-info-300
-        dark:active:bg-info-200
-        dark:disabled:bg-primary-800
-        dark:disabled:text-primary-600
-        `,
-    ghost: `
-        bg-transparent
-        text-info-600
-        hover:bg-info-50
-        active:bg-info-100
-        hover:text-info-700
-        disabled:bg-transparent
-        disabled:text-primary-300
-        dark:text-info-300
-        dark:hover:bg-info-900
-        dark:active:bg-info-800
-        dark:hover:text-info-200
-        dark:disabled:text-primary-600
-        `,
-    outlined: `
-        border
-        border-info-600
-        bg-transparent 
-        text-info-600
-        hover:bg-info-50
-        active:bg-info-100
-        disabled:bg-transparent
-        disabled:border-primary-300
-        disabled:text-primary-300
-        dark:border-info-200
-        dark:text-info-200
-        dark:hover:bg-info-900
-        dark:active:bg-info-800
         dark:disabled:bg-transparent
         dark:disabled:text-primary-600
         `,
@@ -293,54 +199,6 @@ const THEME_COLORS = {
         dark:disabled:text-primary-600
         `,
   },
-  warning: {
-    filled: `
-        bg-warning-500
-        text-primary-0
-        hover:bg-warning-600
-        active:bg-warning-700
-        disabled:bg-primary-100
-        disabled:text-primary-300
-        dark:text-primary-1000
-        dark:bg-warning-400
-        dark:hover:bg-warning-300
-        dark:active:bg-warning-200
-        dark:disabled:bg-primary-800
-        dark:disabled:text-primary-600
-        `,
-    ghost: `
-        bg-transparent
-        text-warning-600
-        hover:bg-warning-50
-        active:bg-warning-100
-        hover:text-warning-700
-        disabled:bg-transparent
-        disabled:text-primary-300
-        dark:text-warning-300
-        dark:hover:bg-warning-900
-        dark:active:bg-warning-800
-        dark:hover:text-warning-200
-        dark:disabled:text-primary-600
-        `,
-    outlined: `
-        border
-        border-warning-600
-        bg-transparent 
-        text-warning-600
-        hover:bg-warning-50
-        active:bg-warning-100
-        disabled:bg-transparent
-        disabled:border-primary-300
-        disabled:text-primary-300
-        dark:border-warning-200
-        dark:text-warning-200
-        dark:hover:bg-warning-900
-        dark:active:bg-warning-800
-        dark:disabled:bg-transparent
-        dark:disabled:border-primary-600
-        dark:disabled:text-primary-600
-        `,
-  },
 };
 
 const getThemeColor = (connotation: Connotations, layout: ButtonLayouts) =>
@@ -435,7 +293,7 @@ const ButtonComponent = (
   const iconOnly = !(children || label);
 
   const baseStyles =
-    "inline-flex items-center text-center font-semibold disabled:cursor-not-allowed whitespace-nowrap";
+    "inline-flex items-center text-center font-semibold font-arsenal disabled:cursor-not-allowed whitespace-nowrap";
   const themeColors = getThemeColor(connotation, layout);
 
   const marginSide = trailingIcon ? "ml-2" : "mr-2";

@@ -31,6 +31,10 @@ export const sendToMixpanel = (
   eventName: string,
   eventProperties?: EventProperties
 ): void => {
+  if (window.location.hostname === "localhost") {
+    return;
+  }
+
   if (debounceTimer) {
     clearTimeout(debounceTimer);
   }

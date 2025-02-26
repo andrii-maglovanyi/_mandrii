@@ -182,10 +182,6 @@ const sizeStyles = {
 };
 
 const filledLayoutIconColors = (connotation: Connotations) => {
-  if (connotation === "warning") {
-    return "fill-primary-1000 dark:fill-primary-0";
-  }
-
   return "fill-primary-0 dark:fill-primary-1000";
 };
 

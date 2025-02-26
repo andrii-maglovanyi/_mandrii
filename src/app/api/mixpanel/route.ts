@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    // Ensure Mixpanel Token Exists
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json({ status: "Event is ignored" });
+    }
+
     if (!process.env.MIXPANEL_TOKEN) {
       return NextResponse.json(
         { error: "Missing Mixpanel token" },
@@ -10,15 +13,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Import Mixpanel dynamically (only on the server)
     const Mixpanel = (await import("mixpanel")).default;
     const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
-    // Parse request body
     const data = await request.json();
     const { event, properties } = data;
 
-    // Validate event name
     if (!event || typeof event !== "string") {
       return NextResponse.json(
         { error: "Invalid event name" },
@@ -26,7 +26,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate properties object
     if (!properties || typeof properties !== "object") {
       return NextResponse.json(
         { error: "Invalid properties object" },
@@ -34,7 +33,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Track the event in Mixpanel with proper callback typing
     mixpanel.track(event, properties, (err?: Error) => {
       if (err) {
         console.error("Mixpanel tracking failed:", err);

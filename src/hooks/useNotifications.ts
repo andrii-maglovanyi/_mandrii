@@ -7,13 +7,10 @@ interface Options {
 }
 
 const defaultHeaders = {
-  [CONNOTATIONS.announcement]: "Announcement!",
   [CONNOTATIONS.success]: "Success!",
   [CONNOTATIONS.alert]: "Error!",
   [CONNOTATIONS.primary]: "",
-  [CONNOTATIONS.info]: "",
   [CONNOTATIONS.cta]: "Announcement!",
-  [CONNOTATIONS.warning]: "Warning!",
 };
 
 export const useNotifications = () => {
@@ -53,17 +50,10 @@ export const useNotifications = () => {
     [showNotification]
   );
 
-  const showWarning = useCallback(
-    (message: string, options?: Options) =>
-      showNotification(CONNOTATIONS.warning, message, options?.header),
-    [showNotification]
-  );
-
   return {
     dismissNotification,
     showError,
     showSuccess,
-    showWarning,
     notifications,
   };
 };

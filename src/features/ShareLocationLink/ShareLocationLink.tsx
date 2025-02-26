@@ -6,13 +6,16 @@ import { useLanguage } from "@/hooks";
 import { sendToMixpanel } from "@/lib";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components";
+import { classNames } from "@/utils";
 
 interface ShareLocationLinkProps {
   asButton?: boolean;
+  className?: string;
 }
 
 export default function ShareLocationLink({
   asButton,
+  className = "",
 }: ShareLocationLinkProps) {
   const { data: session, status } = useSession();
   const { lang, dict } = useLanguage();
@@ -42,7 +45,10 @@ export default function ShareLocationLink({
     </Button>
   ) : (
     <Link
-      className="ml-2 text-cta-600 hover:underline font-bold"
+      className={classNames(
+        "ml-2 text-cta-600 hover:underline font-bold",
+        className
+      )}
       href=""
       onClick={handleClick}
     >

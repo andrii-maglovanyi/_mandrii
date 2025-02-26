@@ -1,55 +1,6 @@
 import { CONNOTATIONS } from "../types";
-import { hexToRgb } from "../utils";
-
-const connotationMap = {
-  [CONNOTATIONS.announcement]: "announcement",
-  [CONNOTATIONS.alert]: "alert",
-  [CONNOTATIONS.cta]: "cta",
-  [CONNOTATIONS.info]: "information",
-  [CONNOTATIONS.primary]: "neutral",
-  [CONNOTATIONS.success]: "success",
-  [CONNOTATIONS.warning]: "warning",
-};
-
-const wrapWithCSSVars = (
-  colors: Record<CONNOTATIONS, Record<number, string>>
-) => {
-  const wrapped = Object.keys(connotationMap).reduce(
-    (acc, key) => ({ ...acc, [key]: {} }),
-    {} as { [K in CONNOTATIONS]: Record<number, string> }
-  );
-
-  Object.entries(colors).forEach(([key, shades]) => {
-    const connotation = key as CONNOTATIONS;
-    wrapped[connotation] = Object.fromEntries(
-      Object.entries(shades).map(([shade, value]) => [
-        shade,
-        `var(--dp-color-${
-          connotationMap[connotation]
-        }-${shade}, var(--vvd-color-${
-          connotationMap[connotation]
-        }-${shade}, ${hexToRgb(value)}))`,
-      ])
-    );
-  });
-
-  return wrapped;
-};
 
 const DEFAULT_COLORS = {
-  [CONNOTATIONS.announcement]: {
-    100: "#ffdcf7",
-    200: "#f8b9e7",
-    300: "#fb8fd8",
-    400: "#e560bb",
-    50: "#ffedfb",
-    500: "#d6219c",
-    600: "#bb1e89",
-    700: "#8f1669",
-    800: "#620256",
-    900: "#32082c",
-    950: "#1d031a",
-  },
   [CONNOTATIONS.alert]: {
     100: "#fedfdf",
     200: "#ffbbbb",
@@ -64,30 +15,17 @@ const DEFAULT_COLORS = {
     950: "#250004",
   },
   [CONNOTATIONS.cta]: {
-    100: "#ece2fa",
-    200: "#dcc1fc",
-    300: "#cba1fa",
-    400: "#b27bf2",
-    50: "#f5f0fd",
-    500: "#9941ff",
-    600: "#871eff",
-    700: "#6405d1",
-    800: "#440291",
-    900: "#26044d",
-    950: "#140623",
-  },
-  [CONNOTATIONS.info]: {
-    100: "#d3e9fc",
-    200: "#9dd2fe",
-    300: "#65baff",
-    400: "#2997f0",
-    50: "#e8f4fb",
-    500: "#0276d5",
-    600: "#0e65c2",
-    700: "#094a9e",
-    800: "#0e306d",
-    900: "#071939",
-    950: "#040d1d",
+    100: "#c9dbef",
+    200: "#a5c4e5",
+    300: "#81acdb",
+    400: "#5d94d0",
+    50: "#edf3fa",
+    500: "#397dc6",
+    600: "#2f66a2",
+    700: "#244f7e",
+    800: "#1a395a",
+    900: "#102236",
+    950: "#050b12",
   },
   [CONNOTATIONS.primary]: {
     0: `#FFFFFF`,
@@ -117,50 +55,13 @@ const DEFAULT_COLORS = {
     900: "#0a1e11",
     950: "#060f09",
   },
-  [CONNOTATIONS.warning]: {
-    100: "#fdeaa0",
-    200: "#facc4b",
-    300: "#fa9f00",
-    400: "#e07902",
-    50: "#fdf5d4",
-    500: "#be5702",
-    600: "#a64c03",
-    700: "#893000",
-    800: "#522801",
-    900: "#2a1502",
-    950: "#150b01",
-  },
 };
 
-const wrappedColors = wrapWithCSSVars(DEFAULT_COLORS);
-
 export const COLORS = {
-  ...wrappedColors,
-  accent: {
-    check: {
-      faintDark: `var(--vvd-checkbox-accent-primary-increment, ${
-        wrappedColors[CONNOTATIONS.primary][100]
-      })`,
-      faintLight: `var(--vvd-checkbox-accent-primary-increment, ${
-        wrappedColors[CONNOTATIONS.primary][700]
-      })`,
-      primary: `var(--vvd-checkbox-accent-primary, ${
-        wrappedColors[CONNOTATIONS.primary][1000]
-      })`,
-      text: `var(--vvd-checkbox-accent-primary-text, ${
-        wrappedColors[CONNOTATIONS.primary][0]
-      })`,
-    },
-    tab: {
-      faint: `var(--vvd-tab-accent-faint, ${
-        wrappedColors[CONNOTATIONS.primary][50]
-      })`,
-      primary: `var(--vvd-tab-accent-primary, ${
-        wrappedColors[CONNOTATIONS.primary][950]
-      })`,
-    },
-  },
-  fixed: {
-    ...DEFAULT_COLORS,
+  ...DEFAULT_COLORS,
+  ukraine: {
+    darkBlue: "#255ea0",
+    blue: "#336fb0",
+    yellow: "#f8d848",
   },
 };

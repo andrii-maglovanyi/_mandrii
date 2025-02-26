@@ -16,7 +16,7 @@ import { classNames, maybePluralize } from "@/utils";
 
 import { NameValueObject } from "@/types";
 import { PlaceCard } from "./PlaceCard/PlaceCard";
-import { FORM_ID, PROGRESS_BAR_WIDTH } from "./constants";
+import { PROGRESS_BAR_WIDTH } from "./constants";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
@@ -213,15 +213,6 @@ export const PlacesMap = () => {
     return () => clearTimeout(handler);
   }, [inputValue]);
 
-  useEffect(() => {
-    if (selectedPlaceId) {
-      document.getElementById(String(selectedPlaceId))?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [selectedPlaceId]);
-
   const placeCards: Array<React.ReactNode> = [];
   let selectedCard: React.ReactNode = <></>;
 
@@ -348,7 +339,7 @@ export const PlacesMap = () => {
 
       <Row className={classNames("w-full h-full", showProgress && "hidden")}>
         {data.length ? (
-          <Column className="hidden lg:flex w-[50vw] overflow-y-scroll h-[calc(100vh-230px)] px-3">
+          <Column className="hidden lg:flex w-[50vw] overflow-y-scroll h-[calc(100vh-230px)] px-3 -mt-[2px]">
             {placeCards}
           </Column>
         ) : null}
@@ -361,6 +352,13 @@ export const PlacesMap = () => {
             onLoadedAction={setMapIsLoaded}
             onPlaceSelectedAction={(id) => {
               setSelectedPlaceId(id);
+
+              setTimeout(() => {
+                document.getElementById(String(id))?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }, 200);
             }}
             selectedPlaceId={selectedPlaceId}
             zoom={14}
