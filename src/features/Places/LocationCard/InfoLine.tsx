@@ -9,7 +9,7 @@ import { sendToMixpanel } from "@/lib/mixpanel";
 interface InfoLineProps {
   isLink?: boolean;
   icon: IconType;
-  text?: string;
+  text?: string | null;
   tooltipText: string;
 }
 

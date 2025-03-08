@@ -13,15 +13,17 @@ import {
 } from "@/components";
 import { useNotifications } from "@/hooks";
 
-import { useSearchAllPlaces } from "@/hooks/useSearchAllPlaces";
-import { CONNOTATIONS, PlaceEntry, Status } from "@/types";
+import { useLocations } from "@/hooks";
+import { CONNOTATIONS, Status, Ukrainian_Locations } from "@/types";
 import { formatDate, formatDistanceToNow } from "date-fns";
-import { ObjectId } from "mongodb";
+import Link from "next/link";
+import { useState } from "react";
 
 interface ExpandedPlaceViewProps {
-  place: PlaceEntry;
-  changePlaceStatus: (
-    id: ObjectId,
+  isBusy: boolean;
+  location: Ukrainian_Locations;
+  changeLocationStatus: (
+    id: number,
     name: string,
     status: Status
   ) => Promise<void>;
@@ -46,7 +48,9 @@ const COLUMNS = [
   {
     key: "value",
     render: (value: unknown, { name }: { name: string }) => {
-      if (typeof value === "string") {
+      if (name === "website" && typeof value === "string") {
+        return <Link href={value}>{value}</Link>;
+      } else if (typeof value === "string" || typeof value === "number") {
         return value ?? "-";
       } else if (name === "images" && Array.isArray(value) && value.length) {
         return (
@@ -63,7 +67,7 @@ const COLUMNS = [
         return value.join(", ");
       } else if (
         name === "geo" &&
-        hasProperty<PlaceEntry["geo"]>(value, "coordinates")
+        hasProperty<Ukrainian_Locations["geo"]>(value, "coordinates")
       ) {
         return (
           <>
@@ -125,10 +129,11 @@ const ExpandIcon = ({
 }) => <Expand expanded={expanded} onExpand={(e) => onExpand(record, e)} />;
 
 const ExpandedPlaceView = ({
-  place,
-  changePlaceStatus,
+  location,
+  isBusy,
+  changeLocationStatus,
 }: ExpandedPlaceViewProps) => {
-  const { _id, name, status } = place;
+  const { id, name, status } = location;
 
   return (
     <Card className="mb-4 mt-1 md:w-full max-w-full">
@@ -136,7 +141,7 @@ const ExpandedPlaceView = ({
         <Table
           columns={COLUMNS}
           data-testid="products-list"
-          dataSource={Object.entries(place).map(([name, value]) => ({
+          dataSource={Object.entries(location).map(([name, value]) => ({
             name,
             value,
           }))}
@@ -146,23 +151,38 @@ const ExpandedPlaceView = ({
         <Row className="flex-nowrap justify-end mt-4">
           {status !== "active" && (
             <Button
+              disabled={isBusy}
               connotation="success"
-              data-testid="approve-version"
+              data-testid="activate-location"
               label="Activate"
-              layout="outlined"
-              onClick={() => changePlaceStatus(_id, name, "active")}
+              layout="filled"
+              onClick={() => changeLocationStatus(id, name, "active")}
               size="condensed"
             />
           )}
 
-          {status !== "inactive" && (
+          {status !== "rejected" && (
             <Button
+              disabled={isBusy}
               className="ml-2"
               connotation="alert"
-              data-testid="decline-version"
-              label="Deactivate"
+              data-testid="reject-location"
+              label="Reject"
               layout="outlined"
-              onClick={() => changePlaceStatus(_id, name, "inactive")}
+              onClick={() => changeLocationStatus(id, name, "rejected")}
+              size="condensed"
+            />
+          )}
+
+          {status !== "archived" && (
+            <Button
+              disabled={isBusy}
+              className="ml-2"
+              connotation="primary"
+              data-testid="archive-location"
+              label="Archive"
+              layout="outlined"
+              onClick={() => changeLocationStatus(id, name, "archived")}
               size="condensed"
             />
           )}
@@ -173,8 +193,10 @@ const ExpandedPlaceView = ({
 };
 
 const ManagePlaces = () => {
-  const { isLoading, data } = useSearchAllPlaces({});
+  const { getAdminLocations, updateLocationStatus } = useLocations();
+  const { loading, data, error } = getAdminLocations({});
   const { showSuccess, showError } = useNotifications();
+  const [isBusy, setIsBusy] = useState(false);
 
   const COLUMNS = [
     {
@@ -192,8 +214,8 @@ const ManagePlaces = () => {
     },
 
     {
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "created_at",
+      key: "created_at",
       sorter: false,
       render: (createdAt: unknown) =>
         typeof createdAt === "string" ? (
@@ -236,28 +258,23 @@ const ManagePlaces = () => {
     EXPAND_COLUMN,
   ];
 
-  const changePlaceStatus = async (
-    id: ObjectId,
+  const changeLocationStatus = async (
+    id: number,
     name: string,
     status: Status
   ) => {
-    try {
-      fetch("/api/places/edit", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          status,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.error("Error:", error));
-      showSuccess(`Place ${name} approved`);
-    } catch (error: unknown) {
-      showError("Failed to approve place");
+    const { data, error, loading } = await updateLocationStatus(id, status);
+    setIsBusy(loading);
+
+    if (data) {
+      showSuccess(
+        `Status of ${name} updated to ${data.update_ukrainian_locations_by_pk.status}`
+      );
+    }
+
+    if (error) {
+      console.error(error.message);
+      showError("Failed to update location status");
     }
   };
 
@@ -267,15 +284,16 @@ const ManagePlaces = () => {
         expandIcon: ExpandIcon,
         expandedRowRender: (props) => (
           <ExpandedPlaceView
-            place={props}
-            changePlaceStatus={changePlaceStatus}
+            location={props}
+            isBusy={isBusy}
+            changeLocationStatus={changeLocationStatus}
           />
         ),
       }}
       columns={COLUMNS}
       dataSource={data}
-      loading={isLoading}
-      rowKey="_id"
+      loading={loading}
+      rowKey="id"
     />
   );
 };

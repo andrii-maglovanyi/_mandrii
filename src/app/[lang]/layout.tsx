@@ -11,6 +11,7 @@ import { Heading } from "@/features/Heading/Heading";
 import { Column } from "@/components";
 import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
 import Providers from "@/components/Providers";
+import ApolloWrapper from "@/lib/apollo-provider";
 
 const kyivType = localFont({
   display: "swap",
@@ -83,14 +84,16 @@ export default async function RootLayout({
       >
         <Providers>
           <LanguageProvider lang={lang} dict={dict}>
-            <NotificationsProvider>
-              <Column className="relative flex-1 mt-14 sm:mt-16 md:mt-20 max-w-screen overflow-x-clip">
-                {children}
-              </Column>
-              <Heading />
+            <ApolloWrapper>
+              <NotificationsProvider>
+                <Column className="relative flex-1 mt-14 sm:mt-16 md:mt-20 max-w-screen overflow-x-clip">
+                  {children}
+                </Column>
+                <Heading />
 
-              <NotificationsTicker />
-            </NotificationsProvider>
+                <NotificationsTicker />
+              </NotificationsProvider>
+            </ApolloWrapper>
             <CookieConsentBar />
           </LanguageProvider>
         </Providers>

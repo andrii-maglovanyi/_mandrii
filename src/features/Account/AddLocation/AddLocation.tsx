@@ -2,19 +2,16 @@
 
 import { useNotifications } from "@/hooks/useNotifications";
 import { PlaceForm, type FormData } from "./Form";
-import slugify from "slugify";
 import { useLanguage } from "@/hooks";
 import { Button, Column, Row } from "@/components";
 import { useRouter } from "next/navigation";
 
-export const AddPlace = () => {
+export const AddLocation = () => {
   const { showSuccess, showError } = useNotifications();
   const { dict } = useLanguage();
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
-    const slug = slugify(formData.name, { lower: true, strict: true });
-
     const body = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -24,10 +21,11 @@ export const AddPlace = () => {
       }
     });
 
-    body.append("slug", slug);
-
     try {
-      const response = await fetch("/api/places/add", { method: "POST", body });
+      const response = await fetch("/api/locations/add", {
+        method: "POST",
+        body,
+      });
       const result = await response.json();
 
       showSuccess(dict["Great! Location submitted successfully!"]);
@@ -54,4 +52,4 @@ export const AddPlace = () => {
   );
 };
 
-export default AddPlace;
+export default AddLocation;

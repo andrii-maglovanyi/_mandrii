@@ -11,21 +11,21 @@ import React, {
 } from "react";
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { createDashedCirclePolyline } from "./utils";
-import { PlaceEntry } from "@/types";
 import { Row } from "../Row/Row";
 import { sendToMixpanel } from "@/lib/mixpanel";
-import { ObjectId } from "mongodb";
+import { GetPublicLocationsQuery, Ukrainian_Locations } from "@/types";
 
 interface MapProps {
   zoom: number;
   onLoadedAction: (isLoaded: boolean) => void;
-  selectedPlaceId: ObjectId | null;
-  onPlaceSelectedAction: (id: ObjectId) => void;
+  selectedPlaceId: number | null;
+  onPlaceSelectedAction: (id: number) => void;
   distance: number;
   location: google.maps.LatLngLiteral | undefined;
-  locations: Array<PlaceEntry>;
+  locations: GetPublicLocationsQuery["ukrainian_locations"];
   mapContainerStyle?: React.CSSProperties;
   googleMapsApiKey: string;
+  showMe?: boolean;
   googleMapsMapId: string;
 }
 
@@ -50,6 +50,7 @@ const MapComponent = (
     locations,
     location,
     onLoadedAction,
+    showMe,
     selectedPlaceId,
     onPlaceSelectedAction,
     distance,
@@ -67,8 +68,8 @@ const MapComponent = (
   const mapRef = useRef<GoogleMapInstance | null>(null);
   const dashedCircleRef = useRef<Polyline | null>(null);
 
-  const markersRef = useRef<Map<ObjectId, AdvancedMarkerElement>>(new Map());
-  const labelSpansRef = useRef<Map<ObjectId, HTMLSpanElement>>(new Map());
+  const markersRef = useRef<Map<number, AdvancedMarkerElement>>(new Map());
+  const labelSpansRef = useRef<Map<number, HTMLSpanElement>>(new Map());
 
   const onLoad = useCallback((map: GoogleMapInstance) => {
     mapRef.current = map;
@@ -119,7 +120,7 @@ const MapComponent = (
     markersRef.current.clear();
     labelSpansRef.current.clear();
 
-    locations.forEach(({ _id, name, geo }) => {
+    locations.forEach(({ id, name, geo }) => {
       const contentDiv = document.createElement("div");
       contentDiv.style.cursor = "pointer";
 
@@ -131,9 +132,8 @@ const MapComponent = (
           : name;
 
       const labelSpan = document.createElement("span");
-      labelSpan.setAttribute("id", String(_id));
+      labelSpan.setAttribute("id", String(id));
       labelSpan.style.borderRadius = "30px";
-      labelSpan.style.backgroundColor = "#444444";
       labelSpan.style.color = "white";
       labelSpan.style.fontFamily = "nunito";
       labelSpan.style.position = "relative";
@@ -144,13 +144,20 @@ const MapComponent = (
       const arrowDiv = document.createElement("div");
       arrowDiv.style.borderLeft = "4px solid transparent";
       arrowDiv.style.borderRight = "4px solid transparent";
-      arrowDiv.style.borderTop = "4px solid #444444";
       arrowDiv.style.bottom = "-3px";
       arrowDiv.style.height = "0";
       arrowDiv.style.left = "50%";
       arrowDiv.style.position = "absolute";
       arrowDiv.style.transform = "translateX(-50%)";
       arrowDiv.style.width = "0";
+
+      if (id === selectedPlaceId) {
+        labelSpan.style.backgroundColor = "#007BFF";
+        arrowDiv.style.borderTop = "4px solid #007BFF";
+      } else {
+        labelSpan.style.backgroundColor = "#444444";
+        arrowDiv.style.borderTop = "4px solid #444444";
+      }
 
       labelSpan.appendChild(arrowDiv);
       contentDiv.appendChild(labelSpan);
@@ -167,14 +174,14 @@ const MapComponent = (
 
       advancedMarker.addListener("click", () => {
         sendToMixpanel("selected_place_marker", {
-          id: _id,
+          id: id,
           name,
         });
-        onPlaceSelectedAction(_id);
+        onPlaceSelectedAction(id);
       });
 
       labelSpan.onmouseover = () => {
-        if (_id !== selectedPlaceId) {
+        if (id !== selectedPlaceId) {
           labelSpan.style.backgroundColor = "#000000";
           arrowDiv.style.borderTop = "4px solid #000000";
           advancedMarker.element.classList.add("selected");
@@ -182,7 +189,7 @@ const MapComponent = (
       };
 
       labelSpan.onmouseout = () => {
-        if (_id !== selectedPlaceId) {
+        if (id !== selectedPlaceId) {
           advancedMarker.element.classList.remove("selected");
 
           advancedMarker.element.classList.add("advanced-marker");
@@ -191,24 +198,24 @@ const MapComponent = (
         }
       };
 
-      markersRef.current.set(_id, advancedMarker);
-      labelSpansRef.current.set(_id, labelSpan);
+      markersRef.current.set(id, advancedMarker);
+      labelSpansRef.current.set(id, labelSpan);
     });
   }, [isLoaded, locations, onPlaceSelectedAction, selectedPlaceId]);
 
-  useEffect(() => {
-    labelSpansRef.current.forEach((labelSpan, id) => {
-      const arrowDiv = labelSpan.lastElementChild as HTMLDivElement;
+  // useEffect(() => {
+  //   labelSpansRef.current.forEach((labelSpan, id) => {
+  //     const arrowDiv = labelSpan.lastElementChild as HTMLDivElement;
 
-      if (id === selectedPlaceId) {
-        labelSpan.style.backgroundColor = "#007BFF";
-        arrowDiv.style.borderTop = "4px solid #007BFF";
-      } else {
-        labelSpan.style.backgroundColor = "#444444";
-        arrowDiv.style.borderTop = "4px solid #444444";
-      }
-    });
-  }, [selectedPlaceId]);
+  //     if (id === selectedPlaceId) {
+  //       labelSpan.style.backgroundColor = "#007BFF";
+  //       arrowDiv.style.borderTop = "4px solid #007BFF";
+  //     } else {
+  //       labelSpan.style.backgroundColor = "#444444";
+  //       arrowDiv.style.borderTop = "4px solid #444444";
+  //     }
+  //   });
+  // }, [selectedPlaceId]);
 
   useEffect(() => {
     markersRef.current.forEach((marker, id) => {
@@ -229,7 +236,7 @@ const MapComponent = (
   }, [isLoaded, location, distance, drawDashedCircle]);
 
   useEffect(() => {
-    if (!mapRef.current || !location) return;
+    if (!mapRef.current || !location || !showMe) return;
 
     const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
       map: mapRef.current,
@@ -242,7 +249,7 @@ const MapComponent = (
         advancedMarker.map = null;
       }
     };
-  }, [location]);
+  }, [location, showMe]);
 
   const options = useMemo(
     () => ({ ...OPTIONS, mapId: googleMapsMapId }),

@@ -15,10 +15,10 @@ export const Account = () => {
   const tabs = [
     {
       Component: isAddPlacePage
-        ? dynamic(() => import("./AddPlace/AddPlace"), {
+        ? dynamic(() => import("./AddLocation/AddLocation"), {
             ssr: false,
           })
-        : dynamic(() => import("./MyPlaces/MyPlaces"), {
+        : dynamic(() => import("./MyLocations/MyLocations"), {
             ssr: false,
           }),
       name: "My places",

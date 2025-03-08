@@ -39,7 +39,7 @@ export const Heading = ({ className }: BaseComponentProps) => {
                   <Image
                     src="/assets/logo/mandrii.png"
                     alt={dict["Mandrii"]}
-                    className="rounded-full border-2 group-hover:scale-105 border-white "
+                    className="rounded-full border-2 group-hover:scale-105 border-white"
                     fill
                     priority
                     sizes="(min-width: 1024px) 64px, 48px"

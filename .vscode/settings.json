@@ -12,7 +12,4 @@
     "titleBar.inactiveBackground": "#3F1D0B",
     "titleBar.inactiveForeground": "#C9742A"
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  }
 }

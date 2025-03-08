@@ -2,6 +2,7 @@ import { Nunito } from "next/font/google";
 import "../globals.css";
 import { NotificationsProvider } from "@/context/NotificationsContext";
 import localFont from "next/font/local";
+import ApolloWrapper from "@/lib/apollo-provider";
 
 const leOsler = localFont({
   display: "swap",
@@ -36,9 +37,11 @@ export default async function RootLayout({
       <body
         className={`${nunito.variable} font-nunito ${leOsler.variable} font-leOsler`}
       >
-        <NotificationsProvider>
-          <div className="relative">{children}</div>
-        </NotificationsProvider>
+        <ApolloWrapper>
+          <NotificationsProvider>
+            <div className="relative">{children}</div>
+          </NotificationsProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

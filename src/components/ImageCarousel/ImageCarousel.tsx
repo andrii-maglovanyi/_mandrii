@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface ImageCarouselProps {
-  images: Array<string>;
+  images?: Array<string>;
 }
 
-export const ImageCarousel = ({ images }: ImageCarouselProps) => {
+export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
   const [index, setIndex] = useState(0);
   const [error, setError] = useState(false);
 
@@ -38,7 +38,7 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
         />
       ) : (
         <svg className="w-full h-full" aria-hidden="true" role="img">
-          <use href="/assets/sprite.svg#mill" />
+          <use href="/assets/sprite.svg#no-image" />
         </svg>
       )}
 

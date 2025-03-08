@@ -1,14 +1,15 @@
 import { Badge, Column, Row, Table, Tooltip } from "@/components";
 import { Dictionary } from "@/dictionaries";
 import ShareLocationLink from "@/features/ShareLocationLink/ShareLocationLink";
-import { useLanguage } from "@/hooks";
-import { useSearchMyPlaces } from "@/hooks/useSearchMyPlaces";
+import { useLanguage, useLocations } from "@/hooks";
 import { CONNOTATIONS } from "@/types";
 import { formatDate, formatDistanceToNow } from "date-fns";
 import { enUS, uk } from "date-fns/locale";
 
-const List = () => {
-  const { isLoading, data } = useSearchMyPlaces({});
+const MyLocations = () => {
+  const { getUserLocations } = useLocations();
+  const { data, error, loading } = getUserLocations({});
+
   const { dict, lang } = useLanguage();
 
   const COLUMNS = [
@@ -53,8 +54,8 @@ const List = () => {
       ),
     },
     {
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "created_at",
+      key: "created_at",
       sorter: false,
       render: (createdAt: unknown) =>
         typeof createdAt === "string" ? (
@@ -78,20 +79,24 @@ const List = () => {
       <Row className="mb-4 justify-end">
         <ShareLocationLink asButton />
       </Row>
-      <Table
-        emptyStateHeading={dict["No places added yet"]}
-        emptyStateBodyMessage={
-          dict[
-            "You haven't added any locations yet. Click the button above to add your first location and start managing your places!"
-          ]
-        }
-        columns={COLUMNS}
-        dataSource={data}
-        loading={isLoading}
-        rowKey="_id"
-      />
+      {error ? (
+        error.message
+      ) : (
+        <Table
+          emptyStateHeading={dict["No places added yet"]}
+          emptyStateBodyMessage={
+            dict[
+              "You haven't added any locations yet. Click the button above to add your first location and start managing your places!"
+            ]
+          }
+          columns={COLUMNS}
+          dataSource={data}
+          loading={loading}
+          rowKey="id"
+        />
+      )}
     </Column>
   );
 };
 
-export default List;
+export default MyLocations;

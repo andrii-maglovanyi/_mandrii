@@ -1,15 +1,20 @@
 import type { BaseComponentProps, WithChildren } from "@/types";
+import { forwardRef, Ref } from "react";
 
 interface ColumnProps extends BaseComponentProps, WithChildren {}
 
-export const Column = ({
-  children,
-  className = "",
-  "data-testid": testId,
-  style,
-  ...props
-}: ColumnProps) => (
+export const ColumnComponent = (
+  {
+    children,
+    className = "",
+    "data-testid": testId,
+    style,
+    ...props
+  }: ColumnProps,
+  ref: Ref<HTMLDivElement>
+) => (
   <div
+    ref={ref}
     className={`
       flex flex-col
 
@@ -22,3 +27,5 @@ export const Column = ({
     {children}
   </div>
 );
+
+export const Column = forwardRef(ColumnComponent);

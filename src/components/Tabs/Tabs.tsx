@@ -27,12 +27,12 @@ const TabsComponent = (
   ref: Ref<TabsMethods>
 ) => {
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [hash, setHash] = useState<string>("");
+  const [hash, setHash] = useState(() =>
+    typeof window !== "undefined" ? window.location.hash : ""
+  );
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHash(window.location.hash);
-    }
+    setHash(window.location.hash);
   }, []);
 
   const handleTabChange = (index: number) => {

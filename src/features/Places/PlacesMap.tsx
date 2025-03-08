@@ -15,18 +15,18 @@ import {
 import { classNames, maybePluralize } from "@/utils";
 
 import { NameValueObject } from "@/types";
-import { PlaceCard } from "./PlaceCard/PlaceCard";
+import { LocationCard } from "./LocationCard/LocationCard";
 import { PROGRESS_BAR_WIDTH } from "./constants";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
 import { sendToMixpanel } from "@/lib/mixpanel";
-import { PlaceSlideCard } from "./PlaceCard/PlaceSlideCard";
+import { MobileLocationCard } from "./LocationCard/MobileLocationCard";
 import { CATEGORIES, LONDON_COORDINATES } from "@/constants";
-import { useNotifications, useSearchPlaces } from "@/hooks";
+import { useNotifications, useLocations } from "@/hooks";
 import { Dictionary } from "@/dictionaries";
 import ShareLocationLink from "../ShareLocationLink/ShareLocationLink";
-import { ObjectId } from "mongodb";
+import { Loading } from "./Loading";
 
 type Location = google.maps.LatLngLiteral | undefined;
 type Prediction = google.maps.places.AutocompletePrediction;
@@ -48,7 +48,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
         value: category,
       },
     ],
-    [{ name: dict["All categories"], value: "all" }]
+    [{ name: dict["All categories"], value: "" }]
   );
 
   const DISTANCE: Array<NameValueObject<number>> = [
@@ -56,13 +56,15 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   ].map((value) => ({ name: `${value / 1000}${dict["km"]}`, value }));
 
   const [inputValue, setInputValue] = useState("");
+  const [isReady, setIsReady] = useState(false);
+  const [showMe, setShowMe] = useState(false);
   const [placeSlug, setPlaceSlug] = useState(slug);
   const [category, setCategory] = useState<string>(categoryOptions[0].value);
   const [distance, setDistance] = useState(DISTANCE[DISTANCE.length - 1].value);
 
   const [mapIsLoaded, setMapIsLoaded] = useState(false);
 
-  const [selectedPlaceId, setSelectedPlaceId] = useState<ObjectId | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<number | null>(null);
   const [location, setLocation] = useState<Location>(LONDON_COORDINATES);
   const [predictions, setPredictions] = useState<Array<Prediction>>([]);
 
@@ -70,17 +72,15 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const serviceRef = useRef<AutocompleteService>(null);
   const sessionTokenRef = useRef<AutocompleteToken>(null);
 
-  const { finishProgress, progress, showProgress, startProgress } =
-    useProgress(PROGRESS_BAR_WIDTH);
-
   const { showError } = useNotifications();
+  const { getPublicLocations } = useLocations();
 
   const {
-    isLoading: isLoadingPlaces,
+    loading: isLoadingPlaces,
     data,
-    totalPlacesCount,
-  } = useSearchPlaces({
-    location,
+    total,
+  } = getPublicLocations({
+    geo: location,
     category,
     distance,
     slug: placeSlug,
@@ -120,18 +120,22 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
     });
   };
 
-  const onSelectPrediction = async ({ value }: NameValueObject<string>) => {
+  const onSelectPrediction = async ({
+    value,
+    name,
+  }: NameValueObject<string>) => {
     setPredictions([]);
 
     try {
       const { geometry } = await fetchPlaceDetails(value);
       const { lat, lng } = geometry?.location ?? {};
-      sendToMixpanel("changed_location", { location: value, lat, lng });
+      sendToMixpanel("changed_location", { location: name, lat, lng });
 
       if (lat && lng) {
         setLocation({ lat: lat(), lng: lng() });
         setPlaceSlug("");
       }
+      setShowMe(false);
     } catch (error) {
       if (error instanceof Error) {
         showError(error.message);
@@ -157,6 +161,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          setShowMe(true);
         },
         (_) => {
           showError(dict["We couldn’t find your location. Try searching!"], {
@@ -180,24 +185,26 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
       serviceRef.current = new google.maps.places.AutocompleteService();
 
       // Show progress for at least a second
-      const timeout = setTimeout(finishProgress, 1000);
+      // const timeout = setTimeout(finishProgress, 1000);
 
-      return () => {
-        clearTimeout(timeout);
-      };
+      // return () => {
+      //   clearTimeout(timeout);
+      // };
     } else {
-      startProgress();
+      // startProgress();
     }
-  }, [mapIsLoaded, isLoadingPlaces, finishProgress, startProgress]);
+    // }, [mapIsLoaded, isLoadingPlaces, finishProgress, startProgress]);
+  }, [mapIsLoaded, isLoadingPlaces]);
 
   useEffect(() => {
     if (slug && data.length === 1 && data[0].slug === slug) {
-      const place = data[0];
+      const location = data[0];
       setLocation({
-        lat: place.geo.coordinates[1],
-        lng: place.geo.coordinates[0],
+        lat: location.geo.coordinates[1],
+        lng: location.geo.coordinates[0],
       });
       setDistance(1000);
+      setSelectedPlaceId(location.id);
     }
   }, [slug, data.length, data[0]?.slug]);
 
@@ -234,33 +241,35 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const placeCards: Array<React.ReactNode> = [];
   let selectedCard: React.ReactNode = <></>;
 
-  data.forEach((place) => {
+  console.log("DATA", data);
+
+  data.forEach((location) => {
     const card = (
-      <PlaceCard
+      <LocationCard
         onClick={() => {
           sendToMixpanel("selected_place_card", {
-            id: place._id,
-            name: place.name,
+            id: location.id,
+            name: location.name,
           });
-          setSelectedPlaceId(place._id);
+          setSelectedPlaceId(location.id);
         }}
-        key={place._id.toString()}
+        key={location.id.toString()}
         selectedId={selectedPlaceId}
-        place={place}
+        location={location}
       />
     );
 
-    if (place._id === selectedPlaceId) {
+    if (location.id === selectedPlaceId) {
       selectedCard = (
-        <PlaceSlideCard
+        <MobileLocationCard
           onClick={() => {
             sendToMixpanel("selected_place_card_mobile", {
-              id: place._id,
-              name: place.name,
+              id: location.id,
+              name: location.name,
             });
-            setSelectedPlaceId(place._id);
+            setSelectedPlaceId(location.id);
           }}
-          place={place}
+          location={location}
         />
       );
     }
@@ -273,7 +282,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
       <Column className="max-w-screen-xl w-full grow px-4 md:px-8 py-2 md:flex-row">
         <Column className="grow ">
           <Input
-            disabled={showProgress}
+            disabled={!isReady}
             label={dict["Location"]}
             name="location"
             onFocus={handleFocus}
@@ -289,7 +298,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
         <Row className="mt-2 md:mt-0 ">
           <Column className="ml-0 md:ml-2 mr-1 grow">
             <Select
-              disabled={showProgress}
+              disabled={!isReady}
               name="category"
               items={categoryOptions}
               label={dict["Category"]}
@@ -302,7 +311,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           </Column>
           <Column className="ml-1 grow">
             <Select
-              disabled={showProgress}
+              disabled={!isReady}
               name="distance"
               items={DISTANCE}
               label={dict["Distance"]}
@@ -333,29 +342,23 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           <Row
             className={classNames(
               "hidden sm:flex items-center grow basis-0 justify-end text-nowrap h-7",
-              showProgress && "hidden"
+              !isReady && "hidden"
             )}
           >
             {dict["Added"]}
             <strong className="ml-1 text-lg">
-              {maybePluralize(totalPlacesCount, dict["place"], lang)}
+              {maybePluralize(total, dict["place"], lang)}
             </strong>
           </Row>
         ) : null}
       </Row>
 
-      {showProgress && (
-        <Row
-          className="m-auto h-full mb-10"
-          style={{ width: `${PROGRESS_BAR_WIDTH}px` }}
-        >
-          <Column className="grow justify-center">
-            <LinearProgress value={progress * 100} />
-          </Column>
-        </Row>
-      )}
+      <Loading
+        isLoading={!(mapIsLoaded && !isLoadingPlaces)}
+        onLoaded={setIsReady}
+      />
 
-      <Row className={classNames("w-full h-full", showProgress && "hidden")}>
+      <Row className={classNames("w-full h-full", !isReady && "hidden")}>
         {data.length ? (
           <Column className="hidden lg:flex w-[50vw] overflow-y-scroll h-[calc(100vh-230px)] px-3 -mt-[2px]">
             {placeCards}
@@ -380,6 +383,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
             }}
             selectedPlaceId={selectedPlaceId}
             zoom={14}
+            showMe={showMe}
             distance={distance}
             location={location}
             googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}

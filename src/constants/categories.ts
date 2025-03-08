@@ -1,9 +1,9 @@
 export const CATEGORIES = [
-  "Grocery Store",
-  "Library",
-  "Restaurant",
-  "Club",
-  "School",
-  "Church",
-  "Dental clinic",
+  "grocery store",
+  "library",
+  "restaurant",
+  "club",
+  "school",
+  "church",
+  "dental clinic",
 ];

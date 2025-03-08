@@ -43,7 +43,7 @@ export const LandingPage = () => {
         <Column className="bg-ukraine-blue h-1/2 min-h-max px-7 md:flex-row ">
           <Row className="max-w-screen-xl justify-center m-auto h-full ">
             <Column className="w-full lg:w-[60vw] lg:pr-8 xl:pr-12 grow justify-around">
-              <H1 className="font-kyivType text-primary-0 text-5xl sm:text-7xl md:text-8xl lg:text-7xl leading-tight">
+              <H1 className="font-kyivType text-primary-0 text-[14vw] leading-none sm:text-7xl md:text-8xl lg:text-7xl">
                 {dict["Let's unite, Ukrainians!"]}
               </H1>
 

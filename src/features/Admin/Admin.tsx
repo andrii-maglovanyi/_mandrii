@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 const tabs = [
   {
-    Component: dynamic(() => import("./ManagePlaces/ManagePlaces"), {
+    Component: dynamic(() => import("./ManageLocations/ManageLocations"), {
       ssr: false,
     }),
     name: "Manage places",

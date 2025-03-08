@@ -56,6 +56,22 @@ img[src$=".webp"] {
   z-index: 3; 
 }
 
+@keyframes spin-infinite {
+  0% {
+    stroke-dasharray: 0.01px, 43.97px;
+    transform: rotate(0deg);
+    visibility: visible;
+  }
+  50% {
+    stroke-dasharray: 21.99px, 21.99px;
+    transform: rotate(450deg);
+  }
+  100% {
+    stroke-dasharray: 0.01px, 43.97px;
+    transform: rotate(1080deg);
+  }
+}
+
 @keyframes slide-infinite-1 {
   0% {
     opacity: 1;

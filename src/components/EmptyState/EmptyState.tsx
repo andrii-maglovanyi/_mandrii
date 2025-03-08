@@ -42,9 +42,9 @@ export const EmptyState = ({
     {body ? (
       <div
         className={`
-          mt-1.5 text-primary-1000
+          mt-1.5 text-primary-1000 max-w-screen-sm
 
-          dark:text-primary-0
+          dark:text-primary-0 text-center
         `}
       >
         {body}
