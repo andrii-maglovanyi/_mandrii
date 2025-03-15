@@ -1,204 +1,3 @@
-// import { useCallback, useEffect, useRef, useState } from "react";
-
-// import {
-//   Button,
-//   Column,
-//   H3,
-//   ImageCarousel,
-//   Phrase,
-//   Row,
-//   Tooltip,
-// } from "@/components";
-// import { useNotifications } from "@/hooks";
-// import { useLanguage } from "@/hooks/useLanguage";
-// import { sendToMixpanel } from "@/lib";
-// import { GetPublicLocationsQuery } from "@/types";
-// import { classNames } from "@/utils";
-
-// import { InfoLine } from "./InfoLine";
-
-// interface PlaceSlideCardProps {
-//   location: GetPublicLocationsQuery["ukrainian_locations"][number];
-//   onClick: () => void;
-// }
-
-// const INITIAL_POSITION = -200;
-// const EXPAND_THRESHOLD = 50;
-
-// export const MobileLocationCard = ({
-//   location,
-//   onClick,
-// }: PlaceSlideCardProps) => {
-//   const { address, emails, id, images, name, phone_numbers, slug, website } =
-//     location;
-//   const placeCardRef = useRef<HTMLDivElement>(null);
-//   const [expanded, setExpanded] = useState(false);
-//   const [position, setPosition] = useState(INITIAL_POSITION);
-//   const { dict, lang } = useLanguage();
-//   const { showSuccess } = useNotifications();
-
-//   const startYRef = useRef<number>(0);
-//   const currentPositionRef = useRef<number>(INITIAL_POSITION);
-//   const isAnimatingRef = useRef(false);
-
-//   const maxCarouselExpand = window.screen.height > 700 ? 400 : 300;
-
-//   const animatePosition = useCallback((targetPosition: number) => {
-//     if (isAnimatingRef.current) return;
-//     isAnimatingRef.current = true;
-
-//     const animate = () => {
-//       currentPositionRef.current +=
-//         (targetPosition - currentPositionRef.current) * 0.2;
-//       setPosition(currentPositionRef.current);
-
-//       if (Math.abs(targetPosition - currentPositionRef.current) > 0.5) {
-//         requestAnimationFrame(animate);
-//       } else {
-//         currentPositionRef.current = targetPosition;
-//         setPosition(targetPosition);
-//         isAnimatingRef.current = false;
-//       }
-//     };
-
-//     requestAnimationFrame(animate);
-//   }, []);
-
-//   const handleExpandToggle = useCallback(() => {
-//     setExpanded((prevPosition) => {
-//       const newExpanded = !prevPosition;
-//       animatePosition(newExpanded ? 0 : INITIAL_POSITION);
-//       return newExpanded;
-//     });
-//   }, [animatePosition]);
-
-//   const handleStart = (clientY: number) => {
-//     startYRef.current = clientY;
-//   };
-
-//   const handleMove = (clientY: number) => {
-//     const deltaY = clientY - startYRef.current;
-
-//     if (Math.abs(deltaY) > EXPAND_THRESHOLD) {
-//       if (deltaY < 0 && !expanded) {
-//         setExpanded(true);
-//         animatePosition(0);
-//       } else if (deltaY > 0 && expanded) {
-//         setExpanded(false);
-//         animatePosition(INITIAL_POSITION);
-//       }
-//     }
-//   };
-
-//   useEffect(() => {
-//     const card = placeCardRef.current;
-//     if (!card) return;
-
-//     const wheelHandler = (e: WheelEvent) => {
-//       const delta = e.deltaY;
-//       if (delta > EXPAND_THRESHOLD && !expanded) {
-//         handleExpandToggle();
-//       } else if (delta < -EXPAND_THRESHOLD && expanded) {
-//         handleExpandToggle();
-//       }
-//     };
-
-//     card.addEventListener("wheel", wheelHandler);
-
-//     return () => {
-//       card.removeEventListener("wheel", wheelHandler);
-//     };
-//   }, [expanded, handleExpandToggle]);
-
-//   return (
-//     <Column
-//       onClick={onClick}
-//       ref={placeCardRef}
-//       style={{
-//         marginTop: `${position - (expanded ? maxCarouselExpand : 0)}px`,
-//         transition: isAnimatingRef.current
-//           ? "none"
-//           : "margin-top 0.3s ease-out",
-//       }}
-//       className={`
-//         bg-primary-0 fixed top-full w-full overflow-hidden rounded-t-2xl
-//       `}
-//     >
-//       <Row
-//         className="cursor-pointer justify-center py-3"
-//         onClick={handleExpandToggle}
-//         onTouchStart={(e) => handleStart(e.touches[0].clientY)}
-//         onTouchMove={(e) => handleMove(e.touches[0].clientY)}
-//       >
-//         <div className="border-primary-400 w-[20%] rounded-lg border-2"></div>
-//       </Row>
-
-//       <Row
-//         className="relative mx-2 overflow-hidden rounded-lg"
-//         style={{ height: `${expanded ? maxCarouselExpand : 130}px` }}
-//       >
-//         <ImageCarousel
-//           images={images?.map(
-//             (image) =>
-//               `https://z9bwg0saanmopyjs.public.blob.vercel-storage.com/${image}`
-//           )}
-//         />
-//       </Row>
-
-//       <Row className="items-center justify-between px-4">
-//         <H3>{location.name}</H3>
-//         <Button
-//           icon="share-solid"
-//           onClick={() => {
-//             const url = `${window.location.origin}/map/${slug}`;
-//             sendToMixpanel("shared_place", { slug });
-
-//             navigator.clipboard.writeText(url);
-//             showSuccess(url, { header: dict["Copied"] });
-//           }}
-//         />
-//       </Row>
-
-//       {expanded && (
-//         <Column className="overflow-auto px-4">
-//           <Column className="mb-2 overflow-hidden">
-//             <Phrase
-//               className={classNames("px-4 my-2", expanded ? "" : "")}
-//               dangerouslySetInnerHTML={{
-//                 __html: String(location[`description_${lang}`]).replaceAll(
-//                   "\n",
-//                   "<br />"
-//                 ),
-//               }}
-//             />
-//             <InfoLine
-//               icon="globe-line"
-//               text={website}
-//               tooltipText={dict["Copy website"]}
-//               isLink
-//             />
-//             <InfoLine
-//               icon="email-line"
-//               text={emails?.join(", ")}
-//               tooltipText={dict["Copy email"]}
-//             />
-//             <InfoLine
-//               icon="call-line"
-//               text={phone_numbers?.join(", ")}
-//               tooltipText={dict["Copy phone number"]}
-//             />
-//             <InfoLine
-//               icon="pin-line"
-//               text={address}
-//               tooltipText={dict["Copy address"]}
-//             />
-//           </Column>
-//         </Column>
-//       )}
-//     </Column>
-//   );
-// };
-
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -224,7 +23,6 @@ interface PlaceSlideCardProps {
 }
 
 const INITIAL_POSITION = -200;
-const EXPAND_THRESHOLD = 3;
 
 export const MobileLocationCard = ({
   location,
@@ -319,6 +117,7 @@ export const MobileLocationCard = ({
     };
 
     const handleUserScrollAttempt = (event: WheelEvent) => {
+      const EXPAND_THRESHOLD = 3;
       const delta = event.deltaY * scrollFactor;
 
       if (Math.abs(delta) < EXPAND_THRESHOLD) return;
@@ -331,9 +130,10 @@ export const MobileLocationCard = ({
     let lastY = 0;
 
     const handleTouchMoveAttempt = (event: TouchEvent) => {
+      const EXPAND_THRESHOLD = 200;
       const touch = event.touches[0];
-      lastY = touch.clientY;
       const delta = touch.clientY - lastY;
+      lastY = touch.clientY;
 
       if (Math.abs(delta) < EXPAND_THRESHOLD) return;
 
@@ -345,7 +145,7 @@ export const MobileLocationCard = ({
     window.addEventListener("wheel", handleUserScrollAttempt, {
       passive: true,
     });
-    window.addEventListener("touchmove", handleTouchMoveAttempt, {
+    window.addEventListener("touchstart", handleTouchMoveAttempt, {
       passive: true,
     });
 
@@ -356,6 +156,7 @@ export const MobileLocationCard = ({
   }, [expanded, maxCarouselExpand]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    console.log("TTTT");
     clickDetected.current = false;
     touchStartTimeout.current = setTimeout(() => {
       if (clickDetected.current) return;
@@ -424,9 +225,9 @@ export const MobileLocationCard = ({
       <Row
         className="cursor-pointer justify-center py-3"
         onClick={handleClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        // onTouchStart={handleTouchStart}
+        // onTouchMove={handleTouchMove}
+        // onTouchEnd={handleTouchEnd}
       >
         <div className="border-primary-400 w-[20%] rounded-lg border-2"></div>
       </Row>
