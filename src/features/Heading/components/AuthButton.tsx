@@ -48,6 +48,7 @@ export default function AuthButton() {
           </div>
         </Link>
 
+        {/* <p>Role: {session?.user?.hasuraClaims["x-hasura-default-role"]}</p> */}
         <Link
           href="#"
           className={`
