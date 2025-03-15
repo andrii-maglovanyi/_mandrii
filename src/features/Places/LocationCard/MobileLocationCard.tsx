@@ -328,12 +328,30 @@ export const MobileLocationCard = ({
       });
     };
 
+    let lastY = 0;
+
+    const handleTouchMoveAttempt = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      lastY = touch.clientY;
+      const delta = touch.clientY - lastY;
+
+      if (Math.abs(delta) < EXPAND_THRESHOLD) return;
+
+      requestAnimationFrame(() => {
+        scrollAnimate(delta);
+      });
+    };
+
     window.addEventListener("wheel", handleUserScrollAttempt, {
+      passive: true,
+    });
+    window.addEventListener("touchmove", handleTouchMoveAttempt, {
       passive: true,
     });
 
     return () => {
       window.removeEventListener("wheel", handleUserScrollAttempt);
+      window.removeEventListener("touchmove", handleTouchMoveAttempt);
     };
   }, [expanded, maxCarouselExpand]);
 
