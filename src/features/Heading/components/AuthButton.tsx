@@ -23,10 +23,10 @@ export default function AuthButton() {
         >
           <div
             className={`
-            relative mr-1 ml-3 h-10 w-10
-            sm:h-11 sm:w-11
-            md:h-[50px] md:w-[50px]
-          `}
+              relative mr-1 ml-3 h-10 w-10
+              sm:h-11 sm:w-11
+              md:h-[50px] md:w-[50px]
+            `}
           >
             {session.user?.image ? (
               <Image
@@ -48,7 +48,6 @@ export default function AuthButton() {
           </div>
         </Link>
 
-        {/* <p>Role: {session?.user?.hasuraClaims["x-hasura-default-role"]}</p> */}
         <Link
           href="#"
           className={`
