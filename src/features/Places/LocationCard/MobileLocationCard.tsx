@@ -155,34 +155,34 @@ export const MobileLocationCard = ({
     };
   }, [expanded, maxCarouselExpand]);
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    console.log("TTTT");
-    clickDetected.current = false;
-    touchStartTimeout.current = setTimeout(() => {
-      if (clickDetected.current) return;
-      startYRef.current = e.touches[0].clientY;
-    }, 50);
-  };
+  // const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  //   console.log("TTTT");
+  //   clickDetected.current = false;
+  //   touchStartTimeout.current = setTimeout(() => {
+  //     if (clickDetected.current) return;
+  //     startYRef.current = e.touches[0].clientY;
+  //   }, 50);
+  // };
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    endYRef.current = e.touches[0].clientY;
-  };
+  // const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  //   endYRef.current = e.touches[0].clientY;
+  // };
 
-  const handleTouchEnd = () => {
-    clickDetected.current = false;
-    touchEndTimeout.current = setTimeout(() => {
-      if (clickDetected.current) return;
+  // const handleTouchEnd = () => {
+  //   clickDetected.current = false;
+  //   touchEndTimeout.current = setTimeout(() => {
+  //     if (clickDetected.current) return;
 
-      const deltaY = startYRef.current - endYRef.current;
+  //     const deltaY = startYRef.current - endYRef.current;
 
-      if (deltaY > 50) {
-        setExpanded(true);
-      } else if (deltaY < -50) {
-        setExpanded(false);
-        setPosition(INITIAL_POSITION);
-      }
-    }, 50);
-  };
+  //     if (deltaY > 50) {
+  //       setExpanded(true);
+  //     } else if (deltaY < -50) {
+  //       setExpanded(false);
+  //       setPosition(INITIAL_POSITION);
+  //     }
+  //   }, 50);
+  // };
 
   const handleClick = () => {
     clickDetected.current = true;
