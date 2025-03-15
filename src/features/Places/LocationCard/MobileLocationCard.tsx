@@ -36,8 +36,8 @@ export const MobileLocationCard = ({
 
   const [expanded, setExpanded] = useState(false);
 
-  const startYRef = useRef(0);
-  const endYRef = useRef(0);
+  // const startYRef = useRef(0);
+  // const endYRef = useRef(0);
 
   const [position, setPosition] = useState(INITIAL_POSITION);
   const scrollFactor = 0.5; // Adjust for smoother/faster scrolling
