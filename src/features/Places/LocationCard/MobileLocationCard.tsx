@@ -1,7 +1,206 @@
-import { GetPublicLocationsQuery } from "@/types";
-import { classNames } from "@/utils";
-import { InfoLine } from "./InfoLine";
-import { useLanguage } from "@/hooks/useLanguage";
+// import { useCallback, useEffect, useRef, useState } from "react";
+
+// import {
+//   Button,
+//   Column,
+//   H3,
+//   ImageCarousel,
+//   Phrase,
+//   Row,
+//   Tooltip,
+// } from "@/components";
+// import { useNotifications } from "@/hooks";
+// import { useLanguage } from "@/hooks/useLanguage";
+// import { sendToMixpanel } from "@/lib";
+// import { GetPublicLocationsQuery } from "@/types";
+// import { classNames } from "@/utils";
+
+// import { InfoLine } from "./InfoLine";
+
+// interface PlaceSlideCardProps {
+//   location: GetPublicLocationsQuery["ukrainian_locations"][number];
+//   onClick: () => void;
+// }
+
+// const INITIAL_POSITION = -200;
+// const EXPAND_THRESHOLD = 50;
+
+// export const MobileLocationCard = ({
+//   location,
+//   onClick,
+// }: PlaceSlideCardProps) => {
+//   const { address, emails, id, images, name, phone_numbers, slug, website } =
+//     location;
+//   const placeCardRef = useRef<HTMLDivElement>(null);
+//   const [expanded, setExpanded] = useState(false);
+//   const [position, setPosition] = useState(INITIAL_POSITION);
+//   const { dict, lang } = useLanguage();
+//   const { showSuccess } = useNotifications();
+
+//   const startYRef = useRef<number>(0);
+//   const currentPositionRef = useRef<number>(INITIAL_POSITION);
+//   const isAnimatingRef = useRef(false);
+
+//   const maxCarouselExpand = window.screen.height > 700 ? 400 : 300;
+
+//   const animatePosition = useCallback((targetPosition: number) => {
+//     if (isAnimatingRef.current) return;
+//     isAnimatingRef.current = true;
+
+//     const animate = () => {
+//       currentPositionRef.current +=
+//         (targetPosition - currentPositionRef.current) * 0.2;
+//       setPosition(currentPositionRef.current);
+
+//       if (Math.abs(targetPosition - currentPositionRef.current) > 0.5) {
+//         requestAnimationFrame(animate);
+//       } else {
+//         currentPositionRef.current = targetPosition;
+//         setPosition(targetPosition);
+//         isAnimatingRef.current = false;
+//       }
+//     };
+
+//     requestAnimationFrame(animate);
+//   }, []);
+
+//   const handleExpandToggle = useCallback(() => {
+//     setExpanded((prevPosition) => {
+//       const newExpanded = !prevPosition;
+//       animatePosition(newExpanded ? 0 : INITIAL_POSITION);
+//       return newExpanded;
+//     });
+//   }, [animatePosition]);
+
+//   const handleStart = (clientY: number) => {
+//     startYRef.current = clientY;
+//   };
+
+//   const handleMove = (clientY: number) => {
+//     const deltaY = clientY - startYRef.current;
+
+//     if (Math.abs(deltaY) > EXPAND_THRESHOLD) {
+//       if (deltaY < 0 && !expanded) {
+//         setExpanded(true);
+//         animatePosition(0);
+//       } else if (deltaY > 0 && expanded) {
+//         setExpanded(false);
+//         animatePosition(INITIAL_POSITION);
+//       }
+//     }
+//   };
+
+//   useEffect(() => {
+//     const card = placeCardRef.current;
+//     if (!card) return;
+
+//     const wheelHandler = (e: WheelEvent) => {
+//       const delta = e.deltaY;
+//       if (delta > EXPAND_THRESHOLD && !expanded) {
+//         handleExpandToggle();
+//       } else if (delta < -EXPAND_THRESHOLD && expanded) {
+//         handleExpandToggle();
+//       }
+//     };
+
+//     card.addEventListener("wheel", wheelHandler);
+
+//     return () => {
+//       card.removeEventListener("wheel", wheelHandler);
+//     };
+//   }, [expanded, handleExpandToggle]);
+
+//   return (
+//     <Column
+//       onClick={onClick}
+//       ref={placeCardRef}
+//       style={{
+//         marginTop: `${position - (expanded ? maxCarouselExpand : 0)}px`,
+//         transition: isAnimatingRef.current
+//           ? "none"
+//           : "margin-top 0.3s ease-out",
+//       }}
+//       className={`
+//         bg-primary-0 fixed top-full w-full overflow-hidden rounded-t-2xl
+//       `}
+//     >
+//       <Row
+//         className="cursor-pointer justify-center py-3"
+//         onClick={handleExpandToggle}
+//         onTouchStart={(e) => handleStart(e.touches[0].clientY)}
+//         onTouchMove={(e) => handleMove(e.touches[0].clientY)}
+//       >
+//         <div className="border-primary-400 w-[20%] rounded-lg border-2"></div>
+//       </Row>
+
+//       <Row
+//         className="relative mx-2 overflow-hidden rounded-lg"
+//         style={{ height: `${expanded ? maxCarouselExpand : 130}px` }}
+//       >
+//         <ImageCarousel
+//           images={images?.map(
+//             (image) =>
+//               `https://z9bwg0saanmopyjs.public.blob.vercel-storage.com/${image}`
+//           )}
+//         />
+//       </Row>
+
+//       <Row className="items-center justify-between px-4">
+//         <H3>{location.name}</H3>
+//         <Button
+//           icon="share-solid"
+//           onClick={() => {
+//             const url = `${window.location.origin}/map/${slug}`;
+//             sendToMixpanel("shared_place", { slug });
+
+//             navigator.clipboard.writeText(url);
+//             showSuccess(url, { header: dict["Copied"] });
+//           }}
+//         />
+//       </Row>
+
+//       {expanded && (
+//         <Column className="overflow-auto px-4">
+//           <Column className="mb-2 overflow-hidden">
+//             <Phrase
+//               className={classNames("px-4 my-2", expanded ? "" : "")}
+//               dangerouslySetInnerHTML={{
+//                 __html: String(location[`description_${lang}`]).replaceAll(
+//                   "\n",
+//                   "<br />"
+//                 ),
+//               }}
+//             />
+//             <InfoLine
+//               icon="globe-line"
+//               text={website}
+//               tooltipText={dict["Copy website"]}
+//               isLink
+//             />
+//             <InfoLine
+//               icon="email-line"
+//               text={emails?.join(", ")}
+//               tooltipText={dict["Copy email"]}
+//             />
+//             <InfoLine
+//               icon="call-line"
+//               text={phone_numbers?.join(", ")}
+//               tooltipText={dict["Copy phone number"]}
+//             />
+//             <InfoLine
+//               icon="pin-line"
+//               text={address}
+//               tooltipText={dict["Copy address"]}
+//             />
+//           </Column>
+//         </Column>
+//       )}
+//     </Column>
+//   );
+// };
+
+import { useEffect, useRef, useState } from "react";
+
 import {
   Button,
   Column,
@@ -11,82 +210,27 @@ import {
   Row,
   Tooltip,
 } from "@/components";
-import { useEffect, useRef, useState } from "react";
-import { sendToMixpanel } from "@/lib";
 import { useNotifications } from "@/hooks";
+import { useLanguage } from "@/hooks/useLanguage";
+import { sendToMixpanel } from "@/lib";
+import { GetPublicLocationsQuery } from "@/types";
+import { classNames } from "@/utils";
+
+import { InfoLine } from "./InfoLine";
 
 interface PlaceSlideCardProps {
   location: GetPublicLocationsQuery["ukrainian_locations"][number];
   onClick: () => void;
 }
 
-// (function () {
-//   const logEvent = (event: any) => {
-//     console.log(`Event: ${event.type}`, event);
-//   };
-
-//   const eventTypes = [
-//     // "click",
-//     // "dblclick",
-//     // "mousedown",
-//     // "mouseup",
-//     // "mousemove",
-//     // "mouseenter",
-//     // "mouseleave",
-//     // "mouseover",
-//     // "mouseout",
-//     // "wheel",
-//     // "keydown",
-//     // "keyup",
-//     // "keypress",
-//     // "focus",
-//     // "blur",
-//     // "touchstart",
-//     // "touchmove",
-//     // "touchend",
-//     // "pointerdown",
-//     // "pointermove",
-//     // "pointerup",
-//     // "pointerenter",
-//     // "pointerleave",
-//     // "pointerover",
-//     // "pointerout",
-//     // "dragstart",
-//     // "drag",
-//     // "dragend",
-//     // "drop",
-//     // "submit",
-//     // "change",
-//     // "input",
-//     // "contextmenu",
-//   ];
-
-//   eventTypes.forEach((eventType) => {
-//     document.addEventListener(eventType, logEvent, { passive: true });
-//   });
-
-//   console.log("✅ Logging all user interaction events...");
-// })();
-
-function throttle<T extends (...args: any[]) => void>(
-  func: T,
-  limit: number
-): T {
-  let lastFunc: ReturnType<typeof setTimeout> | null = null;
-
-  return function (this: any, ...args: Parameters<T>) {
-    clearTimeout(lastFunc as NodeJS.Timeout);
-    lastFunc = setTimeout(() => {
-      func.apply(this, args);
-    }, limit);
-  } as T;
-}
+const INITIAL_POSITION = -200;
+const EXPAND_THRESHOLD = 3;
 
 export const MobileLocationCard = ({
   location,
   onClick,
 }: PlaceSlideCardProps) => {
-  const { id, images, name, address, phone_numbers, emails, website, slug } =
+  const { address, emails, id, images, name, phone_numbers, slug, website } =
     location;
   const { dict, lang } = useLanguage();
   const { showSuccess } = useNotifications();
@@ -97,8 +241,8 @@ export const MobileLocationCard = ({
   const startYRef = useRef(0);
   const endYRef = useRef(0);
 
-  const [position, setPosition] = useState(-200);
-  const scrollFactor = 1; // Adjust for smoother/faster scrolling
+  const [position, setPosition] = useState(INITIAL_POSITION);
+  const scrollFactor = 0.5; // Adjust for smoother/faster scrolling
 
   const clickDetected = useRef(false);
 
@@ -108,86 +252,90 @@ export const MobileLocationCard = ({
   const maxCarouselExpand = window.screen.height > 700 ? 400 : 300;
 
   useEffect(() => {
-    // const handleUserScrollAttempt = () => {
-    //   console.log("SCR");
-    //   if (!expanded && placeCardRef.current) {
-    //     const rect = placeCardRef.current.getBoundingClientRect();
-    //     if (rect.top < window.innerHeight && rect.bottom > 0) {
-    //       setExpanded(true);
-    //     }
-    //   }
-    // };
+    let isChangingSize = false;
+    let isLocked: boolean | undefined;
 
-    const timeoutMs = expanded ? 20 : 500;
+    const scrollAnimate = (delta: number) => {
+      if (isChangingSize) return;
 
-    const handleUserScrollAttempt = throttle((event: any) => {
-      if (!placeCardRef.current) return;
+      const card = placeCardRef.current;
+      if (!card) return;
 
-      if (!expanded) {
-        setExpanded(true);
-        setPosition((prev) => prev + maxCarouselExpand);
+      const cardHeight = card.offsetHeight;
+
+      if (delta > 0) {
+        if (expanded) {
+          setPosition((prevPosition) => {
+            const newPosition = prevPosition - delta;
+
+            if (newPosition - maxCarouselExpand <= -cardHeight) {
+              return maxCarouselExpand - cardHeight;
+            }
+
+            return newPosition;
+          });
+        } else {
+          isChangingSize = true;
+
+          setTimeout(() => {
+            isChangingSize = false;
+          }, 500);
+
+          setExpanded(true);
+        }
+      } else {
+        setPosition((prevPosition) => {
+          if (!expanded || isLocked) {
+            return INITIAL_POSITION;
+          }
+
+          if (prevPosition > INITIAL_POSITION) {
+            if (typeof isLocked === "undefined") {
+              isLocked = true;
+              setTimeout(() => {
+                isLocked = false;
+              }, 200);
+
+              return INITIAL_POSITION;
+            } else if (isLocked === false) {
+              isChangingSize = true;
+
+              setTimeout(() => {
+                isChangingSize = false;
+                isLocked = undefined;
+              }, 500);
+
+              setExpanded(false);
+            }
+          } else {
+            return prevPosition - delta;
+          }
+
+          return prevPosition;
+        });
       }
 
-      console.log("CALLED");
+      return;
+    };
 
-      // if (!expanded) {
-      //   setExpanded(true);
-      //   return;
-      // }
+    const handleUserScrollAttempt = (event: WheelEvent) => {
+      const delta = event.deltaY * scrollFactor;
 
-      // event.preventDefault();
-      const delta = event.deltaY * scrollFactor; // Get scroll direction
+      if (Math.abs(delta) < EXPAND_THRESHOLD) return;
 
-      console.log("event.deltaY", event.deltaY);
-      const viewportHeight = window.innerHeight;
-      const containerHeight = placeCardRef.current.offsetHeight;
-
-      // console.log("delta", delta);
-      console.log("viewportHeight", viewportHeight);
-      console.log("containerHeight", containerHeight);
-
-      // Define limits
-      const maxPosition = -200; // Moves to the top (aligned with viewport top)
-      const minPosition = viewportHeight - containerHeight;
-
-      // Calculate new position within boundaries
-      setPosition((prev) => {
-        const newPos = prev - delta;
-
-        if (newPos >= maxPosition) {
-          return maxPosition;
-        }
-
-        console.log("np", newPos, newPos + containerHeight);
-        if (newPos + containerHeight <= 0) {
-          console.log("THIS", -containerHeight);
-          return -containerHeight;
-        }
-
-        return newPos;
+      requestAnimationFrame(() => {
+        scrollAnimate(delta);
       });
-    }, 50);
-
-    // window.addEventListener("scroll", handleUserScrollAttempt, {
-    //   passive: true,
-    // });
+    };
 
     window.addEventListener("wheel", handleUserScrollAttempt, {
       passive: true,
     });
-    // window.addEventListener("touchstart", handleUserScrollAttempt, {
-    //   passive: true,
-    // });
-    // window.addEventListener("pointermove", handleUserScrollAttempt, {
-    //   passive: true,
-    // });
 
     return () => {
       window.removeEventListener("wheel", handleUserScrollAttempt);
-      window.removeEventListener("touchstart", handleUserScrollAttempt);
-      window.removeEventListener("pointermove", handleUserScrollAttempt);
     };
-  }, [expanded]);
+  }, [expanded, maxCarouselExpand]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     clickDetected.current = false;
@@ -212,6 +360,7 @@ export const MobileLocationCard = ({
         setExpanded(true);
       } else if (deltaY < -50) {
         setExpanded(false);
+        setPosition(INITIAL_POSITION);
       }
     }, 50);
   };
@@ -219,16 +368,25 @@ export const MobileLocationCard = ({
   const handleClick = () => {
     clickDetected.current = true;
 
-    touchStartTimeout.current && clearTimeout(touchStartTimeout.current);
-    touchEndTimeout.current && clearTimeout(touchEndTimeout.current);
+    if (touchStartTimeout.current) {
+      clearTimeout(touchStartTimeout.current);
+    }
+
+    if (touchEndTimeout.current) {
+      clearTimeout(touchEndTimeout.current);
+    }
 
     setExpanded(!expanded);
+
+    if (expanded) {
+      setPosition(INITIAL_POSITION);
+    }
 
     setTimeout(() => {
       clickDetected.current = false;
     }, 100);
   };
-  // transition-all duration-500 ease-in-out
+
   return (
     <Column
       onClick={onClick}
@@ -237,23 +395,26 @@ export const MobileLocationCard = ({
       style={{
         marginTop: `${expanded ? position - maxCarouselExpand : position}px`,
       }}
-      className={classNames(
-        // expanded ? "transition-[margin-top] duration-500 ease-in-out" : "",
-        "transition-all duration-200 ease-in text-md lg:text-base overflow-x-hidden rounded-t-2xl bg-primary-0 dark:bg-slate-800 w-[calc(100%+4px)] h-min flex-shrink-0 border-t-2 border-l-2 border-r-2 border-primary-1000 fixed top-full"
-      )}
+      className={`
+        text-md bg-primary-0 border-primary-1000 fixed top-full h-min
+        w-[calc(100%+4px)] shrink-0 overflow-x-hidden rounded-t-2xl border-t-2
+        border-r-2 border-l-2 transition-[margin-top] duration-500 ease-out
+        lg:text-base
+        dark:bg-slate-800
+      `}
     >
       <Row
-        className="justify-center py-3 cursor-pointer"
+        className="cursor-pointer justify-center py-3"
         onClick={handleClick}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="w-[20%] rounded-lg border-2 border-green-400"></div>
+        <div className="border-primary-400 w-[20%] rounded-lg border-2"></div>
       </Row>
       <Row
-        className="relative rounded-lg overflow-hidden mx-2 transition-all duration-500 ease-in-out"
-        style={{ height: `${expanded ? maxCarouselExpand : 130}px` }}
+        className={`relative mx-2 overflow-hidden rounded-lg`}
+        style={{ height: `${expanded ? maxCarouselExpand : 120}px` }}
       >
         <ImageCarousel
           images={images?.map(
@@ -262,7 +423,7 @@ export const MobileLocationCard = ({
           )}
         />
       </Row>
-      <Row className="px-4 justify-between items-center">
+      <Row className="items-center justify-between px-4">
         <H3>{name}</H3>
         <Tooltip placement="left" text={dict["Share place"]}>
           <Button
@@ -278,12 +439,7 @@ export const MobileLocationCard = ({
         </Tooltip>
       </Row>
       {
-        <Column
-          className={classNames(
-            "transition-all duration-100 ease-in-out overflow-hidden mb-2"
-            // expanded ? "max-h-full" : "max-h-0"
-          )}
-        >
+        <Column className="mb-2 overflow-hidden">
           <Phrase
             className={classNames("px-4 my-2", expanded ? "" : "")}
             dangerouslySetInnerHTML={{

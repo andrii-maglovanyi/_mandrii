@@ -13,7 +13,7 @@ interface TabsBarProps {
 
 const getNoticeClass = (notice?: "attention" | "required") => {
   if (notice === "attention") {
-    return "relative before:content-[''] before:absolute before:rounded before:bg-red-500 before:w-[7px] before:h-[7px] before:top-[calc(50%-8px)] before:right-[7px]";
+    return "relative before:content-[''] before:absolute before:rounded-sm before:bg-red-500 before:w-[7px] before:h-[7px] before:top-[calc(50%-8px)] before:right-[7px]";
   }
   if (notice === "required") {
     return "relative before:content-['*'] before:absolute before:top-[calc(50%-12px)] before:right-[6px]";
@@ -65,14 +65,14 @@ export const TabsBar = ({
   }, [activeIndex, children]);
 
   return (
-    <div className="relative border-b border-primary-300">
+    <div className="border-primary-300 relative border-b">
       <div className="flex">
         {React.Children.map(children, (child, index) => {
           if (
             React.isValidElement<{
-              tab: string;
               icon?: IconType;
               notice?: "attention" | "required";
+              tab: string;
             }>(child)
           ) {
             return (
@@ -108,9 +108,8 @@ export const TabsBar = ({
       <div
         aria-selected
         className={`
-          absolute bottom-0 h-0.5 bg-accent-tab-primary transition-transform
+          bg-accent-tab-primary absolute bottom-0 h-0.5 transition-transform
           duration-200
-
           dark:bg-primary-50
         `}
         ref={indicatorRef}

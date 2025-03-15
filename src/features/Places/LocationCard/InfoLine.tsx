@@ -7,8 +7,8 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { sendToMixpanel } from "@/lib/mixpanel";
 
 interface InfoLineProps {
-  isLink?: boolean;
   icon: IconType;
+  isLink?: boolean;
   text?: string | null;
   tooltipText: string;
 }
@@ -34,7 +34,12 @@ export const InfoLine = ({
   return text ? (
     <Tooltip text={tooltipText}>
       <Row
-        className="hover:bg-primary-50 dark:hover:bg-slate-950 py-1 px-4 cursor-pointer items-center text-sm md:text-base"
+        className={`
+          hover:bg-primary-50
+          cursor-pointer items-center px-4 py-1 text-sm
+          md:text-base
+          dark:hover:bg-slate-950
+        `}
         onClick={copyData}
       >
         <Column>
@@ -43,7 +48,10 @@ export const InfoLine = ({
         <Column>
           {isLink ? (
             <a
-              className="ml-3 hover:underline text-cta-500"
+              className={`
+                text-cta-500 ml-3
+                hover:underline
+              `}
               href={text}
               target="_black"
               onClick={(e) => {

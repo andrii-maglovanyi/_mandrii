@@ -1,6 +1,5 @@
 "use client";
 
-import type { BaseComponentProps } from "@/types";
 import {
   type ChangeEvent,
   type FocusEvent,
@@ -8,6 +7,8 @@ import {
   useEffect,
   useState,
 } from "react";
+
+import type { BaseComponentProps } from "@/types";
 
 import { Icon } from "../Icon/Icon";
 
@@ -69,7 +70,9 @@ export const Textarea = ({
   };
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    onInput && onInput(event);
+    if (onInput) {
+      onInput(event);
+    }
     const value = event.target.value;
     setInputValue(value);
     setHasError(false);
@@ -90,7 +93,7 @@ export const Textarea = ({
     ? "bg-primary-100 text-primary-300 cursor-not-allowed"
     : "";
 
-  const textareaClasses = `w-full min-w-20 px-4 py-2 dark:bg-primary-950 dark:text-primary-0 border rounded-lg focus:outline-none
+  const textareaClasses = `w-full min-w-20 px-4 py-2 dark:bg-primary-950 dark:text-primary-0 border rounded-lg focus:outline-hidden
   ${getTextareaStyle(hasError, disabled)}
   ${focusStyle}
   ${disabledStyle}
@@ -122,15 +125,14 @@ export const Textarea = ({
       {showValidationMessage && (
         <p
           className={`
-            mt-1 flex h-5 items-center
-
             dark:text-primary-0
+            mt-1 flex h-5 items-center
           `}
         >
           {hasError && (
             <>
               <Icon
-                className="mr-1 fill-alert-500"
+                className="fill-alert-500 mr-1"
                 size="small"
                 type="info-line"
               />

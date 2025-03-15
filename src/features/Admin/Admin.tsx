@@ -1,9 +1,9 @@
 "use client";
 
-import { Column, TabPane, Tabs } from "@/components";
-
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+
+import { Column, TabPane, Tabs } from "@/components";
 
 const tabs = [
   {
@@ -18,7 +18,10 @@ export const Admin = () => {
   const {} = useRouter();
 
   return (
-    <Column className="px-5 lg:px-24 py-8">
+    <Column className={`
+      px-5 py-8
+      lg:px-24
+    `}>
       <Tabs defer>
         {tabs.map(({ Component, name }) => (
           <TabPane key={name} tab={name}>

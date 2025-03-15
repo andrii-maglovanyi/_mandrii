@@ -67,7 +67,7 @@ const TabsComponent = (
 
   return (
     <div className="flex w-full">
-      <div className="flex-grow">
+      <div className="grow">
         <TabsBar activeIndex={activeTab} onTabChange={handleTabChange}>
           {tabsOnly}
         </TabsBar>
@@ -85,9 +85,8 @@ const TabsComponent = (
               React.isValidElement<TabPaneProps>(child) ? (
                 <div
                   className={`
-                    my-4
-
                     dark:text-primary-0
+                    my-4
                   `}
                   style={{
                     display: `${index === activeTab ? "block" : "none"}`,

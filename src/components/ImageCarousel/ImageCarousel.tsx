@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface ImageCarouselProps {
   images?: Array<string>;
@@ -26,7 +26,11 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
   }, [index]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden min-w-20 md:min-w-40 flex items-center justify-center bg-gray-200">
+    <div className={`
+      relative flex h-full w-full min-w-20 items-center justify-center
+      overflow-hidden bg-gray-200
+      md:min-w-40
+    `}>
       {!error ? (
         <Image
           onError={() => setError(true)}
@@ -37,7 +41,7 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
           sizes="(min-width: 1024px) 350px, 250px"
         />
       ) : (
-        <svg className="w-full h-full" aria-hidden="true" role="img">
+        <svg className="h-full w-full" aria-hidden="true" role="img">
           <use href="/assets/sprite.svg#no-image" />
         </svg>
       )}
@@ -47,7 +51,11 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
           <button
             type="button"
             onClick={prevImage}
-            className="absolute font-leOsler text-2xl left-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
+            className={`
+              font-leOsler bg-primary-1000/50 absolute top-1/2 left-2 h-8 w-8
+              -translate-y-1/2 transform rounded-full text-2xl text-white
+              hover:bg-primary-1000/80 hover:font-bold
+            `}
           >
             ←
           </button>
@@ -55,7 +63,11 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
           <button
             type="button"
             onClick={nextImage}
-            className="absolute font-leOsler text-2xl  right-2 top-1/2 transform -translate-y-1/2 bg-primary-1000/50 hover:bg-primary-1000/80 hover:font-bold text-white w-8 h-8 rounded-full"
+            className={`
+              font-leOsler bg-primary-1000/50 absolute top-1/2 right-2 h-8 w-8
+              -translate-y-1/2 transform rounded-full text-2xl text-white
+              hover:bg-primary-1000/80 hover:font-bold
+            `}
           >
             →
           </button>

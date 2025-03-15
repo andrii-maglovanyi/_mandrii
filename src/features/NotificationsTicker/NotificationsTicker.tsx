@@ -1,7 +1,8 @@
 "use client";
 
-import { Notification } from "../../components/Notification/Notification";
 import { useNotifications } from "@/hooks/useNotifications";
+
+import { Notification } from "../../components/Notification/Notification";
 
 export const NotificationsTicker = () => {
   const { dismissNotification, notifications } = useNotifications();

@@ -1,13 +1,15 @@
 "use client";
 
-import { useNotifications } from "@/hooks/useNotifications";
-import { PlaceForm, type FormData } from "./Form";
-import { useLanguage } from "@/hooks";
-import { Button, Column, Row } from "@/components";
 import { useRouter } from "next/navigation";
 
+import { Button, Column, Row } from "@/components";
+import { useLanguage } from "@/hooks";
+import { useNotifications } from "@/hooks/useNotifications";
+
+import { type FormData, PlaceForm } from "./Form";
+
 export const AddLocation = () => {
-  const { showSuccess, showError } = useNotifications();
+  const { showError, showSuccess } = useNotifications();
   const { dict } = useLanguage();
   const router = useRouter();
 
@@ -23,8 +25,8 @@ export const AddLocation = () => {
 
     try {
       const response = await fetch("/api/locations/add", {
-        method: "POST",
         body,
+        method: "POST",
       });
       const result = await response.json();
 
@@ -32,6 +34,7 @@ export const AddLocation = () => {
 
       return result;
     } catch (error) {
+      console.error(error);
       showError(dict["Oops! Something went wrong. Please try again."]);
     }
   };

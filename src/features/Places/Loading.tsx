@@ -1,6 +1,8 @@
-import { Column, LinearProgress, Row, useProgress } from "@/components";
-import { PROGRESS_BAR_WIDTH } from "./constants";
 import { useEffect } from "react";
+
+import { Column, LinearProgress, Row, useProgress } from "@/components";
+
+import { PROGRESS_BAR_WIDTH } from "./constants";
 
 export interface LoadingProps {
   isLoading: boolean;
@@ -15,7 +17,7 @@ export const Loading = ({ isLoading = false, onLoaded }: LoadingProps) => {
     if (!showProgress) {
       onLoaded(true);
     }
-  }, [showProgress]);
+  }, [showProgress, onLoaded]);
 
   useEffect(() => {
     if (isLoading) {
@@ -28,7 +30,7 @@ export const Loading = ({ isLoading = false, onLoaded }: LoadingProps) => {
   return (
     showProgress && (
       <Row
-        className="m-auto h-full mb-10"
+        className="m-auto mb-10 h-full"
         style={{ width: `${PROGRESS_BAR_WIDTH}px` }}
       >
         <Column className="grow justify-center">

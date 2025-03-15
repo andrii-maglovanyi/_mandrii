@@ -1,32 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  Column,
-  Input,
-  LinearProgress,
-  GeoMap,
-  Phrase,
-  Row,
-  Select,
-  useProgress,
-} from "@/components";
 
+import { Column, GeoMap, Input, Phrase, Row, Select } from "@/components";
+import { Button } from "@/components/Button/Button";
+import { GoogleMapRef } from "@/components/Map/Map";
+import { CATEGORIES, LONDON_COORDINATES } from "@/constants";
+import { Dictionary } from "@/dictionaries";
+import { useLocations, useNotifications } from "@/hooks";
+import { useLanguage } from "@/hooks/useLanguage";
+import { sendToMixpanel } from "@/lib/mixpanel";
+import { NameValueObject } from "@/types";
 import { classNames, maybePluralize } from "@/utils";
 
-import { NameValueObject } from "@/types";
-import { LocationCard } from "./LocationCard/LocationCard";
-import { PROGRESS_BAR_WIDTH } from "./constants";
-import { GoogleMapRef } from "@/components/Map/Map";
-import { useLanguage } from "@/hooks/useLanguage";
-import { Button } from "@/components/Button/Button";
-import { sendToMixpanel } from "@/lib/mixpanel";
-import { MobileLocationCard } from "./LocationCard/MobileLocationCard";
-import { CATEGORIES, LONDON_COORDINATES } from "@/constants";
-import { useNotifications, useLocations } from "@/hooks";
-import { Dictionary } from "@/dictionaries";
 import ShareLocationLink from "../ShareLocationLink/ShareLocationLink";
 import { Loading } from "./Loading";
+import { LocationCard } from "./LocationCard/LocationCard";
+import { MobileLocationCard } from "./LocationCard/MobileLocationCard";
 
 type Location = google.maps.LatLngLiteral | undefined;
 type Prediction = google.maps.places.AutocompletePrediction;
@@ -73,16 +63,16 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const sessionTokenRef = useRef<AutocompleteToken>(null);
 
   const { showError } = useNotifications();
-  const { getPublicLocations } = useLocations();
+  const { usePublicLocations } = useLocations();
 
   const {
-    loading: isLoadingPlaces,
     data,
+    loading: isLoadingPlaces,
     total,
-  } = getPublicLocations({
-    geo: location,
+  } = usePublicLocations({
     category,
     distance,
+    geo: location,
     slug: placeSlug,
   });
 
@@ -105,8 +95,8 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
     return new Promise<google.maps.places.PlaceResult>((resolve, reject) => {
       service.getDetails(
         {
-          placeId,
           fields: ["geometry"],
+          placeId,
           sessionToken: sessionTokenRef.current ?? undefined,
         },
         (place, status) => {
@@ -121,15 +111,15 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   };
 
   const onSelectPrediction = async ({
-    value,
     name,
+    value,
   }: NameValueObject<string>) => {
     setPredictions([]);
 
     try {
       const { geometry } = await fetchPlaceDetails(value);
       const { lat, lng } = geometry?.location ?? {};
-      sendToMixpanel("changed_location", { location: name, lat, lng });
+      sendToMixpanel("changed_location", { lat, lng, location: name });
 
       if (lat && lng) {
         setLocation({ lat: lat(), lng: lng() });
@@ -163,7 +153,8 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           });
           setShowMe(true);
         },
-        (_) => {
+        (error) => {
+          console.error(error);
           showError(dict["We couldn’t find your location. Try searching!"], {
             header: dict["Location not found"],
           });
@@ -206,7 +197,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
       setDistance(1000);
       setSelectedPlaceId(location.id);
     }
-  }, [slug, data.length, data[0]?.slug]);
+  }, [slug, data]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -217,9 +208,9 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
 
       if (inputValue.length > 2) {
         const request: google.maps.places.AutocompletionRequest = {
+          componentRestrictions: { country: ["uk", "nl", "ge"] },
           input: inputValue,
           sessionToken: sessionTokenRef.current ?? undefined,
-          componentRestrictions: { country: ["uk", "nl", "ge"] },
         };
 
         serviceRef.current.getPlacePredictions(request, (result, status) => {
@@ -240,8 +231,6 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
 
   const placeCards: Array<React.ReactNode> = [];
   let selectedCard: React.ReactNode = <></>;
-
-  console.log("DATA", data);
 
   data.forEach((location) => {
     const card = (
@@ -278,9 +267,14 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   });
 
   return (
-    <Column className="grow items-center w-full h-auto">
-      <Column className="max-w-screen-xl w-full grow px-4 md:px-8 py-2 md:flex-row">
-        <Column className="grow ">
+    <Column className="h-auto w-full grow items-center">
+      <Column
+        className={`
+          w-full max-w-(--breakpoint-xl) grow px-4 py-2
+          md:flex-row md:px-8
+        `}
+      >
+        <Column className="grow">
           <Input
             disabled={!isReady}
             label={dict["Location"]}
@@ -295,8 +289,18 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
             onChange={(e) => setInputValue(e.target.value)}
           />
         </Column>
-        <Row className="mt-2 md:mt-0 ">
-          <Column className="ml-0 md:ml-2 mr-1 grow">
+        <Row
+          className={`
+            mt-2
+            md:mt-0
+          `}
+        >
+          <Column
+            className={`
+              mr-1 ml-0 grow
+              md:ml-2
+            `}
+          >
             <Select
               disabled={!isReady}
               name="category"
@@ -324,8 +328,18 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           </Column>
         </Row>
       </Column>
-      <Row className="justify-between max-w-screen-xl w-full grow px-4 md:px-8 mb-2">
-        <Row className="justify-between md:justify-normal items-center grow basis-0 flex-nowrap h-7">
+      <Row
+        className={`
+          mb-2 w-full max-w-(--breakpoint-xl) grow justify-between px-4
+          md:px-8
+        `}
+      >
+        <Row
+          className={`
+            h-7 grow basis-0 flex-nowrap items-center justify-between
+            md:justify-normal
+          `}
+        >
           <Button
             icon="pin-solid"
             size="super-condensed"
@@ -360,13 +374,26 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
 
       <Row className={classNames("w-full h-full", !isReady && "hidden")}>
         {data.length ? (
-          <Column className="hidden lg:flex w-[50vw] overflow-y-scroll h-[calc(100vh-230px)] px-3 -mt-[2px]">
+          <Column
+            className={`
+              -mt-[2px] hidden h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll
+              px-3
+              lg:flex
+            `}
+          >
             {placeCards}
           </Column>
         ) : null}
         <Column
           onClick={() => setSelectedPlaceId(null)}
-          className={data.length ? "w-screen lg:w-[50vw] " : "w-full"}
+          className={
+            data.length
+              ? `
+                w-screen
+                lg:w-[50vw]
+              `
+              : "w-full"
+          }
         >
           <GeoMap
             ref={mapRef}
@@ -390,8 +417,12 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
             googleMapsMapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID ?? ""}
             locations={data}
           />
-          <Row className="absolute ml-3 mt-3">
-            <Phrase className="bg-primary-1000/70 px-3 py-1 text-sm rounded-md text-primary-0">
+          <Row className="absolute mt-3 ml-3">
+            <Phrase
+              className={`
+                bg-primary-1000/70 text-primary-0 rounded-md px-3 py-1 text-sm
+              `}
+            >
               {placeCards.length
                 ? `${dict["Showing"]} ${maybePluralize(
                     placeCards.length,
@@ -403,7 +434,10 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           </Row>
 
           <Row
-            className="grow bottom-0 absolute w-full box-border justify-center lg:hidden"
+            className={`
+              absolute bottom-0 box-border w-full grow justify-center
+              lg:hidden
+            `}
             onClick={(e) => e.stopPropagation()}
           >
             {selectedCard}

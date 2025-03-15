@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { Admin } from "@/features/Admin/Admin";
 import { authOptions } from "@/lib";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 export default async function ProtectedPage() {
   const session = await getServerSession(authOptions);

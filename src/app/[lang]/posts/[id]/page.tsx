@@ -13,9 +13,9 @@ type Props = {
 };
 
 type PostData = {
-  title: string;
-  date: string;
   contentHtml: string;
+  date: string;
+  title: string;
 };
 
 export async function generateMetadata({ params }: Props) {
@@ -33,25 +33,28 @@ export default async function Post({ params }: Props) {
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-col max-w-screen-xl px-5 lg:px-24 py-16 m-auto font-nunito">
+    <div className={`
+      font-nunito m-auto flex max-w-(--breakpoint-xl) flex-col px-5 py-16
+      lg:px-24
+    `}>
       <Breadcrumbs
         items={[
           { title: dict["Posts"], url: `/${lang}/posts` },
           { title: postData.title },
         ]}
       />
-      <h1 className="mt-12 font-extrabold text-5xl text-slate-700">
+      <h1 className="mt-12 text-5xl font-extrabold text-slate-700">
         {postData.title}
       </h1>
 
-      <div className="text-slate-500 font-medium text-right my-2">
-        <span className="inline-block border-slate-300 border-l-2 pl-4">
+      <div className="my-2 text-right font-medium text-slate-500">
+        <span className="inline-block border-l-2 border-slate-300 pl-4">
           <Date dateString={postData.date} />
         </span>
       </div>
 
       <div
-        className="opacity-90 mt-8"
+        className="mt-8 opacity-90"
         dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
       />
     </div>

@@ -1,14 +1,15 @@
+import { formatDate, formatDistanceToNow } from "date-fns";
+import { enUS, uk } from "date-fns/locale";
+
 import { Badge, Column, Row, Table, Tooltip } from "@/components";
 import { Dictionary } from "@/dictionaries";
 import ShareLocationLink from "@/features/ShareLocationLink/ShareLocationLink";
 import { useLanguage, useLocations } from "@/hooks";
 import { CONNOTATIONS } from "@/types";
-import { formatDate, formatDistanceToNow } from "date-fns";
-import { enUS, uk } from "date-fns/locale";
 
 const MyLocations = () => {
-  const { getUserLocations } = useLocations();
-  const { data, error, loading } = getUserLocations({});
+  const { useUserLocations } = useLocations();
+  const { data, error, loading } = useUserLocations({});
 
   const { dict, lang } = useLanguage();
 
@@ -16,8 +17,6 @@ const MyLocations = () => {
     {
       dataIndex: "status",
       key: "status",
-      sorter: false,
-      title: dict["Status"],
       render: (status: unknown) => {
         let connotation = CONNOTATIONS.primary;
         if (status === "active") {
@@ -36,27 +35,28 @@ const MyLocations = () => {
           </Badge>
         );
       },
+      sorter: false,
+      title: dict["Status"],
     },
     {
       dataIndex: "name",
       key: "name",
+      render: (name: unknown) => <strong>{String(name)}</strong>,
       sorter: false,
       title: dict["Name"],
-      render: (name: unknown) => <strong>{String(name)}</strong>,
     },
     {
       dataIndex: "category",
       key: "category",
-      sorter: false,
-      title: dict["Category"],
       render: (category: unknown) => (
         <>{dict[category as keyof Dictionary] ?? "-"}</>
       ),
+      sorter: false,
+      title: dict["Category"],
     },
     {
       dataIndex: "created_at",
       key: "created_at",
-      sorter: false,
       render: (createdAt: unknown) =>
         typeof createdAt === "string" ? (
           <Tooltip text={formatDate(createdAt, "dd/MM/yyyy HH:mm")}>
@@ -70,6 +70,7 @@ const MyLocations = () => {
         ) : (
           "-"
         ),
+      sorter: false,
       title: dict["Created"],
     },
   ];

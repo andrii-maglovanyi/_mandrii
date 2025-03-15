@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Nunito } from "next/font/google";
 import "../globals.css";
+
+import type { Metadata } from "next";
+import { Nunito } from "next/font/google";
+import localFont from "next/font/local";
 
 const leOsler = localFont({
   display: "swap",
@@ -27,8 +28,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Мандрій",
   description: "Букви та картинки",
+  title: "Мандрій",
 };
 
 export default async function RootLayout({
@@ -39,7 +40,12 @@ export default async function RootLayout({
   return (
     <html>
       <body
-        className={`${nunito.variable} font-nunito ${leOsler.variable} font-leOsler`}
+        className={`
+          ${nunito.variable}
+          font-nunito
+          ${leOsler.variable}
+          font-leOsler
+        `}
       >
         <div className="relative">{children}</div>
       </body>

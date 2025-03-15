@@ -1,3 +1,7 @@
+import { formatDate, formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+import { useState } from "react";
+
 import {
   Badge,
   Button,
@@ -12,21 +16,22 @@ import {
   Tooltip,
 } from "@/components";
 import { useNotifications } from "@/hooks";
-
 import { useLocations } from "@/hooks";
-import { CONNOTATIONS, Status, Ukrainian_Locations } from "@/types";
-import { formatDate, formatDistanceToNow } from "date-fns";
-import Link from "next/link";
-import { useState } from "react";
+import {
+  CONNOTATIONS,
+  GetAdminLocationsQuery,
+  Status,
+  Ukrainian_Locations,
+} from "@/types";
 
 interface ExpandedPlaceViewProps {
-  isBusy: boolean;
-  location: Ukrainian_Locations;
   changeLocationStatus: (
     id: number,
     name: string,
     status: Status
   ) => Promise<void>;
+  isBusy: boolean;
+  location: GetAdminLocationsQuery["ukrainian_locations"][number];
 }
 
 const hasProperty = <T extends object>(
@@ -54,7 +59,7 @@ const COLUMNS = [
         return value ?? "-";
       } else if (name === "images" && Array.isArray(value) && value.length) {
         return (
-          <Column className="relative w-96 h-96">
+          <Column className="relative h-96 w-96">
             <ImageCarousel
               images={value.map(
                 (image) =>
@@ -74,6 +79,7 @@ const COLUMNS = [
             <a
               target="_blank"
               href={`https://www.google.com/maps?q=${value.coordinates[1]},${value.coordinates[0]}`}
+              rel="noreferrer"
             >
               <Badge connotation="cta" layout="soft">
                 {value.coordinates[1]}, {value.coordinates[0]}
@@ -122,21 +128,26 @@ const ExpandIcon = ({
 }: {
   expanded: boolean;
   onExpand: (
-    record: any,
+    record: GetAdminLocationsQuery["ukrainian_locations"][number],
     e: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element>
   ) => void;
-  record: any;
+  record: GetAdminLocationsQuery["ukrainian_locations"][number];
 }) => <Expand expanded={expanded} onExpand={(e) => onExpand(record, e)} />;
 
 const ExpandedPlaceView = ({
-  location,
-  isBusy,
   changeLocationStatus,
+  isBusy,
+  location,
 }: ExpandedPlaceViewProps) => {
   const { id, name, status } = location;
 
   return (
-    <Card className="mb-4 mt-1 md:w-full max-w-full">
+    <Card
+      className={`
+        mt-1 mb-4 max-w-full
+        md:w-full
+      `}
+    >
       <Column>
         <Table
           columns={COLUMNS}
@@ -148,8 +159,8 @@ const ExpandedPlaceView = ({
           rowKey="name"
         />
 
-        <Row className="flex-nowrap justify-end mt-4">
-          {status !== "active" && (
+        <Row className="mt-4 flex-nowrap justify-end">
+          {status !== "ACTIVE" && (
             <Button
               disabled={isBusy}
               connotation="success"
@@ -161,7 +172,7 @@ const ExpandedPlaceView = ({
             />
           )}
 
-          {status !== "rejected" && (
+          {status !== "REJECTED" && (
             <Button
               disabled={isBusy}
               className="ml-2"
@@ -174,7 +185,7 @@ const ExpandedPlaceView = ({
             />
           )}
 
-          {status !== "archived" && (
+          {status !== "ARCHIVED" && (
             <Button
               disabled={isBusy}
               className="ml-2"
@@ -193,18 +204,18 @@ const ExpandedPlaceView = ({
 };
 
 const ManagePlaces = () => {
-  const { getAdminLocations, updateLocationStatus } = useLocations();
-  const { loading, data, error } = getAdminLocations({});
-  const { showSuccess, showError } = useNotifications();
+  const { updateLocationStatus, useAdminLocations } = useLocations();
+  const { data, loading } = useAdminLocations({});
+  const { showError, showSuccess } = useNotifications();
   const [isBusy, setIsBusy] = useState(false);
 
   const COLUMNS = [
     {
       dataIndex: "name",
       key: "name",
+      render: (name: unknown) => <strong>{String(name)}</strong>,
       sorter: false,
       title: "Name",
-      render: (name: unknown) => <strong>{String(name)}</strong>,
     },
     {
       dataIndex: "category",
@@ -216,7 +227,6 @@ const ManagePlaces = () => {
     {
       dataIndex: "created_at",
       key: "created_at",
-      sorter: false,
       render: (createdAt: unknown) =>
         typeof createdAt === "string" ? (
           <Tooltip text={formatDate(createdAt, "dd/MM/yyyy HH:mm")}>
@@ -229,13 +239,12 @@ const ManagePlaces = () => {
         ) : (
           "-"
         ),
+      sorter: false,
       title: "Created",
     },
     {
       dataIndex: "status",
       key: "status",
-      sorter: false,
-      title: "Status",
       render: (status: unknown) => {
         let connotation = CONNOTATIONS.primary;
         if (status === "active") {
@@ -254,6 +263,8 @@ const ManagePlaces = () => {
           </Badge>
         );
       },
+      sorter: false,
+      title: "Status",
     },
     EXPAND_COLUMN,
   ];

@@ -1,7 +1,6 @@
 import "server-only";
-import { Locale } from "./i18n-config";
 
-const dictionary = await import("./dict.json").then((module) => module.default);
+import { Locale } from "./i18n-config";
 
 const dictionaries = {
   base: () => import("./dict.json").then((module) => module.default),

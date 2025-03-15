@@ -15,7 +15,7 @@ export const Card = ({
   return (
     <div
       className={deduplicateClass(
-        `w-full md:w-3/4 max-w-screen-md mx-auto p-6 bg-primary-0 dark:bg-primary-900 shadow-lg rounded-lg
+        `w-full md:w-3/4 max-w-(--breakpoint-md) mx-auto p-6 bg-primary-0 dark:bg-primary-900 shadow-lg rounded-lg
 
         ${onClick ? "cursor-pointer hover:shadow-xl" : ""}
       `,

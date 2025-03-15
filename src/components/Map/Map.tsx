@@ -1,32 +1,34 @@
 "use client";
 
+import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import React, {
-  useRef,
-  useEffect,
   ForwardedRef,
   forwardRef,
-  useImperativeHandle,
   useCallback,
+  useEffect,
+  useImperativeHandle,
   useMemo,
+  useRef,
 } from "react";
-import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
-import { createDashedCirclePolyline } from "./utils";
-import { Row } from "../Row/Row";
+
 import { sendToMixpanel } from "@/lib/mixpanel";
-import { GetPublicLocationsQuery, Ukrainian_Locations } from "@/types";
+import { GetPublicLocationsQuery } from "@/types";
+
+import { Row } from "../Row/Row";
+import { createDashedCirclePolyline } from "./utils";
 
 interface MapProps {
-  zoom: number;
-  onLoadedAction: (isLoaded: boolean) => void;
-  selectedPlaceId: number | null;
-  onPlaceSelectedAction: (id: number) => void;
   distance: number;
+  googleMapsApiKey: string;
+  googleMapsMapId: string;
   location: google.maps.LatLngLiteral | undefined;
   locations: GetPublicLocationsQuery["ukrainian_locations"];
   mapContainerStyle?: React.CSSProperties;
-  googleMapsApiKey: string;
+  onLoadedAction: (isLoaded: boolean) => void;
+  onPlaceSelectedAction: (id: number) => void;
+  selectedPlaceId: number | null;
   showMe?: boolean;
-  googleMapsMapId: string;
+  zoom: number;
 }
 
 export interface GoogleMapRef {
@@ -38,25 +40,25 @@ type GoogleMapInstance = google.maps.Map;
 type Polyline = google.maps.Polyline;
 
 const OPTIONS = {
-  mapTypeControl: false,
   fullscreenControl: false,
+  mapTypeControl: false,
   streetViewControl: false,
 };
 const libraries: Libraries = ["marker", "places"];
 
 const MapComponent = (
   {
-    zoom,
-    locations,
-    location,
-    onLoadedAction,
-    showMe,
-    selectedPlaceId,
-    onPlaceSelectedAction,
     distance,
-    mapContainerStyle = { width: "100%", height: "100%" },
     googleMapsApiKey,
     googleMapsMapId,
+    location,
+    locations,
+    mapContainerStyle = { height: "100%", width: "100%" },
+    onLoadedAction,
+    onPlaceSelectedAction,
+    selectedPlaceId,
+    showMe,
+    zoom,
   }: MapProps,
   ref: ForwardedRef<GoogleMapRef>
 ) => {
@@ -120,7 +122,7 @@ const MapComponent = (
     markersRef.current.clear();
     labelSpansRef.current.clear();
 
-    locations.forEach(({ id, name, geo }) => {
+    locations.forEach(({ geo, id, name }) => {
       const contentDiv = document.createElement("div");
       contentDiv.style.cursor = "pointer";
 
@@ -163,12 +165,12 @@ const MapComponent = (
       contentDiv.appendChild(labelSpan);
 
       const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
+        content: contentDiv,
         map,
         position: {
           lat: geo.coordinates[1],
           lng: geo.coordinates[0],
         },
-        content: contentDiv,
         title: name,
       });
 
@@ -258,7 +260,7 @@ const MapComponent = (
 
   if (!isLoaded) {
     return (
-      <Row className="h-full w-full justify-center items-center">
+      <Row className="h-full w-full items-center justify-center">
         Loading map...
       </Row>
     );

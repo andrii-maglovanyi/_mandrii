@@ -44,5 +44,5 @@ export const extractLocationData = (response: GeocodeResponse) => {
 
   if (!city || !country || !area || !address) return null;
 
-  return { city, country, area, address, coordinates };
+  return { address, area, city, coordinates, country };
 };

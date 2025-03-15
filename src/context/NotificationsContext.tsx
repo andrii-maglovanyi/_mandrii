@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useReducer, ReactNode } from "react";
-import type { CONNOTATIONS } from "@/types";
 import { nanoid } from "nanoid";
+import React, { createContext, ReactNode, useReducer } from "react";
+
+import type { CONNOTATIONS } from "@/types";
 
 interface NotificationPayload {
   header?: string;
@@ -28,9 +29,14 @@ const initialState: NotificationsState = {
   notifications: [],
 };
 
+type Actions =
+  | { payload: NotificationPayload; type: "NEW_NOTIFICATION" }
+  | { payload: string; type: "REMOVE_NOTIFICATION" }
+  | { type: "RESET" };
+
 const notificationsReducer = (
   state: NotificationsState,
-  action: { type: string; payload?: any }
+  action: Actions
 ): NotificationsState => {
   switch (action.type) {
     case "NEW_NOTIFICATION": {
@@ -80,10 +86,10 @@ export const NotificationsProvider = ({
   const [state, dispatch] = useReducer(notificationsReducer, initialState);
 
   const newNotification = (payload: NotificationPayload) =>
-    dispatch({ type: "NEW_NOTIFICATION", payload });
+    dispatch({ payload, type: "NEW_NOTIFICATION" });
 
   const removeNotification = (id: string) =>
-    dispatch({ type: "REMOVE_NOTIFICATION", payload: id });
+    dispatch({ payload: id, type: "REMOVE_NOTIFICATION" });
 
   const reset = () => dispatch({ type: "RESET" });
 

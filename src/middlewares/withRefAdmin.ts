@@ -1,4 +1,5 @@
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest } from "next/server";
+
 import { MiddlewareFactory } from "./stackHandler";
 
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY!;

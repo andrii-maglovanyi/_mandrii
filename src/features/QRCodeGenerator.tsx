@@ -6,29 +6,29 @@ const margin = dimension / 16;
 const fontSize = margin;
 
 const qrCode = new QRCodeStyling({
-  width: dimension,
-  height: dimension + margin * 6,
-  margin,
-  image: "/assets/logo/mandrii_transparent.png",
   cornersDotOptions: {
     type: "dot",
   },
   cornersSquareOptions: {
-    type: "extra-rounded",
     color: "#273D6C",
+    type: "extra-rounded",
   },
   dotsOptions: {
-    type: "rounded",
     color: "#12284A",
+    type: "rounded",
   },
+  height: dimension + margin * 6,
+  image: "/assets/logo/mandrii_transparent.png",
   imageOptions: {
     hideBackgroundDots: true,
     imageSize: 0.5,
     margin: margin / 4,
   },
+  margin,
   qrOptions: {
     errorCorrectionLevel: "M",
   },
+  width: dimension,
 });
 
 const QRCodeGenerator = () => {
@@ -95,7 +95,8 @@ const QRCodeGenerator = () => {
         }
       }, 2000);
       setIsDisabled(false);
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       setIsDisabled(true);
     }
   }, [text]);
@@ -107,24 +108,33 @@ const QRCodeGenerator = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-4xl p-8 lg:p-24 m-auto">
+    <div
+      className={`
+        m-auto flex max-w-4xl flex-col p-8
+        lg:p-24
+      `}
+    >
       <div className="flex">
         <input
-          className="border border-gray-300 p-2 rounded mr-4 w-full"
+          className="mr-4 w-full rounded-sm border border-gray-300 p-2"
           type="text"
           name="link"
           onChange={(e) => setText(e.target.value)}
         />
         <button
           disabled={isDisabled}
-          className="bg-[#273D6C] hover:bg-[#12284A] text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`
+            rounded-sm bg-[#273D6C] px-4 py-2 font-bold text-white
+            hover:bg-[#12284A]
+            disabled:cursor-not-allowed disabled:opacity-50
+          `}
           onClick={handleDownload}
         >
           Download
         </button>
       </div>
 
-      <div className="mt-8 flex justify-center font-leOsler" ref={qrRef} />
+      <div className="font-leOsler mt-8 flex justify-center" ref={qrRef} />
     </div>
   );
 };

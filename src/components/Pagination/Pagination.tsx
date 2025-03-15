@@ -32,7 +32,7 @@ export const Pagination = ({
 
     if (showStartEllipsis) {
       pages.push(
-        <span className="mx-2 px-1.5 text-primary-1000" key="ellipsis-start">
+        <span className="text-primary-1000 mx-2 px-1.5" key="ellipsis-start">
           ...
         </span>,
       );
@@ -66,7 +66,7 @@ export const Pagination = ({
 
     if (showEndEllipsis) {
       pages.push(
-        <span className="mx-2 px-1.5 text-primary-1000" key="ellipsis-end">
+        <span className="text-primary-1000 mx-2 px-1.5" key="ellipsis-end">
           ...
         </span>,
       );

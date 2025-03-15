@@ -1,8 +1,8 @@
 interface UserData {
   email?: string | null;
-  name?: string | null;
-  image?: string | null;
   id: string;
+  image?: string | null;
+  name?: string | null;
 }
 
 const DEFAULT_ROLE = "user";
@@ -37,7 +37,7 @@ const GET_USER_QUERY = `
         }
     `;
 
-export const saveUser = async ({ email, name, image, id }: UserData) => {
+export const saveUser = async ({ email, id, image, name }: UserData) => {
   const variables = {
     email,
     full_name: name || "anonymous",
@@ -50,12 +50,12 @@ export const saveUser = async ({ email, name, image, id }: UserData) => {
   const response = await fetch(
     process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
     {
-      method: "POST",
+      body: JSON.stringify({ query: INSERT_USER_MUTATION, variables }),
       headers: {
         "Content-Type": "application/json",
         "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET!,
       },
-      body: JSON.stringify({ query: INSERT_USER_MUTATION, variables }),
+      method: "POST",
     }
   );
 
@@ -72,15 +72,15 @@ export const saveUser = async ({ email, name, image, id }: UserData) => {
   const existingUserResponse = await fetch(
     process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET!,
-      },
       body: JSON.stringify({
         query: GET_USER_QUERY,
         variables: { google_id: id },
       }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET!,
+      },
+      method: "POST",
     }
   );
 

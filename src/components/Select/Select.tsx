@@ -1,15 +1,16 @@
 "use client";
 
-import type { BaseComponentProps, NameValueObject } from "@/types";
-import { isNotEmpty, toNameValueObject } from "@/utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import type { BaseComponentProps, NameValueObject } from "@/types";
+import { isNotEmpty, toNameValueObject } from "@/utils";
 import { getDropdownVerticalPosition } from "@/utils";
+
+import { Autocomplete, Option } from "../Autocomplete/Autocomplete";
 import { Button } from "../Button/Button";
 import { Icon } from "../Icon/Icon";
 import { OnBlurDetector } from "../OnBlurDetector/OnBlurDetector";
-import { Autocomplete, Option } from "../Autocomplete/Autocomplete";
 
 export interface SelectProps<T> extends BaseComponentProps {
   defaultValue?: Option<T>;
@@ -25,9 +26,7 @@ export interface SelectProps<T> extends BaseComponentProps {
   width?: string | number;
 }
 
-export const itemStyles = `
-    flex items-center cursor-pointer whitespace-nowrap select-none relative
-    p-3 mx-1 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 
+export const itemStyles = ` p-3 flex items-center cursor-pointer whitespace-nowrap select-none relative mx-1 hover:bg-primary-50 focus:outline-hidden focus:bg-primary-50 
     dark:hover:bg-primary-900 dark:focus:bg-primary-900 rounded-md `;
 
 export const Select = <T extends string | number>({
@@ -49,9 +48,7 @@ export const Select = <T extends string | number>({
   const toggleSelect = () => setIsOpen(!isOpen);
   const groupRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { focusedIndex, handleKeyDown } = useKeyboardNavigation(
-    groupRef.current
-  );
+  const { handleKeyDown } = useKeyboardNavigation(groupRef.current);
 
   const normalizedItems = items.filter(isNotEmpty).map(toNameValueObject);
   const options = useMemo(
@@ -136,7 +133,7 @@ export const Select = <T extends string | number>({
    pl-4 pr-10 h-10 mt-0.5 bg-primary-0 dark:bg-primary-950/50 dark:text-primary-0 
    text-left ${borderStyles} border hover:bg-primary-0 hover:border-primary-950 
    dark:hover:border-white dark:hover:bg-primary-1000 rounded-md 
-   focus:outline-none active:bg-primary-0 dark:active:bg-primary-1000
+   focus:outline-hidden active:bg-primary-0 dark:active:bg-primary-1000
   ${
     disabled &&
     "disabled:border-primary-300 disabled:bg-primary-100 dark:disabled:bg-primary-900 disabled:border-primary-300 dark:disabled:border-primary-600"
@@ -161,9 +158,8 @@ export const Select = <T extends string | number>({
         {label ? (
           <label
             className={`
-              inline-block text-nowrap
-
               dark:text-primary-0
+              inline-block text-nowrap
             `}
             data-testid={`${testId}-label`}
           >
@@ -179,7 +175,7 @@ export const Select = <T extends string | number>({
           onKeyDown={(e) => handleKeyDown(e, toggleSelect)}
           type="button"
         >
-          <span className="mr-1 flex-grow truncate">
+          <span className="mr-1 grow truncate">
             {options?.find(({ value }) => value === selectedOption)?.name ??
               "-"}
           </span>

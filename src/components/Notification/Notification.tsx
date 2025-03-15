@@ -1,11 +1,12 @@
 "use client";
 
+import { memo, useEffect } from "react";
+
 import {
   type BaseComponentProps,
   CONNOTATIONS,
   type Connotations,
 } from "@/types";
-import { memo, useEffect } from "react";
 
 import { Button } from "../Button/Button";
 import { Icon, type IconType } from "../Icon/Icon";
@@ -71,10 +72,9 @@ export const Notification = memo(function Snackbar({
     open && (
       <div
         className={`
-          fixed bottom-4 left-0 right-0 z-50 mx-auto flex max-w-[90%] min-w-96 w-min transform
-          items-center justify-between rounded-lg bg-primary-1000 p-4
-          text-primary-0 drop-shadow-base transition-transform
-
+          bg-primary-1000 text-primary-0 drop-shadow-base fixed right-0 bottom-4
+          left-0 z-50 mx-auto flex w-min max-w-[90%] min-w-96 transform
+          items-center justify-between rounded-lg p-4 transition-transform
           dark:bg-primary-50 dark:text-primary-1000
         `}
         data-testid={testId}
@@ -86,21 +86,18 @@ export const Notification = memo(function Snackbar({
         {snackbarIcon}
         <div>
           {header ? (
-            <div className="mb-1 font-semibold text-lg">{header}</div>
+            <div className="mb-1 text-lg font-semibold">{header}</div>
           ) : null}
           <div className="truncate">{message}</div>
         </div>
         {dismissible && (
-          <div className="ml-4 border-l border-primary-200 pl-2">
+          <div className="border-primary-200 ml-4 border-l pl-2">
             <Button
               className={`
                 fill-primary-50
-
                 active:bg-primary-800
-
-                dark:fill-primary-1000 dark:hover:bg-transparent
-                dark:active:bg-primary-100
-
+                dark:fill-primary-1000 dark:active:bg-primary-100
+                dark:hover:bg-transparent
                 hover:bg-transparent
               `}
               data-testid="snackbar-button"

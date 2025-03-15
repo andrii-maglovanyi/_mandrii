@@ -1,8 +1,9 @@
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
+import path from "path";
 import { remark } from "remark";
 import html from "remark-html";
+
 import { Language } from "@/types";
 
 const postsDirectory = path.join(process.cwd(), "posts");
@@ -58,8 +59,8 @@ export async function getPostData(id: string, lang: Language["lang"]) {
   const contentHtml = processedContent.toString();
 
   return {
-    id,
     contentHtml,
+    id,
     ...(matterResult.data as { date: string; dest: string; title: string }),
   };
 }

@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib";
-import { geocodeAddress } from "./geo";
-import { saveLocation, Ukrainian_Locations_Data } from "./location";
 import slugify from "slugify";
+
+import { authOptions } from "@/lib";
+import {
+  Ukrainian_Location_Categories_Enum,
+  Ukrainian_Location_Statuses_Enum,
+} from "@/types";
+
+import { geocodeAddress } from "./geo";
 import { processAndUploadImage } from "./images";
+import { saveLocation, Ukrainian_Locations_Data } from "./location";
 import { saveUser } from "./user";
 
 export async function POST(request: NextRequest) {
@@ -16,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await request.formData();
-    let body = Object.fromEntries(data);
+    const body = Object.fromEntries(data);
 
     const geo = await geocodeAddress(
       body.address.toString().trim(),
@@ -31,35 +37,35 @@ export async function POST(request: NextRequest) {
 
     const locationData: Ukrainian_Locations_Data = {
       ...geoData,
-      geo: {
-        type: "Point",
-        coordinates,
-      },
-      name: body.name.toString().trim(),
+      category: body.category as Ukrainian_Location_Categories_Enum,
       description_en: body.descriptionEn.toString(),
       description_uk: body.descriptionUk.toString(),
-      website: body.website.toString().trim(),
       emails: [body.email.toString().trim()],
-      category: body.category.toString(),
+      geo: {
+        coordinates,
+        type: "Point",
+      },
+      images: [],
+      name: body.name.toString().trim(),
+      phone_numbers: [],
       slug: slugify(`${body.name} ${area}`, {
         lower: true,
         strict: true,
       }),
-      status: "pending",
-      phone_numbers: [],
-      images: [],
+      status: Ukrainian_Location_Statuses_Enum.Pending,
       user_id: 0,
+      website: body.website.toString().trim(),
     };
 
-    Object.entries(body).forEach(([key, value]: any) => {
-      if (key.startsWith("phoneNumbers")) {
+    Object.entries(body).forEach(([key, value]: [string, string | Blob]) => {
+      if (key.startsWith("phoneNumbers") && typeof value === "string") {
         locationData.phone_numbers?.push(value);
       }
     });
 
     const imageFiles: Array<Blob> = [];
-    Object.entries(body).forEach(([key, value]: any) => {
-      if (key.startsWith("image")) {
+    Object.entries(body).forEach(([key, value]: [string, string | Blob]) => {
+      if (key.startsWith("image") && typeof value === "object") {
         imageFiles.push(value);
       }
     });
@@ -80,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     const id = await saveLocation(locationData);
 
-    return NextResponse.json({ success: true, id }, { status: 200 });
+    return NextResponse.json({ id, success: true }, { status: 200 });
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

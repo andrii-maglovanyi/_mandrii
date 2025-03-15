@@ -20,14 +20,13 @@ export const EmptyState = ({
   >
     <div
       className={`
-        mb-8 flex h-[120px] w-[120px] items-center justify-center rounded-full
-        bg-primary-100
+        bg-primary-100 mb-8 flex h-[120px] w-[120px] items-center justify-center
+        rounded-full
       `}
     >
       <Icon
         className={`
           fill-primary-600
-
           dark:fill-primary-900
         `}
         customSize={36}
@@ -37,14 +36,13 @@ export const EmptyState = ({
     </div>
 
     {heading ? (
-      <div className="text-lg font-semibold text-primary-600">{heading}</div>
+      <div className="text-primary-600 text-lg font-semibold">{heading}</div>
     ) : null}
     {body ? (
       <div
         className={`
-          mt-1.5 text-primary-1000 max-w-screen-sm
-
-          dark:text-primary-0 text-center
+          text-primary-1000 mt-1.5 max-w-(--breakpoint-sm) text-center
+          dark:text-primary-0
         `}
       >
         {body}

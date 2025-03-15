@@ -43,7 +43,6 @@ export const Spinner = ({
         <circle
           className={`
             !stroke-black
-
             dark:!stroke-white
           `}
           cx="8px"

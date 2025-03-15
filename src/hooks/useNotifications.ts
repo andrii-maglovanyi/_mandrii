@@ -1,6 +1,7 @@
+import { useCallback, useContext } from "react";
+
 import { NotificationsContext } from "@/context/NotificationsContext";
 import { CONNOTATIONS } from "@/types";
-import { useCallback, useContext } from "react";
 
 interface Options {
   header?: string;
@@ -20,7 +21,7 @@ export const useNotifications = () => {
     throw new Error("Notifications context is missing");
   }
 
-  const { notifications, newNotification, removeNotification } = context;
+  const { newNotification, notifications, removeNotification } = context;
 
   const showNotification = useCallback(
     (type: CONNOTATIONS, message: string, header?: string) => {
@@ -52,8 +53,8 @@ export const useNotifications = () => {
 
   return {
     dismissNotification,
+    notifications,
     showError,
     showSuccess,
-    notifications,
   };
 };

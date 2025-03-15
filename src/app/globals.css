@@ -1,45 +1,121 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 234, 239, 240;
-  --background-end-rgb: 255, 255, 255;
+@theme {
+  --color-ukraine-blue: #336fb0;
+  --color-ukraine-darkBlue: #255ea0;
+  --color-ukraine-yellow: #f8d848;
+
+  --color-alert-50: #ffeef2;
+  --color-alert-100: #fedfdf;
+  --color-alert-200: #ffbbbb;
+  --color-alert-300: #fe9696;
+  --color-alert-400: #f75959;
+  --color-alert-500: #e61d1d;
+  --color-alert-600: #cd0d0d;
+  --color-alert-700: #9f0202;
+  --color-alert-800: #6e0000;
+  --color-alert-900: #3e0004;
+  --color-alert-950: #250004;
+
+  --color-cta-50: #edf3fa;
+  --color-cta-100: #c9dbef;
+  --color-cta-200: #a5c4e5;
+  --color-cta-300: #81acdb;
+  --color-cta-400: #5d94d0;
+  --color-cta-500: #397dc6;
+  --color-cta-600: #2f66a2;
+  --color-cta-700: #244f7e;
+  --color-cta-800: #1a395a;
+  --color-cta-900: #102236;
+  --color-cta-950: #050b12;
+
+  --color-primary-0: #FFFFFF;
+  --color-primary-50: #F2F2F2;
+  --color-primary-100: #E6E6E6;
+  --color-primary-200: #CCCCCC;
+  --color-primary-300: #B3B3B3;
+  --color-primary-400: #929292;
+  --color-primary-500: #757575;
+  --color-primary-600: #666666;
+  --color-primary-700: #4D4D4D;
+  --color-primary-800: #333333;
+  --color-primary-900: #1A1A1A;
+  --color-primary-950: #0D0D0D;
+  --color-primary-1000: #000000;
+
+  --color-success-50: #e1f8e5;
+  --color-success-100: #cfeed4;
+  --color-success-200: #86e090;
+  --color-success-300: #53ca6a;
+  --color-success-400: #30a849;
+  --color-success-500: #1c8731;
+  --color-success-600: #167629;
+  --color-success-700: #155923;
+  --color-success-800: #183a1e;
+  --color-success-900: #0a1e11;
+  --color-success-950: #060f09;
+
+  --font-nunito: var(--font-nunito), sans-serif;
+  --font-leOsler: var(--font-leOsler), cursive;
+  --font-kyivType: var(--font-kyivType), sans-serif;
+  --font-arsenal: var(--font-arsenal), serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 65, 79, 101;
-    --background-end-rgb: 96, 115, 136;
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  min-height: 100vh;
-}
-
-
-
-p {
-  @apply mb-3;
-}
-
-img[src$=".webp"] {
-  @apply p-1.5 bg-white bg-opacity-30;
+@utility text-balance {
+  text-wrap: balance;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 234, 239, 240;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 65, 79, 101;
+      --background-end-rgb: 96, 115, 136;
+    }
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    min-height: 100vh;
+  }
+
+  p {
+    @apply mb-3;
+  }
+
+  img[src$='.webp'] {
+    @apply p-1.5 bg-white opacity-30;
   }
 }
 

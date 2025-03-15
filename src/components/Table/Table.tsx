@@ -1,8 +1,9 @@
 "use client";
 
+import React, { type Key, useCallback, useEffect, useState } from "react";
+
 import type { BaseComponentProps, SortDirections, SortParams } from "@/types";
 import { deduplicateClass } from "@/utils";
-import React, { type Key, useCallback, useEffect, useState } from "react";
 
 import { EmptyState } from "../EmptyState/EmptyState";
 import { Icon } from "../Icon/Icon";
@@ -24,9 +25,9 @@ interface ExpandColumn {
   key: "table-expand-column";
 }
 
-type DataRecord = {
-  [key: string]: any;
-};
+// type DataRecord = {
+//   [key: string]: string | number | DataRecord;
+// };
 
 type ExpandIconProps<T> = {
   expanded: boolean;
@@ -44,27 +45,30 @@ interface PaginatorProps {
 interface TableProps<T> extends BaseComponentProps {
   columns: Array<Column<T> | ExpandColumn>;
   dataSource?: Array<T>;
+  emptyStateBodyMessage?: string;
+  emptyStateHeading?: string;
   expandable?: {
     expandIcon: (props: ExpandIconProps<T>) => React.ReactNode;
     expandedRowRender: (record: T) => React.ReactNode;
   };
   loading?: boolean;
   onSort?: (params: SortParams) => void;
-  emptyStateHeading?: string;
-  emptyStateBodyMessage?: string;
   pagination?: PaginatorProps;
-  rowKey: string;
+  rowKey: keyof T;
   size?: "condensed";
 }
 
-const isExpandColumn = <T extends DataRecord>(
+function isExpandColumn<T>(
   column: Column<T> | ExpandColumn
-): column is ExpandColumn => column.key === "table-expand-column";
+): column is ExpandColumn {
+  return column.key === "table-expand-column";
+}
 
-const getDataPath = <T extends DataRecord>({ key }: Pick<Column<T>, "key">) =>
-  Array.isArray(key) ? key.join(".") : key;
+function getDataPath<T>({ key }: Pick<Column<T>, "key">) {
+  return Array.isArray(key) ? key.join(".") : key;
+}
 
-const getKey = <T extends DataRecord>(record: T, rowKey: string) => {
+function getKey<T>(record: T, rowKey: keyof T) {
   const key = record[rowKey];
 
   if (typeof key !== "string" && typeof key !== "number") {
@@ -72,7 +76,7 @@ const getKey = <T extends DataRecord>(record: T, rowKey: string) => {
   }
 
   return key;
-};
+}
 
 const Paginator = React.memo(function Paginator({
   current = 1,
@@ -97,32 +101,28 @@ const Paginator = React.memo(function Paginator({
   );
 });
 
-function getNestedValue<T>(
-  obj: Record<string, any>,
-  path: string
-): T | undefined {
-  return path
-    .split(".")
-    .reduce(
-      (acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined),
-      obj
-    ) as T | undefined;
+function getNestedValue<T>(obj: T, path: string) {
+  return path.split(".").reduce((acc: unknown, key) => {
+    if (acc && Object.hasOwn(acc, key)) {
+      return acc[key as keyof typeof acc];
+    }
+  }, obj);
 }
 
-export const Table = <T extends DataRecord>({
+export function Table<T>({
   className = "",
   columns,
   "data-testid": testId = "table",
   dataSource = [],
+  emptyStateBodyMessage,
+  emptyStateHeading,
   expandable,
   loading,
   onSort,
-  emptyStateHeading,
-  emptyStateBodyMessage,
   pagination,
   rowKey,
   size,
-}: TableProps<T>) => {
+}: TableProps<T>) {
   const [data, setData] = useState(dataSource);
   const [paginator, setPaginator] = useState(pagination);
   const [expandedRows, setExpandedRows] = useState<Set<Key>>(new Set());
@@ -290,7 +290,7 @@ export const Table = <T extends DataRecord>({
     { align, className, width, ...column }: Column<T>
   ) => {
     const key = getDataPath(column);
-    const data = getNestedValue(record, key);
+    const data = getNestedValue<T>(record, key);
 
     const style: Record<string, string> = {};
     if (align) {
@@ -332,21 +332,16 @@ export const Table = <T extends DataRecord>({
         <tr
           className={`
             group
-
             ${
               expanded
                 ? ""
                 : `
-                  border-b border-primary-100
-
+                  border-primary-100 border-b
                   dark:border-primary-900
                 `
             }
-
             dark:hover:bg-primary-900
-
             hover:bg-primary-50
-
             last:border-transparent
           `}
         >
@@ -367,8 +362,7 @@ export const Table = <T extends DataRecord>({
         {expanded && (
           <tr
             className={`
-              group border-b border-primary-100
-
+              group border-primary-100 border-b
               dark:border-primary-900
             `}
           >
@@ -385,7 +379,6 @@ export const Table = <T extends DataRecord>({
     <div
       className={`
         relative min-h-32
-
         ${className}
       `}
     >
@@ -393,8 +386,7 @@ export const Table = <T extends DataRecord>({
         <colgroup>{columns.map(renderColgroup)}</colgroup>
         <thead
           className={`
-            border-b border-primary-1000
-
+            border-primary-1000 border-b
             dark:border-primary-0
           `}
         >
@@ -437,7 +429,7 @@ export const Table = <T extends DataRecord>({
       {paginator && <Paginator {...paginator} />}
     </div>
   );
-};
+}
 
 export const EXPAND_COLUMN: ExpandColumn = {
   key: "table-expand-column",

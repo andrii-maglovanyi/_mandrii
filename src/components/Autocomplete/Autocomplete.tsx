@@ -1,5 +1,3 @@
-import type { BaseComponentProps, NameValueObject } from "@/types";
-import { isNotEmpty, toNameValueObject } from "@/utils";
 import {
   forwardRef,
   Ref,
@@ -11,6 +9,8 @@ import {
 } from "react";
 
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import type { BaseComponentProps, NameValueObject } from "@/types";
+import { isNotEmpty, toNameValueObject } from "@/utils";
 import { getDropdownVerticalPosition } from "@/utils";
 
 export type Option<T> = NameValueObject<T> | T;
@@ -21,19 +21,19 @@ export interface AutocompleteProps<T> extends BaseComponentProps {
   emptyOption?: boolean;
   emptyOptionLabel?: string;
   emptyOptionValue?: T;
+  isOpen: boolean;
   items: Array<Option<T> | null | undefined>;
   label?: string;
   name?: string;
+  onOpen: (isOpen: boolean) => void;
   onSelect?: (value: NameValueObject<T>) => void;
   required?: boolean;
   width?: string | number;
-  isOpen: boolean;
-  onOpen: (isOpen: boolean) => void;
 }
 
 export const itemStyles = `
     flex items-center cursor-pointer whitespace-nowrap select-none relative
-    p-3 mx-1 mb-1 last:mb-0 hover:bg-primary-50 focus:outline-none focus:bg-primary-50 
+    p-3 mx-1 mb-1 last:mb-0 hover:bg-primary-50 focus:outline-hidden focus:bg-primary-50 
     dark:hover:bg-primary-900 dark:focus:bg-primary-900 rounded-md `;
 
 export const AutocompleteComponent = <T extends string>(
@@ -43,8 +43,8 @@ export const AutocompleteComponent = <T extends string>(
     emptyOption,
     emptyOptionLabel = "All items",
     emptyOptionValue = " " as T,
-    items,
     isOpen = false,
+    items,
     onOpen,
     onSelect,
   }: AutocompleteProps<T>,
@@ -160,7 +160,9 @@ export const AutocompleteComponent = <T extends string>(
             onClick={handler}
             onKeyDown={(e) => handleKeyDown(e, handler)}
             ref={(el) => {
-              focusedIndex === index && el?.focus();
+              if (focusedIndex === index) {
+                el?.focus();
+              }
             }}
             role="option"
             tabIndex={0}
@@ -175,10 +177,10 @@ export const AutocompleteComponent = <T extends string>(
   return (
     <div
       className={`
-            absolute z-10 rounded-md bg-primary-0 py-1 shadow-lg drop-shadow-xl
-
-            dark:bg-primary-800 dark:text-primary-0 mt-0.5
-          `}
+        bg-primary-0 absolute z-10 mt-0.5 rounded-md py-1 shadow-lg
+        drop-shadow-xl
+        dark:bg-primary-800 dark:text-primary-0
+      `}
       data-testid={`${testId}-group`}
       ref={groupRef}
       style={{ display: isOpen ? "block" : "none" }}

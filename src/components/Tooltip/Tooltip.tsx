@@ -1,7 +1,8 @@
 "use client";
 
-import type { BaseComponentProps } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import type { BaseComponentProps } from "@/types";
 
 export interface TooltipProps extends BaseComponentProps {
   children: React.ReactNode;
@@ -42,8 +43,8 @@ export const Tooltip = ({
   }, [visible, onVisibleChange]);
 
   const onMouseEnter = useCallback(() => {
-    enterTimeout.current && clearTimeout(enterTimeout.current);
-    leaveTimeout.current && clearTimeout(leaveTimeout.current);
+    if (enterTimeout.current) clearTimeout(enterTimeout.current);
+    if (leaveTimeout.current) clearTimeout(leaveTimeout.current);
     if (mouseEnterDelay) {
       enterTimeout.current = setTimeout(
         () => setVisible(true),
@@ -55,8 +56,8 @@ export const Tooltip = ({
   }, [mouseEnterDelay]);
 
   const onMouseLeave = useCallback(() => {
-    enterTimeout.current && clearTimeout(enterTimeout.current);
-    leaveTimeout.current && clearTimeout(leaveTimeout.current);
+    if (enterTimeout.current) clearTimeout(enterTimeout.current);
+    if (leaveTimeout.current) clearTimeout(leaveTimeout.current);
     if (mouseLeaveDelay) {
       enterTimeout.current = setTimeout(
         () => setVisible(false),
@@ -148,12 +149,9 @@ export const Tooltip = ({
         <div
           className={`
             absolute
-
             ${getPositionClasses()}
-
-            z-50 whitespace-nowrap rounded-lg bg-primary-1000 px-3 py-2 text-sm
-            font-semibold text-primary-0 shadow-lg
-
+            bg-primary-1000 text-primary-0 z-50 rounded-lg px-3 py-2 text-sm
+            font-semibold whitespace-nowrap shadow-lg
             dark:bg-primary-0 dark:text-primary-1000
           `}
           data-testid={testId}
@@ -162,7 +160,6 @@ export const Tooltip = ({
           <div
             className={`
               fixed h-0 w-0 border-4 border-transparent
-
               ${getArrowClasses()}
             `}
             style={{ zIndex: 1000 }}

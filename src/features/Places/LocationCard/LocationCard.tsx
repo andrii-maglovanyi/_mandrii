@@ -7,13 +7,13 @@ import {
   Row,
   Tooltip,
 } from "@/components";
-
-import { classNames } from "@/utils";
-import { InfoLine } from "./InfoLine";
+import { useNotifications } from "@/hooks";
 import { useLanguage } from "@/hooks/useLanguage";
 import { sendToMixpanel } from "@/lib";
-import { useNotifications } from "@/hooks";
 import { GetPublicLocationsQuery } from "@/types";
+import { classNames } from "@/utils";
+
+import { InfoLine } from "./InfoLine";
 
 interface LocationCardProps {
   location: GetPublicLocationsQuery["ukrainian_locations"][number];
@@ -23,18 +23,18 @@ interface LocationCardProps {
 
 export const LocationCard = ({
   location,
-  selectedId,
   onClick,
+  selectedId,
 }: LocationCardProps) => {
   const {
+    address,
+    emails,
     id,
     images = [],
     name,
-    address,
     phone_numbers,
-    emails,
-    website,
     slug,
+    website,
   } = location;
 
   const { dict, lang } = useLanguage();
@@ -45,7 +45,7 @@ export const LocationCard = ({
       <Row
         onClick={onClick}
         className={classNames(
-          "border-2 text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-slate-800 w-full h-min flex-shrink-0",
+          "border-2 text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-slate-800 w-full h-min shrink-0",
           selectedId === id
             ? "border-primary-1000 dark:border-primary-0"
             : "border-transparent"
@@ -86,7 +86,7 @@ export const LocationCard = ({
             />
           </Column>
           <Column
-            className="text-sm h-full justify-end pb-1"
+            className="h-full justify-end pb-1 text-sm"
             onClick={(e) => e.stopPropagation()}
           >
             <InfoLine

@@ -1,11 +1,15 @@
-import type { BaseComponentProps, Connotations } from "@/types";
+import {
+  type BaseComponentProps,
+  CONNOTATIONS,
+  type Connotations,
+} from "@/types";
 
 import { Icon, type IconType } from "../Icon/Icon";
 import { BadgeLayouts, Shapes, Sizes } from "../types";
 
 const SHAPE_STYLES = {
   pill: "rounded-full",
-  rounded: "rounded",
+  rounded: "rounded-sm",
 };
 
 export interface BadgeProps extends BaseComponentProps {
@@ -19,7 +23,7 @@ export interface BadgeProps extends BaseComponentProps {
 }
 
 const THEME_COLORS = {
-  alert: {
+  [CONNOTATIONS.alert]: {
     filled: `
         bg-alert-500
         text-primary-0
@@ -41,29 +45,7 @@ const THEME_COLORS = {
         dark:bg-alert-800
         `,
   },
-  announcement: {
-    filled: `
-        bg-announcement-500
-        text-primary-0
-        dark:text-primary-1000
-        dark:bg-announcement-400
-        `,
-    outlined: `
-        border
-        border-announcement-300
-        bg-transparent 
-        text-announcement-600
-        dark:border-announcement-600
-        dark:text-announcement-300
-        `,
-    soft: `
-        bg-announcement-100
-        text-announcement-800
-        dark:text-announcement-200
-        dark:bg-announcement-800
-        `,
-  },
-  cta: {
+  [CONNOTATIONS.cta]: {
     filled: `
         bg-cta-500
         text-primary-0
@@ -85,29 +67,7 @@ const THEME_COLORS = {
         dark:bg-cta-800
         `,
   },
-  info: {
-    filled: `
-        bg-info-500
-        text-primary-0
-        dark:text-primary-1000
-        dark:bg-info-400
-        `,
-    outlined: `
-        border
-        border-info-300
-        bg-transparent 
-        text-info-600
-        dark:border-info-600
-        dark:text-info-300
-        `,
-    soft: `
-        bg-info-100
-        text-info-800
-        dark:text-info-200
-        dark:bg-info-800
-        `,
-  },
-  primary: {
+  [CONNOTATIONS.primary]: {
     filled: `
         bg-primary-500
         text-primary-0
@@ -129,7 +89,7 @@ const THEME_COLORS = {
         dark:bg-primary-800
         `,
   },
-  success: {
+  [CONNOTATIONS.success]: {
     filled: `
         bg-success-500
         text-primary-0
@@ -151,28 +111,6 @@ const THEME_COLORS = {
         dark:bg-success-800
         `,
   },
-  warning: {
-    filled: `
-        bg-warning-300
-        text-primary-1000
-        dark:text-primary-0
-        dark:bg-warning-600
-        `,
-    outlined: `
-        border
-        border-warning-300
-        bg-transparent 
-        text-warning-600
-        dark:border-warning-600
-        dark:text-warning-300
-        `,
-    soft: `
-        bg-warning-100
-        text-warning-800
-        dark:text-warning-200
-        dark:bg-warning-800
-        `,
-  },
 };
 
 const sizeStyles = {
@@ -181,28 +119,20 @@ const sizeStyles = {
   normal: "h-6 leading-6 px-2.5",
 };
 
-const filledLayoutIconColors = (connotation: Connotations) => {
-  return "fill-primary-0 dark:fill-primary-1000";
-};
+const filledLayoutIconColors = "fill-primary-0 dark:fill-primary-1000";
 
 const softLayoutIconColors = {
-  alert: "fill-alert-800 dark:fill-alert-200",
-  announcement: "fill-announcement-800 dark:fill-announcement-200",
-  cta: "fill-cta-800 dark:fill-cta-200",
-  info: "fill-info-800 dark:fill-info-200",
-  primary: "fill-primary-800 dark:fill-primary-200",
-  success: "fill-success-800 dark:fill-success-200",
-  warning: "fill-warning-800 dark:fill-warning-200",
+  [CONNOTATIONS.alert]: "fill-alert-800 dark:fill-alert-200",
+  [CONNOTATIONS.cta]: "fill-cta-800 dark:fill-cta-200",
+  [CONNOTATIONS.primary]: "fill-primary-800 dark:fill-primary-200",
+  [CONNOTATIONS.success]: "fill-success-800 dark:fill-success-200",
 };
 
 const outlinedLayoutIconColors = {
-  alert: "fill-alert-600 dark:fill-alert-300",
-  announcement: "fill-announcement-600 dark:fill-announcement-300",
-  cta: "fill-cta-600 dark:fill-cta-300",
-  info: "fill-info-600 dark:fill-info-300",
-  primary: "fill-primary-600 dark:fill-primary-300",
-  success: "fill-success-600 dark:fill-success-300",
-  warning: "fill-warning-600 dark:fill-warning-300",
+  [CONNOTATIONS.alert]: "fill-alert-600 dark:fill-alert-300",
+  [CONNOTATIONS.cta]: "fill-cta-600 dark:fill-cta-300",
+  [CONNOTATIONS.primary]: "fill-primary-600 dark:fill-primary-300",
+  [CONNOTATIONS.success]: "fill-success-600 dark:fill-success-300",
 };
 
 const getThemeColor = (connotation: Connotations, layout: BadgeLayouts) =>
@@ -230,7 +160,7 @@ export const Badge = ({
   const marginSide = trailingIcon ? "ml-2" : "mr-2";
   const iconStyles = [
     marginSide,
-    layout === "filled" ? filledLayoutIconColors(connotation) : "",
+    layout === "filled" ? filledLayoutIconColors : "",
     layout === "outlined" ? outlinedLayoutIconColors[connotation] : "",
     layout === "soft" ? softLayoutIconColors[connotation] : "",
     fillStyles ?? "",

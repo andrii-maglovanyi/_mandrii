@@ -7,37 +7,37 @@ export type SocialIcon = Extract<
 
 interface SocialLinks {
   href: string;
-  title: string;
   icon: SocialIcon;
+  title: string;
 }
 
 export const DONATE_LINKS: Array<SocialLinks> = [
   {
     href: "https://patreon.com/Mandrii",
-    title: "Patreon",
     icon: "patreon",
+    title: "Patreon",
   },
   {
     href: "https://buymeacoffee.com/mandrii",
-    title: "Buy Me a Coffee",
     icon: "buymeacoffee",
+    title: "Buy Me a Coffee",
   },
 ];
 
 export const SOCIAL_LINKS: Array<SocialLinks> = [
   {
     href: "https://www.youtube.com/@m.andrii",
-    title: "@m.andrii",
     icon: "youtube",
+    title: "@m.andrii",
   },
   {
     href: "https://t.me/m_andrii_ua",
-    title: "m_andrii_ua",
     icon: "telegram",
+    title: "m_andrii_ua",
   },
   {
     href: "https://www.instagram.com/m.andrii.ua",
-    title: "m.andrii.ua",
     icon: "instagram",
+    title: "m.andrii.ua",
   },
 ];

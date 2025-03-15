@@ -2,17 +2,17 @@ import Link from "next/link";
 import React from "react";
 
 const separator = (
-  <span className="opacity-60 text-3xl inline-block mx-3">→</span>
+  <span className="mx-3 inline-block text-3xl opacity-60">→</span>
 );
 
 export const Breadcrumbs = ({
   items,
 }: {
-  items: Array<{ url?: string; title: string }>;
+  items: Array<{ title: string, url?: string; }>;
 }) => {
   const list = items
     .reduce(
-      (acc, { url, title }, index) => {
+      (acc, { title, url }, index) => {
         if (index > 0) {
           acc.push(separator);
         }
@@ -21,12 +21,15 @@ export const Breadcrumbs = ({
           url ? (
             <Link
               href={url}
-              className="opacity-80 hover:opacity-100 font-bold text-2xl hover:underline"
+              className={`
+                text-2xl font-bold opacity-80
+                hover:underline hover:opacity-100
+              `}
             >
               {title}
             </Link>
           ) : (
-            <span className="font-bold cursor-default text-2xl">{title}</span>
+            <span className="cursor-default text-2xl font-bold">{title}</span>
           )
         );
 
@@ -34,7 +37,7 @@ export const Breadcrumbs = ({
       },
       [
         <span
-          className="font-bold text-3xl m-2 opacity-80 cursor-default"
+          className="m-2 cursor-default text-3xl font-bold opacity-80"
           key="root"
         >
           /
@@ -44,7 +47,7 @@ export const Breadcrumbs = ({
     .map((item) => () => item);
 
   return (
-    <div className="flex items-center font-leOsler text-slate-700">
+    <div className="font-leOsler flex items-center text-slate-700">
       {list.map((Item, index) => (
         <Item key={index} />
       ))}

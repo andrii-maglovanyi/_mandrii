@@ -1,10 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
+
 import { Column, TabPane, Tabs } from "@/components";
 import { Dictionary } from "@/dictionaries";
 import { useLanguage } from "@/hooks";
-import dynamic from "next/dynamic";
-import { usePathname } from "next/navigation";
 
 export const Account = () => {
   const { dict } = useLanguage();
@@ -26,7 +27,10 @@ export const Account = () => {
   ];
 
   return (
-    <Column className="px-5 lg:px-24 py-8">
+    <Column className={`
+      px-5 py-8
+      lg:px-24
+    `}>
       <Tabs defer>
         {tabs.map(({ Component, name }) => (
           <TabPane key={name} tab={dict[name as keyof Dictionary]}>

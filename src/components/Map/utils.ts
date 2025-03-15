@@ -39,20 +39,22 @@ export const createDashedCirclePolyline = (
 
   // Create the polyline. We'll use icons to simulate a dash pattern.
   return new google.maps.Polyline({
-    path,
-    strokeOpacity: 0, // hide the "normal" stroke so we only see the dashed icons
-    strokeWeight: 2,
-    map,
     icons: [
       {
         icon: {
           path: "M 0,-1 0,1",
-          strokeOpacity: 1,
-          scale: 2, // size of each dash segment
+          scale: 2,
+          strokeOpacity: 1, // size of each dash segment
         },
         offset: "0",
         repeat: "10px", // distance between dashes
       },
     ],
+    map, 
+    path,
+    
+strokeOpacity: 0,
+    // hide the "normal" stroke so we only see the dashed icons
+strokeWeight: 2,
   });
 };

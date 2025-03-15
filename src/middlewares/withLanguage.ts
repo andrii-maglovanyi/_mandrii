@@ -1,7 +1,7 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { MiddlewareFactory } from "./stackHandler";
 
 import { i18n } from "../dictionaries/i18n-config";
+import { MiddlewareFactory } from "./stackHandler";
 
 const excludedRoutes = [
   "admin",
@@ -18,7 +18,7 @@ export const withLanguage: MiddlewareFactory = (next) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const url = request.nextUrl;
     const { pathname } = url;
-    const { locales, defaultLocale } = i18n;
+    const { defaultLocale, locales } = i18n;
 
     if (!excludedRoutes.some((path) => pathname.startsWith(`/${path}`))) {
       const pathnameHasLocale = locales.find(

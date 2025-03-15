@@ -9,3 +9,9 @@ generates:
     plugins:
       - "typescript"
       - "typescript-operations"
+    config:
+      scalars:
+        geography: "./geography#Geography"
+        geometry: "./geography#Geometry"
+        jsonb: "./json#Json"
+        timestamptz: string

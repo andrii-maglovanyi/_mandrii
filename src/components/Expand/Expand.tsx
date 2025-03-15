@@ -11,7 +11,6 @@ interface ExpandProps {
 
 export const Expand = ({
   collapsedMessage = "Show details",
-  "data-testid": testId = "",
   expanded,
   expandedMessage = "Hide details",
   onExpand,

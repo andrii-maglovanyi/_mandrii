@@ -1,9 +1,10 @@
-import type { BaseComponentProps, Connotations } from "@/types";
 import { forwardRef, type Ref } from "react";
 
-import type { ButtonLayouts, Shapes, Sizes } from "../types";
-import { Icon, type IconType } from "../Icon/Icon";
+import type { BaseComponentProps, Connotations } from "@/types";
 import { deduplicateClass } from "@/utils";
+
+import { Icon, type IconType } from "../Icon/Icon";
+import type { ButtonLayouts, Shapes, Sizes } from "../types";
 
 const SHAPE_STYLES = {
   pill: "rounded-full",
@@ -293,7 +294,7 @@ const ButtonComponent = (
   const iconOnly = !(children || label);
 
   const baseStyles =
-    "inline-flex items-center text-center font-semibold font-arsenal disabled:cursor-not-allowed whitespace-nowrap";
+    "inline-flex items-center text-center font-semibold font-arsenal cursor-pointer disabled:cursor-not-allowed whitespace-nowrap";
   const themeColors = getThemeColor(connotation, layout);
 
   const marginSide = trailingIcon ? "ml-2" : "mr-2";

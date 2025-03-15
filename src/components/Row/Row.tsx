@@ -1,5 +1,6 @@
-import type { BaseComponentProps, WithChildren } from "@/types";
 import { forwardRef, Ref } from "react";
+
+import type { BaseComponentProps, WithChildren } from "@/types";
 
 interface RowProps extends BaseComponentProps, WithChildren {
   style?: object;
@@ -13,7 +14,6 @@ const RowComponent = (
     ref={ref}
     className={`
       flex flex-row
-
       ${className}
     `}
     data-testid={testId}

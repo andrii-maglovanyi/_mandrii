@@ -1,10 +1,11 @@
-import { Card, H1, H2, Phrase } from "@/components";
-import { Language } from "@/types";
 import { Metadata } from "next";
 
+import { Card, H1, H2, Phrase } from "@/components";
+import { Language } from "@/types";
+
 export const metadata: Metadata = {
-  title: "How I Use Cookies | Мандрій",
   description: "Learn how and why i use cookies on our website.",
+  title: "How I Use Cookies | Мандрій",
 };
 
 type Props = {
@@ -15,7 +16,10 @@ export default async function HowIUseCookies({ params }: Props) {
   const lang = (await params).lang;
 
   return (
-    <main className="flex flex-col grow h-full py-8 md:py-12 px-3 md:px-6 justify-center">
+    <main className={`
+      flex h-full grow flex-col justify-center px-3 py-8
+      md:px-6 md:py-12
+    `}>
       <Card>
         {lang === "en" ? (
           <article>
@@ -30,7 +34,10 @@ export default async function HowIUseCookies({ params }: Props) {
 
             <H2>Why do I use cookies?</H2>
             <Phrase>For a few different purposes:</Phrase>
-            <ul className="list-disc list-inside mt-2 text-primary-1000 dark:text-primary-0">
+            <ul className={`
+              text-primary-1000 mt-2 list-inside list-disc
+              dark:text-primary-0
+            `}>
               <li>
                 To collect statistics with Mixpanel - it helps me understand how
                 many visitors are there and what I&apos;m doing right and wrong.
@@ -63,7 +70,10 @@ export default async function HowIUseCookies({ params }: Props) {
 
             <H2>Чому я використовую cookies?</H2>
             <Phrase>З кількох причин:</Phrase>
-            <ul className="list-disc list-inside mt-2 text-primary-1000 dark:text-primary-0">
+            <ul className={`
+              text-primary-1000 mt-2 list-inside list-disc
+              dark:text-primary-0
+            `}>
               <li>
                 Для збору статистики через Mixpanel – це допомагає мені
                 зрозуміти, скільки у мене відвідувачів і що я роблю правильно чи

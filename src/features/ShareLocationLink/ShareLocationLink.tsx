@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { signIn,useSession } from "next-auth/react";
+
+import { Button } from "@/components";
 import { useLanguage } from "@/hooks";
 import { sendToMixpanel } from "@/lib";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components";
 import { classNames } from "@/utils";
 
 interface ShareLocationLinkProps {
@@ -18,7 +19,7 @@ export default function ShareLocationLink({
   className = "",
 }: ShareLocationLinkProps) {
   const { data: session, status } = useSession();
-  const { lang, dict } = useLanguage();
+  const { dict, lang } = useLanguage();
   const router = useRouter();
 
   const handleClick = (e: React.SyntheticEvent<Element>) => {

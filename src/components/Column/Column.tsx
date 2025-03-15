@@ -1,5 +1,6 @@
-import type { BaseComponentProps, WithChildren } from "@/types";
 import { forwardRef, Ref } from "react";
+
+import type { BaseComponentProps, WithChildren } from "@/types";
 
 interface ColumnProps extends BaseComponentProps, WithChildren {}
 
@@ -17,7 +18,6 @@ export const ColumnComponent = (
     ref={ref}
     className={`
       flex flex-col
-
       ${className}
     `}
     data-testid={testId}

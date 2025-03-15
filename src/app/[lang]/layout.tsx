@@ -1,17 +1,19 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Arsenal, Nunito } from "next/font/google";
 import "../globals.css";
-import { NotificationsProvider } from "@/context/NotificationsContext";
-import { NotificationsTicker } from "@/features/NotificationsTicker/NotificationsTicker";
-import { LanguageProvider } from "@/context/LanguageContext";
-import { Language } from "@/types";
-import { getDictionary } from "@/dictionaries";
-import { Heading } from "@/features/Heading/Heading";
+
+import type { Metadata } from "next";
+import { Arsenal, Nunito } from "next/font/google";
+import localFont from "next/font/local";
+
 import { Column } from "@/components";
-import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
 import Providers from "@/components/Providers";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { NotificationsProvider } from "@/context/NotificationsContext";
+import { getDictionary } from "@/dictionaries";
+import { CookieConsentBar } from "@/features/CookieConsentBar/CookieConsentBar";
+import { Heading } from "@/features/Heading/Heading";
+import { NotificationsTicker } from "@/features/NotificationsTicker/NotificationsTicker";
 import ApolloWrapper from "@/lib/apollo-provider";
+import { Language } from "@/types";
 
 const kyivType = localFont({
   display: "swap",
@@ -44,9 +46,9 @@ const leOsler = localFont({
 const arsenal = Arsenal({
   display: "swap",
   preload: true,
-  weight: ["400", "700"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-arsenal",
+  weight: ["400", "700"],
 });
 
 const nunito = Nunito({
@@ -57,13 +59,13 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mandrii.com"),
-  title: "Мандрій",
   description: "мандруй / мрій / дій",
+  metadataBase: new URL("https://mandrii.com"),
   openGraph: {
     images: ["/assets/logo/mandrii.png"],
     type: "website",
   },
+  title: "Мандрій",
 };
 
 export default async function RootLayout({
@@ -80,13 +82,26 @@ export default async function RootLayout({
     <html>
       <body
         lang={lang}
-        className={`font-kyivType ${kyivType.variable} ${nunito.variable} font-nunito ${leOsler.variable} font-arsenal ${arsenal.variable} font-leOsler min-h-screen flex flex-col`}
+        className={`
+          font-kyivType
+          ${kyivType.variable}
+          ${nunito.variable}
+          font-nunito
+          ${leOsler.variable}
+          font-arsenal
+          ${arsenal.variable}
+          font-leOsler flex min-h-screen flex-col
+        `}
       >
         <Providers>
           <LanguageProvider lang={lang} dict={dict}>
             <ApolloWrapper>
               <NotificationsProvider>
-                <Column className="relative flex-1 mt-14 sm:mt-16 md:mt-20 max-w-screen overflow-x-clip">
+                <Column className={`
+                  relative mt-14 max-w-screen flex-1 overflow-x-clip
+                  sm:mt-16
+                  md:mt-20
+                `}>
                   {children}
                 </Column>
                 <Heading />

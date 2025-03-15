@@ -26,17 +26,14 @@ export const LinearProgress = ({
     <div
       className={`
         relative mx-auto h-1.5 w-full overflow-hidden rounded-md
-
         ${
           indeterminate
             ? `
               bg-primary-1000
-
               dark:bg-primary-100
             `
             : `
               bg-primary-100
-
               dark:bg-primary-800
             `
         }
@@ -69,9 +66,8 @@ export const LinearProgress = ({
       ) : (
         <div
           className={`
-            h-full rounded-md bg-primary-1000 transition-all duration-200
+            bg-primary-1000 h-full rounded-md transition-all duration-200
             ease-in-out
-
             dark:bg-primary-0
           `}
           style={{ width: `${value}%` }}

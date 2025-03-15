@@ -1,7 +1,5 @@
 "use client";
 
-import type { BaseComponentProps, NameValueObject } from "@/types";
-import { isEmail } from "@/utils";
 import {
   type ChangeEvent,
   type FocusEvent,
@@ -11,24 +9,27 @@ import {
   useState,
 } from "react";
 
+import type { BaseComponentProps, NameValueObject } from "@/types";
+import { isEmail } from "@/utils";
+
+import { Autocomplete, Option } from "../Autocomplete/Autocomplete";
 import { Button } from "../Button/Button";
 import { Icon, type IconType } from "../Icon/Icon";
-import { Autocomplete, Option } from "../Autocomplete/Autocomplete";
 import { OnBlurDetector } from "../OnBlurDetector/OnBlurDetector";
 
 export interface InputProps<T> extends BaseComponentProps {
   disabled?: boolean;
   icon?: IconType;
+  items?: Array<Option<T> | null | undefined>;
   label?: string;
   name: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => Promise<void> | void;
   onFocus?: () => void;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  onSelect?: (value: NameValueObject<T>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
+  onSelect?: (value: NameValueObject<T>) => void;
   placeholder?: string;
   required?: boolean;
-  items?: Array<Option<T> | null | undefined>;
   showValidationMessage?: boolean;
   type?: "text" | "email" | "password" | "number" | "search" | "tel" | "url";
   value?: string;
@@ -49,14 +50,14 @@ export const Input = <T extends string>({
   "data-testid": testId = "input",
   disabled = false,
   icon,
+  items,
   label,
   name,
+  onChange,
   onClear,
   onFocus,
-  onChange,
-  onSelect,
-  items,
   onKeyDown,
+  onSelect,
   placeholder,
   required = false,
   showValidationMessage = false,
@@ -70,11 +71,13 @@ export const Input = <T extends string>({
   const [inputValue, setInputValue] = useState(value);
   const [isOpen, setIsOpen] = useState(Boolean(items?.length));
 
-  const autocompleteRef = useRef<any | null>(null);
+  const autocompleteRef = useRef<HTMLUListElement | null>(null);
 
   const handleFocus = () => {
     setIsFocused(true);
-    onFocus && onFocus();
+    if (onFocus) {
+      onFocus();
+    }
   };
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -92,7 +95,9 @@ export const Input = <T extends string>({
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange && onChange(event);
+    if (onChange) {
+      onChange(event);
+    }
     const value = event.target.value;
     setInputValue(value);
     setHasError(false);
@@ -113,7 +118,12 @@ export const Input = <T extends string>({
     setHasError(false);
     setTouched(false);
     setIsOpen(false);
-    onClear ? onClear() : setInputValue("");
+
+    if (onClear) {
+      onClear();
+    } else {
+      setInputValue("");
+    }
   };
 
   useEffect(() => {
@@ -133,7 +143,7 @@ export const Input = <T extends string>({
     ? "bg-primary-100 text-primary-300 cursor-not-allowed"
     : "";
 
-  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} dark:bg-primary-950/50 dark:text-primary-0 h-10 border rounded-lg focus:outline-none
+  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} dark:bg-primary-950/50 dark:text-primary-0 h-10 border rounded-lg focus:outline-hidden
   ${getInputStyle(hasError, disabled)}
   ${focusStyle}
   ${disabledStyle}
@@ -141,7 +151,9 @@ export const Input = <T extends string>({
 
   const handleSelect = (option: NameValueObject<T>) => {
     setInputValue(option.name);
-    onSelect && onSelect(option);
+    if (onSelect) {
+      onSelect(option);
+    }
   };
 
   const iconStyles = "absolute top-1/2 left-3 transform -translate-y-1/2";
@@ -200,15 +212,14 @@ export const Input = <T extends string>({
         {showValidationMessage && (
           <p
             className={`
-            mt-1 flex h-5 items-center
-
-            dark:text-primary-0
-          `}
+              dark:text-primary-0
+              mt-1 flex h-5 items-center
+            `}
           >
             {hasError && (
               <>
                 <Icon
-                  className="mr-1 fill-alert-500"
+                  className="fill-alert-500 mr-1"
                   size="small"
                   type="info-line"
                 />

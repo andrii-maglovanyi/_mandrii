@@ -2,13 +2,13 @@ import { nanoid } from "nanoid";
 
 interface LocationData {
   city?: string;
-  regionName?: string;
-  country?: string;
   continent?: string;
+  country?: string;
+  regionName?: string;
 }
 
 interface EventProperties {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 let cachedUserID: string | null = null;
@@ -69,15 +69,11 @@ export const sendToMixpanel = (
     const userAgent: string = navigator?.userAgent ?? "Unknown";
     const platform: string = navigator?.platform ?? "Unknown";
 
-    const additionalProperties: Record<string, any> = {
-      distinct_id: userID,
-      $user_id: userID,
+    const additionalProperties: Record<string, unknown> = {
       $browser: userAgent,
       $browser_version: navigator?.appVersion ?? "Unknown",
       $city: locationData?.city ?? "Unknown",
-      $region: locationData?.regionName ?? "Unknown",
       $continent: locationData?.continent ?? "Unknown",
-      mp_country_code: locationData?.country ?? "Unknown",
       $current_url: window.location.href,
       $device: platform,
       $device_id: userAgent,
@@ -86,12 +82,16 @@ export const sendToMixpanel = (
         ? new URL(document.referrer).hostname
         : undefined,
       $os: platform,
+      $region: locationData?.regionName ?? "Unknown",
       $screen_height: window.screen?.height ?? 0,
       $screen_width: window.screen?.width ?? 0,
+      $user_id: userID,
+      distinct_id: userID,
+      mp_country_code: locationData?.country ?? "Unknown",
       ...utmParams,
     };
 
-    const properties: Record<string, any> = {
+    const properties: Record<string, unknown> = {
       ...eventProperties,
       ...additionalProperties,
     };
@@ -103,9 +103,9 @@ export const sendToMixpanel = (
     } else {
       try {
         await fetch("/api/mixpanel", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: requestBody,
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
         });
       } catch (error) {
         console.log("Error sending Mixpanel event:", error);

@@ -1,8 +1,8 @@
 import { kv } from "@vercel/kv";
 
 interface Redirect {
-  url: string;
   hits: number;
+  url: string;
 }
 
 const getKey = (topic: string) => `ref:${topic}`;
@@ -39,29 +39,35 @@ export async function DELETE(request: Request) {
 
     return Response.json({ message: "URL removed successfully" });
   } catch (error) {
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { error: `Internal Server Error: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET() {
   try {
     const allKeys = await scanAllKeys();
-    const allRedirects: { topic: string; url: string; hits: number }[] = [];
+    const allRedirects: { hits: number; topic: string; url: string }[] = [];
 
     for (const key of allKeys) {
       const redirect = await kv.get<Redirect>(key);
       if (redirect) {
         allRedirects.push({
+          hits: redirect.hits,
           topic: key.replace("ref:", ""),
           url: redirect.url,
-          hits: redirect.hits,
         });
       }
     }
 
     return Response.json(allRedirects);
   } catch (error) {
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { error: `Internal Server Error: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -83,7 +89,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Topic already exists" }, { status: 409 });
     }
 
-    const redirect: Redirect = { url, hits: 0 };
+    const redirect: Redirect = { hits: 0, url };
     await kv.set(key, redirect);
 
     return Response.json(
@@ -91,7 +97,10 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { error: `Internal Server Error: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -118,6 +127,9 @@ export async function PUT(request: Request) {
 
     return Response.json({ message: "URL updated successfully" });
   } catch (error) {
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { error: `Internal Server Error: ${error}` },
+      { status: 500 }
+    );
   }
 }

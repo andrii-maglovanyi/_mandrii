@@ -1,4 +1,5 @@
 import { WithChildren } from "@/types";
+
 import type { IconType } from "../Icon/Icon";
 
 export interface TabPaneProps extends WithChildren {

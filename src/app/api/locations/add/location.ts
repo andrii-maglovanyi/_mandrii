@@ -1,22 +1,28 @@
-import { Ukrainian_Locations } from "@/types";
+import {
+  Ukrainian_Location_Categories_Enum,
+  Ukrainian_Locations,
+} from "@/types";
 
-export type Ukrainian_Locations_Data = Omit<Ukrainian_Locations, "id">;
+export type Ukrainian_Locations_Data = Omit<
+  Ukrainian_Locations,
+  "id" | "ukrainian_location_category" | "ukrainian_location_status"
+>;
 
 export interface LocationData {
-  name: string;
   address: string;
+  category: Ukrainian_Location_Categories_Enum;
+  city: string;
+  coordinates: [number, number];
+  country: string;
   description_en: string;
   description_uk: string;
-  website: string;
-  coordinates: [number, number];
   emails: Array<string>;
-  category: string;
-  city: string;
-  country: string;
-  slug: string;
-  phone_numbers: Array<string>;
   images: Array<string>;
+  name: string;
+  phone_numbers: Array<string>;
+  slug: string;
   user_id: string;
+  website: string;
 }
 
 const INSERT_LOCATION_MUTATION = `
@@ -34,7 +40,7 @@ const INSERT_LOCATION_MUTATION = `
             $description_uk: String, 
             $website: String, 
             $slug: String!, 
-            $status: String!, 
+            $status: ukrainian_location_statuses_enum!, 
             $user_id: Int!
         ) {
             insert_ukrainian_locations_one(
@@ -65,12 +71,12 @@ export const saveLocation = async (variables: Ukrainian_Locations_Data) => {
   const response = await fetch(
     process.env.NEXT_PUBLIC_HASURA_GRAPHQL_ENDPOINT!,
     {
-      method: "POST",
+      body: JSON.stringify({ query: INSERT_LOCATION_MUTATION, variables }),
       headers: {
         "Content-Type": "application/json",
         "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET!,
       },
-      body: JSON.stringify({ query: INSERT_LOCATION_MUTATION, variables }),
+      method: "POST",
     }
   );
 

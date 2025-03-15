@@ -1,12 +1,13 @@
 "use client";
 
-import { Dictionary } from "@/dictionaries";
-import { Language } from "@/types";
 import { createContext, ReactNode } from "react";
 
+import { Dictionary } from "@/dictionaries";
+import { Language } from "@/types";
+
 interface LanguageContextType {
-  lang: Language["lang"];
   dict: Dictionary;
+  lang: Language["lang"];
 }
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(
@@ -14,13 +15,13 @@ export const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export const LanguageProvider = ({
-  lang,
-  dict,
   children,
+  dict,
+  lang,
 }: LanguageContextType & {
   children: ReactNode;
 }) => (
-  <LanguageContext.Provider value={{ lang, dict }}>
+  <LanguageContext.Provider value={{ dict, lang }}>
     {children}
   </LanguageContext.Provider>
 );

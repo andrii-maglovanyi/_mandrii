@@ -1,25 +1,24 @@
-import {
-  GetAdminLocationsQuery,
-  GetLocationsQuery,
-  GetPublicLocationsQuery,
-  GetUserLocationsQuery,
-  Status,
-  Ukrainian_Locations,
-} from "@/types";
 import { DocumentNode, gql, useMutation, useQuery } from "@apollo/client";
 import { useCallback } from "react";
 
+import {
+  GetAdminLocationsQuery,
+  GetPublicLocationsQuery,
+  GetUserLocationsQuery,
+  Status,
+} from "@/types";
+
 interface LocationsParams {
+  category?: string;
+  distance?: number;
   geo?: {
     lat: number;
     lng: number;
   };
-  distance?: number;
-  category?: string;
   slug?: string;
 }
 
-const getFilter = ({ geo, distance, category, slug }: LocationsParams) => {
+const getFilter = ({ category, distance, geo, slug }: LocationsParams) => {
   const variables: { where: Record<string, unknown> } = {
     where: {},
   };
@@ -34,8 +33,8 @@ const getFilter = ({ geo, distance, category, slug }: LocationsParams) => {
         _st_d_within: {
           distance: distance,
           from: {
-            type: "Point",
             coordinates: [geo.lng, geo.lat],
+            type: "Point",
           },
         },
       };
@@ -125,7 +124,10 @@ const GET_ADMIN_LOCATIONS = gql`
 `;
 
 export const UPDATE_LOCATION_STATUS = gql`
-  mutation UpdateLocationStatus($id: Int!, $status: String!) {
+  mutation UpdateLocationStatus(
+    $id: Int!
+    $status: ukrainian_location_statuses_enum!
+  ) {
     update_ukrainian_locations_by_pk(
       pk_columns: { id: $id }
       _set: { status: $status }
@@ -137,27 +139,30 @@ export const UPDATE_LOCATION_STATUS = gql`
   }
 `;
 
-export const useLocations = () => {
-  const getLocations = <
-    T extends
-      | GetAdminLocationsQuery
-      | GetUserLocationsQuery
-      | GetPublicLocationsQuery
-  >(
-    query: DocumentNode,
-    params: LocationsParams
-  ) => {
-    const { data, loading, error } = useQuery<T>(query, getFilter(params));
+/**
+ * Custom hook to fetch locations based on a query.
+ */
+const useLocationsQuery = <
+  T extends
+    | GetAdminLocationsQuery
+    | GetUserLocationsQuery
+    | GetPublicLocationsQuery
+>(
+  query: DocumentNode,
+  params: LocationsParams
+) => {
+  const { data, error, loading } = useQuery<T>(query, getFilter(params));
 
-    return {
-      data: data?.ukrainian_locations ?? [],
-      total: data?.ukrainian_locations_aggregate?.aggregate?.count ?? 0,
-      loading,
-      error,
-    };
+  return {
+    data: (data?.ukrainian_locations ?? []) as T["ukrainian_locations"],
+    error,
+    loading,
+    total: data?.ukrainian_locations_aggregate?.aggregate?.count ?? 0,
   };
+};
 
-  const [updateStatus, { loading, error }] = useMutation(
+export const useLocations = () => {
+  const [updateStatus, { error, loading }] = useMutation(
     UPDATE_LOCATION_STATUS
   );
 
@@ -167,33 +172,24 @@ export const useLocations = () => {
         variables: { id, status },
       });
 
-      return { data, loading, error };
+      return { data, error, loading };
     },
     [updateStatus, loading, error]
   );
 
-  const getAdminLocations = useCallback(
-    (params: LocationsParams) =>
-      getLocations<GetAdminLocationsQuery>(GET_ADMIN_LOCATIONS, params),
-    []
-  );
+  const useAdminLocations = (params: LocationsParams) =>
+    useLocationsQuery<GetAdminLocationsQuery>(GET_ADMIN_LOCATIONS, params);
 
-  const getUserLocations = useCallback(
-    (params: LocationsParams) =>
-      getLocations<GetUserLocationsQuery>(GET_USER_LOCATIONS, params),
-    []
-  );
+  const useUserLocations = (params: LocationsParams) =>
+    useLocationsQuery<GetUserLocationsQuery>(GET_USER_LOCATIONS, params);
 
-  const getPublicLocations = useCallback(
-    (params: LocationsParams) =>
-      getLocations<GetPublicLocationsQuery>(GET_PUBLIC_LOCATIONS, params),
-    []
-  );
+  const usePublicLocations = (params: LocationsParams) =>
+    useLocationsQuery<GetPublicLocationsQuery>(GET_PUBLIC_LOCATIONS, params);
 
   return {
-    getAdminLocations,
-    getUserLocations,
-    getPublicLocations,
     updateLocationStatus,
+    useAdminLocations,
+    usePublicLocations,
+    useUserLocations,
   };
 };

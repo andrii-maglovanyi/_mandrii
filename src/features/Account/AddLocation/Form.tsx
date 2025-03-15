@@ -1,5 +1,7 @@
 "use client";
 
+import { ChangeEvent, FormEvent,useState } from "react";
+
 import {
   Button,
   Card,
@@ -18,18 +20,16 @@ import { Dictionary } from "@/dictionaries";
 import { useLanguage } from "@/hooks";
 import { NameValueObject } from "@/types";
 
-import { useState, ChangeEvent, FormEvent } from "react";
-
 export interface FormData {
-  name: string;
   address: string;
+  category: string;
   descriptionEn: string;
   descriptionUk: string;
-  website: string;
-  category: string;
   email: string;
-  phoneNumbers: string[];
   images: File[];
+  name: string;
+  phoneNumbers: string[];
+  website: string;
 }
 
 interface PlaceFormProps {
@@ -37,15 +37,15 @@ interface PlaceFormProps {
 }
 
 const INITIAL_FORM_DATA = {
-  name: "",
   address: "",
+  category: "",
   descriptionEn: "",
   descriptionUk: "",
-  website: "",
   email: "",
-  category: "",
-  phoneNumbers: [""],
   images: [],
+  name: "",
+  phoneNumbers: [""],
+  website: "",
 };
 
 export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
@@ -134,7 +134,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             placeholder="Пузата хата"
             value={formData.name}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full rounded-sm border p-2"
             required
           />
         </Column>
@@ -146,7 +146,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             placeholder="10 Oxford St, London W1D 1AW"
             value={formData.address}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full rounded-sm border p-2"
             required
           />
         </Column>
@@ -189,7 +189,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             placeholder="https://puzatahata.co.uk"
             value={formData.website}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full rounded-sm border p-2"
           />
         </Column>
         <Column className="grow py-2">
@@ -200,19 +200,19 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             placeholder="varenyk@puzatahata.co.uk"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full rounded-sm border p-2"
           />
         </Column>
         <Column className="grow py-2">
           <label className="block font-semibold">{dict["Phone numbers"]}</label>
           {formData.phoneNumbers.map((phone, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
+            <div key={index} className="mb-2 flex items-center space-x-2">
               <input
                 type="tel"
                 placeholder="+44 20 7946 0123"
                 value={phone}
                 onChange={(e) => handleInputChange(e, index)}
-                className="w-full p-2 border rounded"
+                className="w-full rounded-sm border p-2"
               />
               {index > 0 && (
                 <Button
@@ -238,10 +238,13 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             multiple
             disabled={isBusy}
             onChange={handleImageChange}
-            className="w-full p-2 border rounded"
+            className="w-full rounded-sm border p-2"
           />
           {imagePreviews.length ? (
-            <Column className="relative w-full h-96 justify-center rounded-lg my-4 overflow-hidden">
+            <Column className={`
+              relative my-4 h-96 w-full justify-center overflow-hidden
+              rounded-lg
+            `}>
               <ImageCarousel images={imagePreviews} />
             </Column>
           ) : null}

@@ -1,10 +1,11 @@
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { MiddlewareFactory } from "./stackHandler";
 import { kv } from "@vercel/kv";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+
+import { MiddlewareFactory } from "./stackHandler";
 
 interface Redirect {
-  url: string;
   hits: number;
+  url: string;
 }
 
 export const withRef: MiddlewareFactory = (next) => {
@@ -33,7 +34,7 @@ export const withRef: MiddlewareFactory = (next) => {
         return Response.redirect(redirect.url);
       } catch (error) {
         return Response.json(
-          { error: "Internal Server Error" },
+          { error: `Internal Server Error: ${error}` },
           { status: 500 }
         );
       }
