@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent,useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 import {
   Button,
@@ -58,7 +58,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
       ...options,
       {
         name: dict[category as keyof Dictionary],
-        value: category,
+        value: category.toUpperCase(),
       },
     ],
     [] as Array<NameValueObject<string>>
@@ -241,10 +241,12 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             className="w-full rounded-sm border p-2"
           />
           {imagePreviews.length ? (
-            <Column className={`
+            <Column
+              className={`
               relative my-4 h-96 w-full justify-center overflow-hidden
               rounded-lg
-            `}>
+            `}
+            >
               <ImageCarousel images={imagePreviews} />
             </Column>
           ) : null}

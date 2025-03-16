@@ -86,6 +86,7 @@ const GET_USER_LOCATIONS = gql`
       emails
       website
       phone_numbers
+      status
       slug
     }
     ukrainian_locations_aggregate {

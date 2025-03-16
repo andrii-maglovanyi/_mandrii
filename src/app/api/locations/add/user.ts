@@ -1,3 +1,5 @@
+import { User_Roles_Enum, User_Statuses_Enum } from "@/types";
+
 interface UserData {
   email?: string | null;
   id: string;
@@ -5,11 +7,8 @@ interface UserData {
   name?: string | null;
 }
 
-const DEFAULT_ROLE = "user";
-const DEFAULT_STATUS = "active";
-
 const INSERT_USER_MUTATION = `
-        mutation InsertUser($email: String!, $full_name: String!, $google_id: String!, $profile_image: String, $role: String!, $status: String!) {
+        mutation InsertUser($email: String!, $full_name: String!, $google_id: String!, $profile_image: String, $role: user_roles_enum!, $status: user_statuses_enum!) {
             insert_users_one(
                 object: {
                     email: $email,
@@ -43,8 +42,8 @@ export const saveUser = async ({ email, id, image, name }: UserData) => {
     full_name: name || "anonymous",
     google_id: id,
     profile_image: image || null,
-    role: DEFAULT_ROLE,
-    status: DEFAULT_STATUS,
+    role: User_Roles_Enum.User,
+    status: User_Statuses_Enum.Active,
   };
 
   const response = await fetch(

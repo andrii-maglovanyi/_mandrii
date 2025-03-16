@@ -5,7 +5,7 @@ import { Badge, Column, Row, Table, Tooltip } from "@/components";
 import { Dictionary } from "@/dictionaries";
 import ShareLocationLink from "@/features/ShareLocationLink/ShareLocationLink";
 import { useLanguage, useLocations } from "@/hooks";
-import { CONNOTATIONS } from "@/types";
+import { CONNOTATIONS, Ukrainian_Location_Statuses_Enum } from "@/types";
 
 const MyLocations = () => {
   const { useUserLocations } = useLocations();
@@ -19,9 +19,9 @@ const MyLocations = () => {
       key: "status",
       render: (status: unknown) => {
         let connotation = CONNOTATIONS.primary;
-        if (status === "active") {
+        if (status === Ukrainian_Location_Statuses_Enum.Active) {
           connotation = CONNOTATIONS.success;
-        } else if (status === "inactive") {
+        } else if (status === Ukrainian_Location_Statuses_Enum.Rejected) {
           connotation = CONNOTATIONS.alert;
         }
 
@@ -31,7 +31,11 @@ const MyLocations = () => {
             connotation={connotation}
             layout={status ? "filled" : "soft"}
           >
-            {dict[(status ?? "unknown") as keyof Dictionary]}
+            {
+              dict[
+                String(status ?? "unknown").toLowerCase() as keyof Dictionary
+              ]
+            }
           </Badge>
         );
       },

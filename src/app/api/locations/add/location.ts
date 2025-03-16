@@ -31,7 +31,7 @@ const INSERT_LOCATION_MUTATION = `
             $address: String!, 
             $phone_numbers: [String!], 
             $emails: [String!], 
-            $category: String!, 
+            $category: ukrainian_location_categories_enum!,  
             $city: String!, 
             $country: String!, 
             $geo: geography!,
