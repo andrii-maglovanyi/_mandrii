@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const uploadedUrl = await processAndUploadImage(
         buffer,
-        locationData.slug
+        [geoData.country, locationData.slug].join("/")
       );
 
       if (uploadedUrl) {
