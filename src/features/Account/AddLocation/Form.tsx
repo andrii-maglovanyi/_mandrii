@@ -243,9 +243,9 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
           {imagePreviews.length ? (
             <Column
               className={`
-              relative my-4 h-96 w-full justify-center overflow-hidden
-              rounded-lg
-            `}
+                relative my-4 h-96 w-full justify-center overflow-hidden
+                rounded-lg
+              `}
             >
               <ImageCarousel images={imagePreviews} />
             </Column>
