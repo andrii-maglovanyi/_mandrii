@@ -30,10 +30,13 @@ export const AddLocation = () => {
       });
       const result = await response.json();
 
-      showSuccess(dict["Great! Location submitted successfully!"]);
-
-      router.push("/account");
-      return result;
+      if (response.status === 200) {
+        showSuccess(dict["Great! Location submitted successfully!"]);
+        router.push("/account");
+        return result;
+      } else {
+        throw result.error;
+      }
     } catch (error) {
       console.error(error);
       showError(dict["Oops! Something went wrong. Please try again."]);
