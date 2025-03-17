@@ -5,11 +5,12 @@ import {
   GetAdminLocationsQuery,
   GetPublicLocationsQuery,
   GetUserLocationsQuery,
-  Status,
+  Ukrainian_Location_Categories_Enum,
+  Ukrainian_Location_Statuses_Enum,
 } from "@/types";
 
 interface LocationsParams {
-  category?: string;
+  category?: Ukrainian_Location_Categories_Enum;
   distance?: number;
   geo?: {
     lat: number;
@@ -41,7 +42,7 @@ const getFilter = ({ category, distance, geo, slug }: LocationsParams) => {
     }
 
     if (category) {
-      variables.where.category = { _eq: category };
+      variables.where.category = { _eq: category.toUpperCase() };
     }
   }
 
@@ -168,7 +169,7 @@ export const useLocations = () => {
   );
 
   const updateLocationStatus = useCallback(
-    async (id: number, status: Status) => {
+    async (id: number, status: Ukrainian_Location_Statuses_Enum) => {
       const { data } = await updateStatus({
         variables: { id, status },
       });

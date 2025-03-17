@@ -5,12 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { Column, GeoMap, Input, Phrase, Row, Select } from "@/components";
 import { Button } from "@/components/Button/Button";
 import { GoogleMapRef } from "@/components/Map/Map";
-import { CATEGORIES, LONDON_COORDINATES } from "@/constants";
+import { LONDON_COORDINATES } from "@/constants";
 import { Dictionary } from "@/dictionaries";
 import { useLocations, useNotifications } from "@/hooks";
 import { useLanguage } from "@/hooks/useLanguage";
 import { sendToMixpanel } from "@/lib/mixpanel";
-import { NameValueObject } from "@/types";
+import { NameValueObject, Ukrainian_Location_Categories_Enum } from "@/types";
 import { classNames, maybePluralize } from "@/utils";
 
 import ShareLocationLink from "../ShareLocationLink/ShareLocationLink";
@@ -30,15 +30,26 @@ interface PlacesMapProps {
 export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const { dict, lang } = useLanguage();
 
-  const categoryOptions: Array<NameValueObject<string>> = CATEGORIES.reduce(
+  const categoryOptions: Array<
+    NameValueObject<Ukrainian_Location_Categories_Enum>
+  > = Object.values(Ukrainian_Location_Categories_Enum).reduce(
     (options, category) => [
       ...options,
       {
-        name: dict[category as keyof Dictionary],
+        name: dict[
+          category
+            .toLowerCase()
+            .replaceAll("_", " ") as unknown as keyof Dictionary
+        ],
         value: category,
       },
     ],
-    [{ name: dict["All categories"], value: "" }]
+    [
+      {
+        name: dict["All categories"],
+        value: "" as Ukrainian_Location_Categories_Enum,
+      },
+    ]
   );
 
   const DISTANCE: Array<NameValueObject<number>> = [
@@ -49,7 +60,9 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const [isReady, setIsReady] = useState(false);
   const [showMe, setShowMe] = useState(false);
   const [placeSlug, setPlaceSlug] = useState(slug);
-  const [category, setCategory] = useState<string>(categoryOptions[0].value);
+  const [category, setCategory] = useState<Ukrainian_Location_Categories_Enum>(
+    categoryOptions[0].value
+  );
   const [distance, setDistance] = useState(DISTANCE[DISTANCE.length - 1].value);
 
   const [mapIsLoaded, setMapIsLoaded] = useState(false);

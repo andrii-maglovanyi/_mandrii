@@ -20,7 +20,7 @@ import { useLocations } from "@/hooks";
 import {
   CONNOTATIONS,
   GetAdminLocationsQuery,
-  Status,
+  Ukrainian_Location_Statuses_Enum,
   Ukrainian_Locations,
 } from "@/types";
 
@@ -28,7 +28,7 @@ interface ExpandedPlaceViewProps {
   changeLocationStatus: (
     id: number,
     name: string,
-    status: Status
+    status: Ukrainian_Location_Statuses_Enum
   ) => Promise<void>;
   isBusy: boolean;
   location: GetAdminLocationsQuery["ukrainian_locations"][number];
@@ -167,7 +167,13 @@ const ExpandedPlaceView = ({
               data-testid="activate-location"
               label="Activate"
               layout="filled"
-              onClick={() => changeLocationStatus(id, name, "active")}
+              onClick={() =>
+                changeLocationStatus(
+                  id,
+                  name,
+                  Ukrainian_Location_Statuses_Enum.Active
+                )
+              }
               size="condensed"
             />
           )}
@@ -180,7 +186,13 @@ const ExpandedPlaceView = ({
               data-testid="reject-location"
               label="Reject"
               layout="outlined"
-              onClick={() => changeLocationStatus(id, name, "rejected")}
+              onClick={() =>
+                changeLocationStatus(
+                  id,
+                  name,
+                  Ukrainian_Location_Statuses_Enum.Rejected
+                )
+              }
               size="condensed"
             />
           )}
@@ -193,7 +205,13 @@ const ExpandedPlaceView = ({
               data-testid="archive-location"
               label="Archive"
               layout="outlined"
-              onClick={() => changeLocationStatus(id, name, "archived")}
+              onClick={() =>
+                changeLocationStatus(
+                  id,
+                  name,
+                  Ukrainian_Location_Statuses_Enum.Archived
+                )
+              }
               size="condensed"
             />
           )}
@@ -247,9 +265,9 @@ const ManagePlaces = () => {
       key: "status",
       render: (status: unknown) => {
         let connotation = CONNOTATIONS.primary;
-        if (status === "active") {
+        if (status === Ukrainian_Location_Statuses_Enum.Active) {
           connotation = CONNOTATIONS.success;
-        } else if (status === "inactive") {
+        } else if (status === Ukrainian_Location_Statuses_Enum.Rejected) {
           connotation = CONNOTATIONS.alert;
         }
 
@@ -272,7 +290,7 @@ const ManagePlaces = () => {
   const changeLocationStatus = async (
     id: number,
     name: string,
-    status: Status
+    status: Ukrainian_Location_Statuses_Enum
   ) => {
     const { data, error, loading } = await updateLocationStatus(id, status);
     setIsBusy(loading);

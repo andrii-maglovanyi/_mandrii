@@ -15,10 +15,9 @@ import {
   Select,
   Textarea,
 } from "@/components";
-import { CATEGORIES } from "@/constants";
 import { Dictionary } from "@/dictionaries";
 import { useLanguage } from "@/hooks";
-import { NameValueObject } from "@/types";
+import { NameValueObject, Ukrainian_Location_Categories_Enum } from "@/types";
 
 export interface FormData {
   address: string;
@@ -53,11 +52,17 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [isBusy, setIsBusy] = useState(false);
 
-  const categoryOptions: Array<NameValueObject<string>> = CATEGORIES.reduce(
+  const categoryOptions: Array<NameValueObject<string>> = Object.values(
+    Ukrainian_Location_Categories_Enum
+  ).reduce(
     (options, category) => [
       ...options,
       {
-        name: dict[category as keyof Dictionary],
+        name: dict[
+          category
+            .toLowerCase()
+            .replaceAll("_", " ") as unknown as keyof Dictionary
+        ],
         value: category.toUpperCase(),
       },
     ],
