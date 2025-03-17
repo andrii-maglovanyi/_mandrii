@@ -32,6 +32,7 @@ export const AddLocation = () => {
 
       showSuccess(dict["Great! Location submitted successfully!"]);
 
+      router.push("/account");
       return result;
     } catch (error) {
       console.error(error);

@@ -266,7 +266,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             disabled={!(formData.name && formData.address) || isBusy}
             type="submit"
           >
-            {dict["Submit place"]}
+            {dict[isBusy ? "Please wait..." : "Submit place"]}
           </Button>
         </Row>
       </form>

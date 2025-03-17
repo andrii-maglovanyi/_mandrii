@@ -53,7 +53,13 @@ const MyLocations = () => {
       dataIndex: "category",
       key: "category",
       render: (category: unknown) => (
-        <>{dict[category as keyof Dictionary] ?? "-"}</>
+        <>
+          {dict[
+            String(category)
+              .toLowerCase()
+              .replaceAll("_", " ") as keyof Dictionary
+          ] ?? "-"}
+        </>
       ),
       sorter: false,
       title: dict["Category"],
