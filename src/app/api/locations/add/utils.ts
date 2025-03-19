@@ -33,7 +33,10 @@ export const extractLocationData = (response: GeocodeResponse) => {
   const coordinates: [number, number] = [lng, lat];
 
   for (const component of res.address_components) {
-    if (component.types.includes("postal_town")) {
+    if (
+      component.types.includes("locality") ||
+      component.types.includes("postal_town")
+    ) {
       city = component.long_name;
     } else if (component.types.includes("country")) {
       country = component.long_name;

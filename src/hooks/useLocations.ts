@@ -100,7 +100,7 @@ const GET_USER_LOCATIONS = gql`
 
 const GET_ADMIN_LOCATIONS = gql`
   query GetAdminLocations($where: ukrainian_locations_bool_exp!) {
-    ukrainian_locations(where: $where) {
+    ukrainian_locations(where: $where, order_by: { updated_at: desc }) {
       id
       name
       address

@@ -143,7 +143,7 @@ export const Input = <T extends string>({
     ? "bg-primary-100 text-primary-300 cursor-not-allowed"
     : "";
 
-  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} dark:bg-primary-950/50 dark:text-primary-0 h-10 border rounded-lg focus:outline-hidden
+  const inputClasses = `w-full min-w-20 ${paddingLeft} ${paddingRight} bg-primary-0 dark:bg-primary-950/50 dark:text-primary-0 h-10 border rounded-lg focus:outline-hidden
   ${getInputStyle(hasError, disabled)}
   ${focusStyle}
   ${disabledStyle}
