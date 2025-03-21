@@ -8,7 +8,7 @@ export const processAndUploadImage = async (file: Buffer, fileName: string) => {
     const processedImageBuffer = await sharp(file)
       .resize(1000, 1000, { fit: "cover" })
       .toFormat(FILE_FORMAT)
-      .avif({ effort: 9, quality: 30 })
+      .avif({ effort: 6, quality: 30 })
       .toBuffer();
 
     const blob = await put(`${fileName}.${FILE_FORMAT}`, processedImageBuffer, {

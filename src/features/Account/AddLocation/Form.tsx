@@ -11,6 +11,7 @@ import {
   ImageCarousel,
   Input,
   LinearProgress,
+  Phrase,
   Row,
   Select,
   Textarea,
@@ -18,13 +19,21 @@ import {
 import { Dictionary } from "@/dictionaries";
 import { useLanguage } from "@/hooks";
 import { NameValueObject, Ukrainian_Location_Categories_Enum } from "@/types";
+import {
+  capitalize,
+  formatPhoneNumber,
+  isEmail,
+  isObjectEmpty,
+  isPhoneNumber,
+} from "@/utils";
+import { isWebsite } from "@/utils/website";
 
 export interface FormData {
   address: string;
   category: string;
   descriptionEn: string;
   descriptionUk: string;
-  email: string;
+  emails: string[];
   images: File[];
   name: string;
   phoneNumbers: string[];
@@ -40,7 +49,7 @@ const INITIAL_FORM_DATA = {
   category: "",
   descriptionEn: "",
   descriptionUk: "",
-  email: "",
+  emails: [""],
   images: [],
   name: "",
   phoneNumbers: [""],
@@ -51,6 +60,10 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
   const { dict } = useLanguage();
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [isBusy, setIsBusy] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [error, setError] = useState<Record<string, string | undefined>>({
+    category: "",
+  });
 
   const categoryOptions: Array<NameValueObject<string>> = Object.values(
     Ukrainian_Location_Categories_Enum
@@ -58,40 +71,102 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
     (options, category) => [
       ...options,
       {
-        name: dict[
-          category
-            .toLowerCase()
-            .replaceAll("_", " ") as unknown as keyof Dictionary
-        ],
+        name: capitalize(
+          dict[
+            category
+              .toLowerCase()
+              .replaceAll("_", " ") as unknown as keyof Dictionary
+          ]
+        ),
         value: category.toUpperCase(),
       },
     ],
     [] as Array<NameValueObject<string>>
   );
 
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [error, setError] = useState<string>("");
-
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
     index: number | null = null
   ) => {
     const { name, value } = e.target;
-    if (index !== null) {
-      const updatedPhones = [...formData.phoneNumbers];
-      updatedPhones[index] = value;
-      setFormData({ ...formData, phoneNumbers: updatedPhones });
+
+    if (["name", "address"].includes(name)) {
+      if (value.trim()) {
+        updateError(name);
+      } else {
+        updateError(name, "This field is required");
+      }
+    }
+
+    if (name === "website") {
+      if (!value || isWebsite(value)) {
+        updateError(name);
+      } else {
+        updateError(name, "Website is invalid");
+      }
+    }
+
+    if (name === "phone-number" && index !== null) {
+      if (!value || isPhoneNumber(value)) {
+        const updatedPhones = [...formData.phoneNumbers];
+        updatedPhones[index] = value;
+        setFormData({ ...formData, phoneNumbers: updatedPhones });
+        updateError(name);
+      } else {
+        updateError(name, "Phone number is invalid");
+      }
+    } else if (name === "email" && index !== null) {
+      if (!value || isEmail(value)) {
+        const updatedEmails = [...formData.emails];
+        updatedEmails[index] = value;
+        setFormData({ ...formData, emails: updatedEmails });
+        updateError(name);
+      } else {
+        updateError(name, "Email is invalid");
+      }
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
+  const updateError = (name: string, errorMessage?: keyof Dictionary) => {
+    setError((error) => {
+      if (errorMessage) {
+        return {
+          ...error,
+          [name]: dict[errorMessage],
+        };
+      } else {
+        const { [name]: fieldName, ...rest } = error;
+        console.info(`Field ${fieldName} corrected`);
+        return rest;
+      }
+    });
+  };
+
   const handleValueChange = (name: string, value: string) => {
+    if (name === "category") {
+      if (value.trim()) {
+        updateError("category");
+      } else {
+        updateError("category", "Please choose a category");
+      }
+    }
+
     setFormData({ ...formData, [name]: value });
+  };
+
+  const addEmail = () => {
+    setFormData({ ...formData, emails: [...formData.emails, ""] });
   };
 
   const addPhoneNumber = () => {
     setFormData({ ...formData, phoneNumbers: [...formData.phoneNumbers, ""] });
+  };
+
+  const removeEmail = (index: number) => {
+    const updatedEmails = formData.emails.filter((_, i) => i !== index);
+    setFormData({ ...formData, emails: updatedEmails });
   };
 
   const removePhoneNumber = (index: number) => {
@@ -102,20 +177,21 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
-    setFormData({ ...formData, images: files });
-    setImagePreviews(files.map((file) => URL.createObjectURL(file)));
+    if (files.length > 9) {
+      updateError("images", "No more than 9 files please");
+      setFormData({ ...formData, images: [] });
+      setImagePreviews([]);
+    } else {
+      updateError("images");
+      setFormData({ ...formData, images: files });
+      setImagePreviews(files.map((file) => URL.createObjectURL(file)));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsBusy(true);
 
-    if (!formData.name || !formData.address || !formData.category) {
-      setError(dict["Name and address are required."]);
-      return;
-    }
-
-    setError("");
     await onSubmit(formData);
 
     setImagePreviews([]);
@@ -129,42 +205,52 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
         <Icon type="pin-line" className="mr-2" />
         <H2>{dict["Submit place details"]}</H2>
       </Row>
-      {error && <p className="text-red-500">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <Column className="grow py-2">
+        <Column className="grow pt-2">
           <Input
             type="text"
             name="name"
-            label={dict["Name (required)"]}
+            label={`${dict["Name"]} (${dict["required"]})`}
             placeholder="Пузата хата"
             value={formData.name}
             onChange={handleInputChange}
             className="w-full rounded-sm border p-2"
             required
           />
+          <Phrase className="text-alert-500 h-6 text-end">{error.name}</Phrase>
         </Column>
-        <Column className="grow py-2">
+        <Column className="grow pt-1">
           <Input
             type="text"
             name="address"
-            label={dict["Address (required)"]}
+            label={`${dict["Address"]} (${dict["required"]})`}
             placeholder="10 Oxford St, London W1D 1AW"
             value={formData.address}
             onChange={handleInputChange}
             className="w-full rounded-sm border p-2"
             required
           />
+          <Phrase className="text-alert-500 h-6 text-end">
+            {error.address}
+          </Phrase>
         </Column>
-        <Column className="grow py-2">
+        <Column className="grow pt-1">
           <Select
             name="category"
             items={categoryOptions}
             emptyOption
+            emptyOptionValue=" "
             emptyOptionLabel="-"
+            required
             defaultValue={formData.category}
-            label={dict["Category"]}
-            onChange={({ value }) => handleValueChange("category", value)}
+            label={`${dict["Category"]} (${dict["required"]})`}
+            onChange={({ value }) => {
+              handleValueChange("category", value);
+            }}
           />
+          <Phrase className="text-alert-500 h-6 text-end">
+            {error.category}
+          </Phrase>
         </Column>
         <Column className="grow py-2">
           <Textarea
@@ -196,48 +282,80 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             onChange={handleInputChange}
             className="w-full rounded-sm border p-2"
           />
+          <Phrase className="text-alert-500 h-6 text-end">
+            {error.website}
+          </Phrase>
         </Column>
-        <Column className="grow py-2">
-          <Input
-            type="email"
-            name="email"
-            label={dict["Email"]}
-            placeholder="varenyk@puzatahata.co.uk"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="w-full rounded-sm border p-2"
-          />
-        </Column>
-        <Column className="grow py-2">
-          <label className="block font-semibold">{dict["Phone numbers"]}</label>
-          {formData.phoneNumbers.map((phone, index) => (
-            <div key={index} className="mb-2 flex items-center space-x-2">
-              <input
-                type="tel"
-                placeholder="+44 20 7946 0123"
-                value={phone}
-                onChange={(e) => handleInputChange(e, index)}
-                className="w-full rounded-sm border p-2"
-              />
+
+        <Column className="grow pt-2 pb-1">
+          <label className="block font-semibold">{dict["Email"]}</label>
+          {formData.emails.map((email, index) => (
+            <Row key={index} className="mb-2 justify-center">
+              <Column className="grow">
+                <Input
+                  name="email"
+                  placeholder="varenyk@puzatahata.co.uk"
+                  value={email}
+                  onChange={(e) => handleInputChange(e, index)}
+                  className="w-full rounded-sm border p-2"
+                />
+              </Column>
               {index > 0 && (
                 <Button
                   type="button"
-                  onClick={() => removePhoneNumber(index)}
-                  className="text-alert-500"
+                  onClick={() => removeEmail(index)}
+                  className="text-alert-500 mt-0.5 ml-2"
                 >
                   {dict["Remove"]}
                 </Button>
               )}
-            </div>
+            </Row>
           ))}
-          <Row className="justify-end">
+          <Row className="justify-between">
+            <Phrase className="text-alert-500 h-6 text-end">
+              {error.email}
+            </Phrase>
+            <Button type="button" onClick={addEmail}>
+              + {dict["Add email"]}
+            </Button>
+          </Row>
+        </Column>
+
+        <Column className="grow pb-1">
+          <label className="block font-semibold">{`${dict["Phone number"]} (${dict["with country code: +44, +380..."]})`}</label>
+          {formData.phoneNumbers.map((phone, index) => (
+            <Row key={index} className="mb-2 justify-center">
+              <Column className="grow">
+                <Input
+                  name="phone-number"
+                  placeholder="+44 20 7946 0123"
+                  value={formatPhoneNumber(phone)}
+                  onChange={(e) => handleInputChange(e, index)}
+                  className="w-full rounded-sm border p-2"
+                />
+              </Column>
+              {index > 0 && (
+                <Button
+                  type="button"
+                  onClick={() => removePhoneNumber(index)}
+                  className="text-alert-500 mt-0.5 ml-2"
+                >
+                  {dict["Remove"]}
+                </Button>
+              )}
+            </Row>
+          ))}
+          <Row className="justify-between">
+            <Phrase className="text-alert-500 h-6 text-end">
+              {error["phone-number"]}
+            </Phrase>
             <Button type="button" onClick={addPhoneNumber}>
               + {dict["Add phone number"]}
             </Button>
           </Row>
         </Column>
-        <Column className="grow py-2">
-          <label className="block font-semibold">{dict["Upload images"]}</label>
+        <Column className="grow pb-2">
+          <label className="block font-semibold">{`${dict["Upload images"]} (${dict["max 9 images"]})`}</label>
           <input
             type="file"
             multiple
@@ -245,6 +363,9 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             onChange={handleImageChange}
             className="w-full rounded-sm border p-2"
           />
+          <Phrase className="text-alert-500 h-6 text-end">
+            {error.images}
+          </Phrase>
           {imagePreviews.length ? (
             <Column
               className={`
@@ -260,10 +381,21 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             {isBusy && <LinearProgress indeterminate />}
           </Row>
         </Column>
-        <Row className="justify-end">
+        <Row className="items-center justify-between">
+          <Phrase>
+            {
+              dict[
+                "The request may take up to a minute to process. Thank you for your patience!"
+              ]
+            }
+          </Phrase>
           <Button
             layout="filled"
-            disabled={!(formData.name && formData.address) || isBusy}
+            disabled={
+              !(formData.name && formData.address) ||
+              isBusy ||
+              !isObjectEmpty(error)
+            }
             type="submit"
           >
             {dict[isBusy ? "Please wait..." : "Submit place"]}

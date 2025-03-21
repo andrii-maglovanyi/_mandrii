@@ -44,8 +44,13 @@ export const Select = <T extends string | number>({
   required,
   width,
 }: SelectProps<T>) => {
+  const [hasError, setHasError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const toggleSelect = () => setIsOpen(!isOpen);
+  const [touched, setTouched] = useState(false);
+  const toggleSelect = () => {
+    setIsOpen(!isOpen);
+    setTouched(true);
+  };
   const groupRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { handleKeyDown } = useKeyboardNavigation(groupRef.current);
@@ -126,13 +131,21 @@ export const Select = <T extends string | number>({
     };
   }, [isOpen]);
 
-  const borderStyles = className?.includes("border-")
-    ? ""
+  useEffect(() => {
+    if (touched && required && defaultValue === emptyOptionValue) {
+      setHasError(true);
+    } else {
+      setHasError(false);
+    }
+  }, [emptyOptionValue, required, defaultValue, touched]);
+
+  const borderStyles = hasError
+    ? "border-alert-500 bg-alert-50 dark:border-alert-400 dark:bg-alert-900"
     : "border-primary-950 dark:border-primary-0";
+
   const buttonStyles = `justify-start w-full truncate relative overflow-x-hidden
    pl-4 pr-10 h-10 mt-0.5 bg-primary-0 dark:bg-primary-950/50 dark:text-primary-0 
-   text-left ${borderStyles} border hover:bg-primary-0 hover:border-primary-950 
-   dark:hover:border-white dark:hover:bg-primary-1000 rounded-md 
+   text-left ${borderStyles} border hover:bg-primary-0 dark:hover:bg-primary-1000 rounded-md 
    focus:outline-hidden active:bg-primary-0 dark:active:bg-primary-1000
   ${
     disabled &&

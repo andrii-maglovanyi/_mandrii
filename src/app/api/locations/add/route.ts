@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       category: body.category as Ukrainian_Location_Categories_Enum,
       description_en: body.descriptionEn.toString(),
       description_uk: body.descriptionUk.toString(),
-      emails: [body.email.toString().trim()],
+      emails: [],
       geo: {
         coordinates,
         type: "Point",
@@ -59,7 +59,13 @@ export async function POST(request: NextRequest) {
 
     Object.entries(body).forEach(([key, value]: [string, string | Blob]) => {
       if (key.startsWith("phoneNumbers") && typeof value === "string") {
-        locationData.phone_numbers?.push(value);
+        locationData.phone_numbers?.push(value.trim());
+      }
+    });
+
+    Object.entries(body).forEach(([key, value]: [string, string | Blob]) => {
+      if (key.startsWith("emails") && typeof value === "string") {
+        locationData.emails?.push(value.trim());
       }
     });
 
