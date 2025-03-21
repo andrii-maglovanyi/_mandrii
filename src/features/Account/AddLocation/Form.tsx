@@ -41,7 +41,7 @@ export interface FormData {
 }
 
 interface PlaceFormProps {
-  onSubmit(data: FormData): Promise<void>;
+  onSubmit(data: FormData): Promise<unknown>;
 }
 
 const INITIAL_FORM_DATA = {
@@ -192,11 +192,13 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
     e.preventDefault();
     setIsBusy(true);
 
-    await onSubmit(formData);
+    const result = await onSubmit(formData);
 
-    setImagePreviews([]);
-    setFormData(INITIAL_FORM_DATA);
-    setIsBusy(false);
+    if (result) {
+      setImagePreviews([]);
+      setFormData(INITIAL_FORM_DATA);
+      setIsBusy(false);
+    }
   };
 
   return (
