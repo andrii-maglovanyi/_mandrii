@@ -1,5 +1,6 @@
 import "../globals.css";
 
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Arsenal, Nunito } from "next/font/google";
 import localFont from "next/font/local";
@@ -97,11 +98,13 @@ export default async function RootLayout({
           <LanguageProvider lang={lang} dict={dict}>
             <ApolloWrapper>
               <NotificationsProvider>
-                <Column className={`
-                  relative mt-14 max-w-screen flex-1 overflow-x-clip
-                  sm:mt-16
-                  md:mt-20
-                `}>
+                <Column
+                  className={`
+                    relative mt-14 max-w-screen flex-1 overflow-x-clip
+                    sm:mt-16
+                    md:mt-20
+                  `}
+                >
                   {children}
                 </Column>
                 <Heading />
@@ -112,6 +115,7 @@ export default async function RootLayout({
             <CookieConsentBar />
           </LanguageProvider>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
