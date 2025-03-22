@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { MiddlewareFactory } from "./stackHandler";
 
-export const withLanguage: MiddlewareFactory = (next) => {
+export const withAdmin: MiddlewareFactory = (next) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const hostname = request.headers.get("host") || "";
     const url = request.nextUrl.clone();
