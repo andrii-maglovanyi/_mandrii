@@ -4,7 +4,6 @@ import { i18n } from "../dictionaries/i18n-config";
 import { MiddlewareFactory } from "./stackHandler";
 
 const excludedRoutes = [
-  "admin",
   "api",
   "assets",
   "auth",
