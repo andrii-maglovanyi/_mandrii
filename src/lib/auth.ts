@@ -14,7 +14,7 @@ type UserExtra = User & {
   id: string;
 };
 
-export type UserSession = Session & { accessToken: string, user: UserExtra; };
+export type UserSession = Session & { accessToken: string; user: UserExtra };
 
 const getHasuraClaims = (email?: string | null) => ({
   "x-hasura-allowed-roles":
@@ -71,6 +71,19 @@ export const authOptions = {
       } as UserSession;
     },
   },
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        domain: ".mandrii.com",
+        httpOnly: true,
+        path: "/",
+        sameSite: "lax",
+        secure: true, // ← this is key
+      },
+    },
+  },
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
