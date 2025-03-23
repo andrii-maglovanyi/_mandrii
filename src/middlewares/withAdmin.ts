@@ -7,8 +7,19 @@ export const withAdmin: MiddlewareFactory = (next) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const hostname = request.headers.get("host") || "";
     const url = request.nextUrl.clone();
+    const pathname = url.pathname;
 
-    if (hostname.startsWith("admin.")) {
+    const isStaticAsset =
+      pathname.startsWith("/_next") || pathname.startsWith("/static");
+    const isApiRoute = pathname.startsWith("/api");
+    const isPublicFile = /\.(.*)$/.test(pathname); // favicon.ico, etc.
+
+    if (
+      hostname.startsWith("admin.") &&
+      !isStaticAsset &&
+      !isApiRoute &&
+      !isPublicFile
+    ) {
       url.pathname = `/admin${url.pathname}`;
       return NextResponse.rewrite(url);
     }
