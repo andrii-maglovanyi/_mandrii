@@ -1,10 +1,10 @@
-import Slack from "@slack/bolt";
+import { App } from "@slack/bolt";
 
 import { UserSession } from "@/lib";
 
 import { Ukrainian_Locations_Data } from "./location";
 
-const app = new Slack.App({
+const app = new App({
   signingSecret: process.env.NEXT_PRIVATE_SLACK_SIGNING_SECRET,
   token: process.env.NEXT_PRIVATE_SLACK_BOT_TOKEN,
 });
