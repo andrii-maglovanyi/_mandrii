@@ -11,6 +11,7 @@ import {
 import { geocodeAddress } from "./geo";
 import { processAndUploadImage } from "./images";
 import { saveLocation, Ukrainian_Locations_Data } from "./location";
+import { sendNotification } from "./slack";
 import { saveUser } from "./user";
 
 export async function POST(request: NextRequest) {
@@ -91,6 +92,10 @@ export async function POST(request: NextRequest) {
     locationData.user_id = await saveUser(session.user);
 
     const id = await saveLocation(locationData);
+
+    if (id) {
+      sendNotification(session, locationData);
+    }
 
     return NextResponse.json({ id, success: true }, { status: 200 });
   } catch (error) {

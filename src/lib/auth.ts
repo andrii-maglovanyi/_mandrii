@@ -79,7 +79,7 @@ export const authOptions = {
         httpOnly: true,
         path: "/",
         sameSite: "lax",
-        secure: true, // ← this is key
+        secure: true,
       },
     },
   },
