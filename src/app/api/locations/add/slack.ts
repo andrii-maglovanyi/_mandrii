@@ -1,6 +1,7 @@
 import { App } from "@slack/bolt";
 
 import { UserSession } from "@/lib";
+import { capitalize } from "@/utils";
 
 import { Ukrainian_Locations_Data } from "./location";
 
@@ -50,7 +51,9 @@ export const sendNotification = async (
         url: "https://admin.mandrii.com",
       },
       text: {
-        text: location.category,
+        text: `*${capitalize(location.category.toLowerCase())}* - ${
+          location.city
+        }, ${location.country}`,
         type: "mrkdwn",
       },
       type: "section",
