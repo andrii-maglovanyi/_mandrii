@@ -10,11 +10,11 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  Boolean: { input: boolean; output: boolean; },
-  Float: { input: number; output: number; },
-  ID: { input: string; output: string; },
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
-  String: { input: string; output: string; },
+  Float: { input: number; output: number; }
   geography: { input: Geography; output: Geography; }
   geometry: { input: Geometry; output: Geometry; }
   jsonb: { input: Json; output: Json; }
@@ -2706,21 +2706,21 @@ export type GetPublicLocationsQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', address: string, description_en?: string | null, description_uk?: string | null, emails?: Array<string> | null, geo: Geography, id: number, images?: Array<string> | null, name: string, phone_numbers?: Array<string> | null, slug: string, website?: string | null }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
+export type GetPublicLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', id: number, name: string, address: string, images?: Array<string> | null, description_uk?: string | null, description_en?: string | null, geo: Geography, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, slug: string }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
 
 export type GetUserLocationsQueryVariables = Exact<{
   where: Ukrainian_Locations_Bool_Exp;
 }>;
 
 
-export type GetUserLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', address: string, category: Ukrainian_Location_Categories_Enum, created_at?: string | null, description_en?: string | null, description_uk?: string | null, emails?: Array<string> | null, geo: Geography, id: number, images?: Array<string> | null, name: string, phone_numbers?: Array<string> | null, slug: string, website?: string | null }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
+export type GetUserLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', id: number, name: string, address: string, images?: Array<string> | null, category: Ukrainian_Location_Categories_Enum, created_at?: string | null, description_uk?: string | null, description_en?: string | null, geo: Geography, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, status: Ukrainian_Location_Statuses_Enum, slug: string }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
 
 export type GetAdminLocationsQueryVariables = Exact<{
   where: Ukrainian_Locations_Bool_Exp;
 }>;
 
 
-export type GetAdminLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', address: string, category: Ukrainian_Location_Categories_Enum, created_at?: string | null, description_en?: string | null, description_uk?: string | null, emails?: Array<string> | null, geo: Geography, id: number, images?: Array<string> | null, name: string, phone_numbers?: Array<string> | null, slug: string, status: Ukrainian_Location_Statuses_Enum, user_id?: number | null, website?: string | null }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
+export type GetAdminLocationsQuery = { __typename?: 'query_root', ukrainian_locations: Array<{ __typename?: 'ukrainian_locations', id: number, name: string, address: string, images?: Array<string> | null, category: Ukrainian_Location_Categories_Enum, created_at?: string | null, description_uk?: string | null, description_en?: string | null, geo: Geography, emails?: Array<string> | null, website?: string | null, phone_numbers?: Array<string> | null, status: Ukrainian_Location_Statuses_Enum, user_id?: number | null, slug: string }>, ukrainian_locations_aggregate: { __typename?: 'ukrainian_locations_aggregate', aggregate?: { __typename?: 'ukrainian_locations_aggregate_fields', count: number } | null } };
 
 export type UpdateLocationStatusMutationVariables = Exact<{
   id: Scalars['Int']['input'];
