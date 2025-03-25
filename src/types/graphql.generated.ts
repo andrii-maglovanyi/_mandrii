@@ -1078,6 +1078,7 @@ export enum Ukrainian_Location_Categories_Constraint {
 }
 
 export enum Ukrainian_Location_Categories_Enum {
+  BeautySalon = 'BEAUTY_SALON',
   Cafe = 'CAFE',
   Catering = 'CATERING',
   Church = 'CHURCH',
