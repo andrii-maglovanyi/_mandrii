@@ -177,8 +177,8 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
-    if (files.length > 9) {
-      updateError("images", "No more than 9 files please");
+    if (files.length > 7) {
+      updateError("images", "No more than 7 files please");
       setFormData({ ...formData, images: [] });
       setImagePreviews([]);
     } else {
@@ -197,8 +197,9 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
     if (result) {
       setImagePreviews([]);
       setFormData(INITIAL_FORM_DATA);
-      setIsBusy(false);
     }
+
+    setIsBusy(false);
   };
 
   return (
@@ -357,7 +358,7 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
           </Row>
         </Column>
         <Column className="grow pb-2">
-          <label className="block font-semibold">{`${dict["Upload images"]} (${dict["max 9 images"]})`}</label>
+          <label className="block font-semibold">{`${dict["Upload images"]} (${dict["max 7 images"]})`}</label>
           <input
             type="file"
             multiple
