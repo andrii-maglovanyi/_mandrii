@@ -1,3 +1,4 @@
+export * from "./address";
 export * from "./css-helpers";
 export * from "./data-mappers";
 export * from "./debounce";

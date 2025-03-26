@@ -25,6 +25,7 @@ import {
   isEmail,
   isObjectEmpty,
   isPhoneNumber,
+  isPotentiallyValidAddress,
 } from "@/utils";
 import { isWebsite } from "@/utils/website";
 
@@ -96,6 +97,10 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
       } else {
         updateError(name, "This field is required");
       }
+    }
+
+    if (name === "address" && !isPotentiallyValidAddress(value)) {
+      updateError(name, "The address appears to be incomplete.");
     }
 
     if (name === "website") {
@@ -233,6 +238,9 @@ export const PlaceForm = ({ onSubmit }: PlaceFormProps) => {
             className="w-full rounded-sm border p-2"
             required
           />
+          <Phrase className="text-primary-500 text-sm">
+            {dict["Enter a full address, including street, city and postcode"]}
+          </Phrase>
           <Phrase className="text-alert-500 h-6 text-end">
             {error.address}
           </Phrase>

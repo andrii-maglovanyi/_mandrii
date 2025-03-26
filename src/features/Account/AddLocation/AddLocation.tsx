@@ -39,7 +39,14 @@ export const AddLocation = () => {
       }
     } catch (error) {
       console.error(error);
-      showError(dict["Oops! Something went wrong. Please try again."]);
+
+      if (error === "Invalid address") {
+        showError(
+          `${dict["The address appears to be incomplete."]} ${dict["Enter a full address, including street, city and postcode"]}`
+        );
+      } else {
+        showError(dict["Oops! Something went wrong. Please try again."]);
+      }
     }
   };
 

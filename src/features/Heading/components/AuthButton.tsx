@@ -9,7 +9,11 @@ import { useLanguage } from "@/hooks/useLanguage";
 
 export default function AuthButton() {
   const { dict, lang } = useLanguage();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (session) {
     return (

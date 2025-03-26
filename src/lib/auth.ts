@@ -23,6 +23,8 @@ const getHasuraClaims = (email?: string | null) => ({
   "x-hasura-user-id": email || "",
 });
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const authOptions = {
   callbacks: {
     async jwt({
@@ -46,7 +48,7 @@ export const authOptions = {
           "https://hasura.io/jwt/claims": claims,
           sub: token.sub,
         },
-        process.env.NEXT_AUTH_SECRET!, // Use the same secret as Hasura
+        process.env.NEXTAUTH_SECRET!,
         {
           algorithm: "HS256",
           expiresIn: "1h",
@@ -71,26 +73,27 @@ export const authOptions = {
       } as UserSession;
     },
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-next-auth.session-token`,
-      options: {
-        domain: ".mandrii.com",
-        httpOnly: true,
-        path: "/",
-        sameSite: "lax",
-        secure: true,
-      },
-    },
-  },
-
+  cookies: isProd
+    ? {
+        sessionToken: {
+          name: `__Secure-next-auth.session-token`,
+          options: {
+            domain: ".mandrii.com",
+            httpOnly: true,
+            path: "/",
+            sameSite: "lax",
+            secure: true,
+          },
+        },
+      }
+    : undefined,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export const handler = NextAuth(authOptions);
