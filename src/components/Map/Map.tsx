@@ -137,7 +137,7 @@ const MapComponent = (
       labelSpan.setAttribute("id", String(id));
       labelSpan.style.borderRadius = "30px";
       labelSpan.style.color = "white";
-      labelSpan.style.fontFamily = "nunito";
+      labelSpan.style.fontFamily = "arsenal";
       labelSpan.style.position = "relative";
       labelSpan.style.whiteSpace = "nowrap";
       labelSpan.style.padding = "4px 8px";

@@ -2,7 +2,7 @@ import "../globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Arsenal, Nunito } from "next/font/google";
+import { Arsenal } from "next/font/google";
 import localFont from "next/font/local";
 
 import { Column } from "@/components";
@@ -52,13 +52,6 @@ const arsenal = Arsenal({
   weight: ["400", "700"],
 });
 
-const nunito = Nunito({
-  display: "swap",
-  preload: true,
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-nunito",
-});
-
 export const metadata: Metadata = {
   description: "мандруй / мрій / дій",
   metadataBase: new URL("https://mandrii.com"),
@@ -84,14 +77,10 @@ export default async function RootLayout({
       <body
         lang={lang}
         className={`
-          font-kyivType
-          ${kyivType.variable}
-          ${nunito.variable}
-          font-nunito
-          ${leOsler.variable}
-          font-arsenal
           ${arsenal.variable}
-          font-leOsler flex min-h-screen flex-col
+          ${leOsler.variable}
+          ${kyivType.variable}
+          font-arsenal flex min-h-screen flex-col
         `}
       >
         <Providers>

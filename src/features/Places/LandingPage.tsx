@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Button, Column, H1, Icon, Phrase,Row } from "@/components";
+import { Button, Column, H1, Icon, Phrase, Row } from "@/components";
 import { DONATE_LINKS, SOCIAL_LINKS } from "@/constants";
 import { useLanguage } from "@/hooks/useLanguage";
 import { sendToMixpanel } from "@/lib/mixpanel";
@@ -40,45 +40,55 @@ export const LandingPage = () => {
   return (
     <Row className="justify-center">
       <Column className="h-full w-screen">
-        <Column className={`
-          bg-ukraine-blue h-1/2 min-h-max px-7
-          md:flex-row
-        `}>
+        <Column
+          className={`
+            bg-ukraine-blue h-1/2 min-h-max px-7
+            md:flex-row
+          `}
+        >
           <Row className="m-auto h-full max-w-(--breakpoint-xl) justify-center">
-            <Column className={`
-              w-full grow justify-around
-              lg:w-[60vw] lg:pr-8
-              xl:pr-12
-            `}>
-              <H1 className={`
-                font-kyivType text-primary-0 text-[14vw] leading-none
-                sm:text-7xl
-                md:text-8xl
-                lg:text-7xl
-              `}>
+            <Column
+              className={`
+                w-full grow justify-around
+                lg:w-[60vw] lg:pr-8
+                xl:pr-12
+              `}
+            >
+              <H1
+                className={`
+                  font-kyivType text-primary-0 text-[14vw] leading-none
+                  sm:text-7xl
+                  md:text-8xl
+                  lg:text-7xl
+                `}
+              >
                 {dict["Let's unite, Ukrainians!"]}
               </H1>
 
-              <Phrase className={`
-                text-primary-0 text-md font-arsenal
-                sm:mt-4 sm:text-lg
-                md:mt-8
-                lg:text-xl
-                xl:mt-4
-              `}>
+              <Phrase
+                className={`
+                  text-primary-0 text-md font-arsenal
+                  sm:mt-4 sm:text-lg
+                  md:mt-8
+                  lg:text-xl
+                  xl:mt-4
+                `}
+              >
                 {
                   dict[
                     "Discover Ukrainian businesses, restaurants, cultural center and community hubs across Europe."
                   ]
                 }
               </Phrase>
-              <Phrase className={`
-                text-primary-0 text-md font-arsenal mt-2 mb-6
-                sm:text-lg
-                md:mt-5
-                lg:mt-8 lg:text-xl
-                xl:mt-4
-              `}>
+              <Phrase
+                className={`
+                  text-primary-0 text-md font-arsenal mt-2 mb-6
+                  sm:text-lg
+                  md:mt-5
+                  lg:mt-8 lg:text-xl
+                  xl:mt-4
+                `}
+              >
                 {
                   dict[
                     "Whether you're looking for a familiar place, a taste of home, feeling of unity or ways to support own people abroad - this map helps you to find and contribute to the community."
@@ -86,10 +96,12 @@ export const LandingPage = () => {
                 }
               </Phrase>
             </Column>
-            <Column className={`
-              relative hidden w-[50vw] items-end
-              lg:flex
-            `}>
+            <Column
+              className={`
+                relative hidden w-[50vw] items-end
+                lg:flex
+              `}
+            >
               <svg className="pointer-events-none z-10 h-full w-full scale-150">
                 <mask id="headMask">
                   <rect
@@ -127,18 +139,27 @@ export const LandingPage = () => {
           </Row>
         </Column>
         <Column className="bg-ukraine-yellow font-arsenal w-full grow px-7">
-          <Column className={`
-            z-0 m-auto w-full max-w-(--breakpoint-sm) pt-4
-            lg:relative lg:z-10
-            xl:max-w-(--breakpoint-2xl) xl:flex-row xl:items-center
-            xl:justify-around xl:pt-8
-          `}>
-            <Row className={`
-              mb-4 h-12 items-center justify-between
-              xl:mb-0
-            `}>
+          <Column
+            className={`
+              z-0 m-auto w-full max-w-(--breakpoint-sm) pt-4
+              lg:relative lg:z-10
+              xl:max-w-(--breakpoint-2xl) xl:flex-row xl:items-center
+              xl:justify-around xl:pt-8
+            `}
+          >
+            <Row
+              className={`
+                mb-4 h-12 items-center justify-between
+                xl:mb-0
+              `}
+            >
               <Column>
-                <Phrase className="text-cta-600 font-semibold">
+                <Phrase
+                  className={`
+                    text-cta-600 font-semibold
+                    dark:text-cta-600
+                  `}
+                >
                   {dict["Find places owned by Ukrainians"]}
                 </Phrase>{" "}
               </Column>
@@ -150,12 +171,19 @@ export const LandingPage = () => {
                 />
               </Column>
             </Row>
-            <Row className={`
-              mb-4 h-12 min-w-8 items-center justify-between
-              xl:mb-0
-            `}>
+            <Row
+              className={`
+                mb-4 h-12 min-w-8 items-center justify-between
+                xl:mb-0
+              `}
+            >
               <Column>
-                <Phrase className="text-cta-600 font-semibold">
+                <Phrase
+                  className={`
+                    text-cta-600 font-semibold
+                    dark:text-cta-600
+                  `}
+                >
                   {dict["Support Ukrainian businesses and initiatives"]}
                 </Phrase>{" "}
               </Column>
@@ -167,12 +195,19 @@ export const LandingPage = () => {
                 />
               </Column>
             </Row>
-            <Row className={`
-              mb-4 h-12 min-w-8 items-center justify-between
-              xl:mb-0
-            `}>
+            <Row
+              className={`
+                mb-4 h-12 min-w-8 items-center justify-between
+                xl:mb-0
+              `}
+            >
               <Column>
-                <Phrase className="text-cta-600 font-semibold">
+                <Phrase
+                  className={`
+                    text-cta-600 font-semibold
+                    dark:text-cta-600
+                  `}
+                >
                   {dict["Help each other grow and stay connected"]}
                 </Phrase>
               </Column>
@@ -188,6 +223,8 @@ export const LandingPage = () => {
               className={`
                 bg-primary-900 text-primary-0 h-14 rounded-2xl shadow-lg
                 active:bg-cta-50
+                dark:bg-primary-900 dark:text-primary-0 dark:hover:bg-primary-0
+                dark:hover:text-cta-600
                 hover:bg-primary-0 hover:text-cta-600
               `}
               layout="filled"
@@ -201,16 +238,23 @@ export const LandingPage = () => {
           </Column>
 
           <Row className="my-2 items-center justify-center">
-            <Phrase className="text-cta-600 text-nowrap">
+            <Phrase
+              className={`
+                text-cta-600 text-nowrap
+                dark:text-cta-600
+              `}
+            >
               {dict["Know a missed place?"]}
             </Phrase>
             <ShareLocationLink className="text-cta-600 text-nowrap" />.
           </Row>
 
-          <Row className={`
-            text-ukraine-yellow m-auto mt-4 w-full max-w-(--breakpoint-sm)
-            justify-between px-4
-          `}>
+          <Row
+            className={`
+              text-ukraine-yellow m-auto mt-4 w-full max-w-(--breakpoint-sm)
+              justify-between px-4
+            `}
+          >
             {[...DONATE_LINKS, ...SOCIAL_LINKS].map((props) => (
               <SocialLink
                 className="fill-cta-600"
@@ -221,9 +265,11 @@ export const LandingPage = () => {
             ))}
           </Row>
 
-          <Row className={`
-            text-cta-600 mt-2 mb-2 items-center justify-center font-bold
-          `}>
+          <Row
+            className={`
+              text-cta-600 mt-2 mb-2 items-center justify-center font-bold
+            `}
+          >
             Мандруй / Мрій / Дій
           </Row>
         </Column>
