@@ -56,7 +56,7 @@ export const Heading = () => {
             lg:w-32
           `}
         >
-          <Row className="items-start">
+          <Row className="items-center">
             <Column className="group min-w-max items-center">
               <Link href={`/${lang}`}>
                 <div
@@ -98,10 +98,12 @@ export const Heading = () => {
                 </h1>
               </Row>
             </Column>
+
             {strippedPath === "/" ? null : (
               <Row
                 className={`
-                  ml-3 h-12 items-center
+                  ml-3 hidden h-12 items-center
+                  sm:flex
                   lg:h-16
                 `}
               >
@@ -126,7 +128,12 @@ export const Heading = () => {
         <Column className="grow items-end justify-center">
           <Row className="items-center">
             {strippedPath === "/" ? null : (
-              <Row className="text-cta-700 fill-primary-0">
+              <Row
+                className={`
+                  text-cta-700 fill-primary-0 hidden
+                  sm:flex
+                `}
+              >
                 {SOCIAL_LINKS.map((props) => (
                   <SocialLink
                     className="fill-primary-0"

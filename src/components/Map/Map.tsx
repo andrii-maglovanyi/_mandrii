@@ -174,18 +174,18 @@ const MapComponent = (
         title: name,
       });
 
-      advancedMarker.addListener(
-        "click",
-        (event: google.maps.MapMouseEvent) => {
-          event.domEvent?.stopPropagation();
+      advancedMarker.addListener("click", () => {
+        sendToMixpanel("selected_place_marker", {
+          id: id,
+          name,
+        });
 
-          sendToMixpanel("selected_place_marker", {
-            id: id,
-            name,
-          });
-          onPlaceSelectedAction(id);
-        }
-      );
+        onPlaceSelectedAction(id);
+      });
+
+      advancedMarker.element.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
 
       labelSpan.onmouseover = () => {
         if (id !== selectedPlaceId) {
