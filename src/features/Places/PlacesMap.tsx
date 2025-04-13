@@ -387,7 +387,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
           </Column>
         ) : null}
         <Column
-          onClick={() => setSelectedPlaceId(null)}
+          // onClick={() => setSelectedPlaceId(null)}
           className={
             data.length
               ? `
