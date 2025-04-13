@@ -174,13 +174,18 @@ const MapComponent = (
         title: name,
       });
 
-      advancedMarker.addListener("click", () => {
-        sendToMixpanel("selected_place_marker", {
-          id: id,
-          name,
-        });
-        onPlaceSelectedAction(id);
-      });
+      advancedMarker.addListener(
+        "click",
+        (event: google.maps.MapMouseEvent) => {
+          event.domEvent?.stopPropagation();
+
+          sendToMixpanel("selected_place_marker", {
+            id: id,
+            name,
+          });
+          onPlaceSelectedAction(id);
+        }
+      );
 
       labelSpan.onmouseover = () => {
         if (id !== selectedPlaceId) {
@@ -204,20 +209,6 @@ const MapComponent = (
       labelSpansRef.current.set(id, labelSpan);
     });
   }, [isLoaded, locations, onPlaceSelectedAction, selectedPlaceId]);
-
-  // useEffect(() => {
-  //   labelSpansRef.current.forEach((labelSpan, id) => {
-  //     const arrowDiv = labelSpan.lastElementChild as HTMLDivElement;
-
-  //     if (id === selectedPlaceId) {
-  //       labelSpan.style.backgroundColor = "#007BFF";
-  //       arrowDiv.style.borderTop = "4px solid #007BFF";
-  //     } else {
-  //       labelSpan.style.backgroundColor = "#444444";
-  //       arrowDiv.style.borderTop = "4px solid #444444";
-  //     }
-  //   });
-  // }, [selectedPlaceId]);
 
   useEffect(() => {
     markersRef.current.forEach((marker, id) => {

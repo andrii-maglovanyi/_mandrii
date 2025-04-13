@@ -7,7 +7,7 @@ import { Button } from "@/components/Button/Button";
 import { GoogleMapRef } from "@/components/Map/Map";
 import { LONDON_COORDINATES } from "@/constants";
 import { Dictionary } from "@/dictionaries";
-import { useLocations, useNotifications } from "@/hooks";
+import { useLocations, useMediaQuery, useNotifications } from "@/hooks";
 import { useLanguage } from "@/hooks/useLanguage";
 import { sendToMixpanel } from "@/lib/mixpanel";
 import { NameValueObject, Ukrainian_Location_Categories_Enum } from "@/types";
@@ -70,6 +70,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   const [selectedPlaceId, setSelectedPlaceId] = useState<number | null>(null);
   const [location, setLocation] = useState<Location>(LONDON_COORDINATES);
   const [predictions, setPredictions] = useState<Array<Prediction>>([]);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const mapRef = useRef<GoogleMapRef | null>(null);
   const serviceRef = useRef<AutocompleteService>(null);
@@ -187,17 +188,7 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
   useEffect(() => {
     if (mapIsLoaded && !isLoadingPlaces) {
       serviceRef.current = new google.maps.places.AutocompleteService();
-
-      // Show progress for at least a second
-      // const timeout = setTimeout(finishProgress, 1000);
-
-      // return () => {
-      //   clearTimeout(timeout);
-      // };
-    } else {
-      // startProgress();
     }
-    // }, [mapIsLoaded, isLoadingPlaces, finishProgress, startProgress]);
   }, [mapIsLoaded, isLoadingPlaces]);
 
   useEffect(() => {
@@ -386,12 +377,10 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
       />
 
       <Row className={classNames("w-full h-full", !isReady && "hidden")}>
-        {data.length ? (
+        {data.length && isDesktop ? (
           <Column
             className={`
-              -mt-[2px] hidden h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll
-              px-3
-              lg:flex
+              -mt-[2px] h-[calc(100vh-230px)] w-[50vw] overflow-y-scroll px-3
             `}
           >
             {placeCards}
@@ -414,12 +403,14 @@ export const PlacesMap = ({ slug = "" }: PlacesMapProps) => {
             onPlaceSelectedAction={(id) => {
               setSelectedPlaceId(id);
 
-              setTimeout(() => {
-                document.getElementById(String(id))?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }, 200);
+              if (isDesktop) {
+                setTimeout(() => {
+                  document.getElementById(String(id))?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }, 200);
+              }
             }}
             selectedPlaceId={selectedPlaceId}
             zoom={14}
