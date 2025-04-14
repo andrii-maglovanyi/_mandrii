@@ -1,7 +1,7 @@
 import { Column, Row } from "@/components";
 import { PlacesMap } from "@/features/Places/PlacesMap";
 
-export default async function Map() {
+export default async function MapPage() {
   return (
     <main className="box-border flex grow flex-col items-center">
       <Column className="h-full w-full grow">

@@ -73,7 +73,7 @@ export default async function RootLayout({
   const dict = await getDictionary(lang);
 
   return (
-    <html>
+    <html lang={lang}>
       <body
         lang={lang}
         className={`

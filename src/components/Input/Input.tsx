@@ -171,7 +171,7 @@ export const Input = <T extends string>({
   );
 
   return (
-    <OnBlurDetector onBlur={() => {}}>
+    <>
       <div className="mx-px">
         {label ? (
           <label
@@ -230,15 +230,21 @@ export const Input = <T extends string>({
         )}
 
         {items?.length && onSelect ? (
-          <Autocomplete
-            ref={autocompleteRef}
-            isOpen={isOpen}
-            onOpen={setIsOpen}
-            onSelect={handleSelect}
-            items={items}
-          />
+          <OnBlurDetector
+            onBlur={() => {
+              setIsOpen(false);
+            }}
+          >
+            <Autocomplete
+              ref={autocompleteRef}
+              isOpen={isOpen}
+              onOpen={setIsOpen}
+              onSelect={handleSelect}
+              items={items}
+            />
+          </OnBlurDetector>
         ) : null}
       </div>
-    </OnBlurDetector>
+    </>
   );
 };

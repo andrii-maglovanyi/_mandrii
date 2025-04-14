@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname,useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components";
 import { sendToMixpanel } from "@/lib/mixpanel";
@@ -28,10 +28,10 @@ export default function LanguageSwitcher() {
       layout="ghost"
       size="condensed"
       className={`
-        hover:bg-primary-0/10 hover:text-yellow-400
-        font-leOsler h-8 w-8 border border-yellow-400 bg-transparent text-base
-        font-semibold text-yellow-400 uppercase
-        active:bg-yellow-300/10
+        font-leOsler h-8 w-8 border border-yellow-500 bg-transparent text-base
+        font-semibold text-yellow-500 uppercase
+        hover:text-primary-0 hover:bg-yellow-500
+        dark:hover:text-primary-0 dark:hover:bg-yellow-500
       `}
       onClick={switchLanguage}
     >

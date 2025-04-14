@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import type { BaseComponentProps, Connotations } from "../../types";
 
 export const svgImportKeys = [
@@ -34,32 +36,29 @@ export const svgImportKeys = [
 
 export type IconType = (typeof svgImportKeys)[number];
 
-enum IconSizes {
-  large = "32px",
-  medium = "24px",
-  small = "16px",
-}
+const IconSizes = {
+  large: "32px",
+  medium: "24px",
+  small: "16px",
+} as const;
 
-export interface IconProps extends BaseComponentProps {
+interface IconProps extends BaseComponentProps {
   connotation?: Connotations;
-  customSize?: number;
+  customSize?: number | string;
   size?: keyof typeof IconSizes;
-  style?: object;
+  style?: React.CSSProperties;
   type: IconType;
 }
 
-const connotationColors = {
-  alert: "fill-alert-600",
-  announcement: "fill-announcement-600",
-  cta: "fill-cta-600",
-  info: "fill-info-400",
+const connotationColors: Record<Connotations, string> = {
+  alert: "fill-alert-500 dark:fill-alert-400",
+  cta: "fill-cta-500 dark:fill-cta-300",
   primary: "fill-primary-950 dark:fill-primary-0",
-  success: "fill-success-600",
-  warning: "fill-warning-300",
+  success: "fill-success-500 dark:fill-success-300",
 };
 
 export const Icon = ({
-  className,
+  className = "",
   connotation = "primary",
   customSize,
   "data-testid": testId,
@@ -67,23 +66,32 @@ export const Icon = ({
   style = {},
   type,
 }: IconProps) => {
-  const iconSize = customSize ? `${customSize}px` : IconSizes[size];
+  if (!svgImportKeys.includes(type)) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`Unknown icon type: ${type}`);
+    }
+  }
+
+  const iconSize =
+    typeof customSize === "number"
+      ? `${customSize}px`
+      : customSize ?? IconSizes[size];
+
+  const computedClassName = useMemo(() => {
+    const hasFill = className.includes("fill-");
+    const colorClass = hasFill ? "" : connotationColors[connotation] ?? "";
+    return ["bg-transparent inline-block", colorClass, className]
+      .filter(Boolean)
+      .join(" ");
+  }, [className, connotation]);
 
   return (
     <svg
-      className={[
-        "bg-transparent inline-block",
-        className?.includes("fill-") ? "" : connotationColors[connotation],
-        className ?? "",
-      ]
-        .join(" ")
-        .trim()}
+      className={computedClassName}
       data-testid={testId ?? `icon-${type}`}
-      height={iconSize}
-      style={style}
-      width={iconSize}
+      style={{ height: iconSize, width: iconSize, ...style }}
     >
-      <use xlinkHref={`/assets/sprite.svg#${type}`}></use>
+      <use xlinkHref={`/assets/sprite.svg#${type}`} />
     </svg>
   );
 };
