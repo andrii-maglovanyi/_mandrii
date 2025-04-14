@@ -30,6 +30,7 @@ export const SocialLink = ({
       }}
       target="_blank"
       rel="noopener noreferrer"
+      data-icon
       className={`
         relative mx-2 my-2 flex max-h-min cursor-pointer transition-transform
         hover:scale-125 hover:underline

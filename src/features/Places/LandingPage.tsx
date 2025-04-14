@@ -222,10 +222,9 @@ export const LandingPage = () => {
               size="expanded"
               className={`
                 bg-primary-900 text-primary-0 h-14 rounded-2xl shadow-lg
-                active:bg-cta-50
-                dark:bg-primary-900 dark:text-primary-0 dark:hover:bg-primary-0
-                dark:hover:text-cta-600
-                hover:bg-primary-0 hover:text-cta-600
+                dark:active:bg-primary-800 dark:bg-primary-900
+                dark:text-primary-0 dark:hover:bg-primary-1000
+                hover:bg-primary-1000
               `}
               layout="filled"
               onClick={() => {
@@ -246,7 +245,13 @@ export const LandingPage = () => {
             >
               {dict["Know a missed place?"]}
             </Phrase>
-            <ShareLocationLink className="text-cta-600 text-nowrap" />.
+            <ShareLocationLink
+              className={`
+                dark:!text-ukraine-blue
+                text-nowrap
+              `}
+            />
+            .
           </Row>
 
           <Row

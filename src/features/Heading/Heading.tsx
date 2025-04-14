@@ -37,6 +37,7 @@ export const Heading = () => {
       <Row
         className={`
           bg-cta-700 fixed left-0 -z-1 h-14 w-full
+          dark:bg-primary-900
           sm:h-16
           md:h-20
         `}

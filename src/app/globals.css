@@ -109,6 +109,10 @@
     min-height: 100vh;
   }
 
+  a:not([data-icon]) {
+    @apply text-ukraine-blue dark:text-ukraine-yellow hover:underline
+  }
+
   p {
     @apply mb-3;
   }

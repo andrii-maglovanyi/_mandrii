@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn,useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import { Button } from "@/components";
 import { useLanguage } from "@/hooks";
@@ -46,10 +46,7 @@ export default function ShareLocationLink({
     </Button>
   ) : (
     <Link
-      className={classNames(
-        "ml-2 text-cta-600 hover:underline font-bold",
-        className
-      )}
+      className={classNames("ml-2 font-bold", className)}
       href=""
       onClick={handleClick}
     >
