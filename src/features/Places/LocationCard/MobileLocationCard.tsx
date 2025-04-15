@@ -36,66 +36,10 @@ export const MobileLocationCard = ({
 
   const [expanded, setExpanded] = useState(false);
 
-  const startYRef = useRef(0);
-  const endYRef = useRef(0);
-
-  const [position, setPosition] = useState(INITIAL_POSITION);
-
-  const clickDetected = useRef(false);
-
-  const touchStartTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const touchEndTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const maxCarouselExpand = window.screen.height > 700 ? 400 : 300;
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    clickDetected.current = false;
-    touchStartTimeout.current = setTimeout(() => {
-      if (clickDetected.current) return;
-      startYRef.current = e.touches[0].clientY;
-    }, 50);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    endYRef.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = () => {
-    clickDetected.current = false;
-    touchEndTimeout.current = setTimeout(() => {
-      if (clickDetected.current) return;
-
-      const deltaY = startYRef.current - endYRef.current;
-
-      if (deltaY > 50) {
-        setExpanded(true);
-      } else if (deltaY < -50) {
-        setExpanded(false);
-        setPosition(INITIAL_POSITION);
-      }
-    }, 50);
-  };
-
   const handleClick = () => {
-    clickDetected.current = true;
-
-    if (touchStartTimeout.current) {
-      clearTimeout(touchStartTimeout.current);
-    }
-
-    if (touchEndTimeout.current) {
-      clearTimeout(touchEndTimeout.current);
-    }
-
     setExpanded(!expanded);
-
-    if (expanded) {
-      setPosition(INITIAL_POSITION);
-    }
-
-    setTimeout(() => {
-      clickDetected.current = false;
-    }, 100);
   };
 
   return (
@@ -104,25 +48,24 @@ export const MobileLocationCard = ({
       key={id.toString()}
       ref={placeCardRef}
       style={{
-        marginTop: `${expanded ? -window.innerHeight : position}px`,
+        marginTop: `${expanded ? -window.innerHeight : INITIAL_POSITION}px`,
       }}
       className={`
         text-md bg-primary-0 border-primary-1000 fixed top-full z-50 h-full
         w-[calc(100%+4px)] shrink-0 overflow-hidden overflow-x-hidden
         rounded-t-2xl border-t-2 border-r-2 border-l-2 transition-[margin-top]
-        duration-500 ease-out
+        duration-400 ease-out
+        dark:bg-cta-800
         lg:text-base
-        dark:bg-slate-800
       `}
     >
-      <Row
-        className="cursor-pointer justify-center py-3"
-        onClick={handleClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="border-primary-400 w-[20%] rounded-lg border-2"></div>
+      <Row className="cursor-pointer justify-center py-3" onClick={handleClick}>
+        <div
+          className={`
+            border-primary-400 w-[20%] rounded-lg border-2
+            dark:border-primary-0
+          `}
+        ></div>
       </Row>
       <Column style={{ overflow: expanded ? "scroll" : "hidden" }}>
         <Column>

@@ -337,10 +337,10 @@ export function Table<T>({
                 ? ""
                 : `
                   border-primary-100 border-b
-                  dark:border-primary-900
+                  dark:border-cta-800
                 `
             }
-            dark:hover:bg-primary-900
+            dark:hover:bg-cta-900/20
             hover:bg-primary-50
             last:border-transparent
           `}

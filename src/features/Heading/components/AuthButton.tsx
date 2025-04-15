@@ -54,13 +54,15 @@ export default function AuthButton() {
 
         <Link
           href="#"
-          className={`
-            text-primary-50 font-kyivType ml-2 text-sm
-            hover:text-primary-0 hover:underline
-          `}
-          onClick={(e) => {
+          className={`font-kyivType !text-ukraine-yellow ml-2 text-sm`}
+          onClick={async (e) => {
             e.preventDefault();
-            signOut({ callbackUrl: `${window.location.origin}/` });
+            const result = await signOut({
+              callbackUrl: `${window.location.origin}/`,
+              redirect: false,
+            });
+
+            window.location.href = result.url;
           }}
         >
           {dict["Sign out"]}

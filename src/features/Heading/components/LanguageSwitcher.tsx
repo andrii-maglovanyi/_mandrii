@@ -28,10 +28,10 @@ export default function LanguageSwitcher() {
       layout="ghost"
       size="condensed"
       className={`
-        font-leOsler h-8 w-8 border border-yellow-500 bg-transparent text-base
-        font-semibold text-yellow-500 uppercase
-        hover:text-primary-0 hover:bg-yellow-500
-        dark:hover:text-primary-0 dark:hover:bg-yellow-500
+        font-leOsler border-ukraine-yellow !text-ukraine-yellow h-8 w-8 border
+        bg-transparent text-base font-semibold uppercase
+        hover:!text-cta-800 hover:bg-ukraine-yellow
+        dark:hover:!text-cta-800 dark:hover:bg-ukraine-yellow
       `}
       onClick={switchLanguage}
     >

@@ -26,11 +26,13 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
   }, [index]);
 
   return (
-    <div className={`
-      relative flex h-full w-full min-w-20 items-center justify-center
-      overflow-hidden bg-gray-200
-      md:min-w-40
-    `}>
+    <div
+      className={`
+        relative flex h-full w-full min-w-20 items-center justify-center
+        overflow-hidden bg-gray-200
+        md:min-w-40
+      `}
+    >
       {!error ? (
         <Image
           onError={() => setError(true)}
@@ -52,8 +54,9 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
             type="button"
             onClick={prevImage}
             className={`
-              font-leOsler bg-primary-1000/50 absolute top-1/2 left-2 h-8 w-8
-              -translate-y-1/2 transform rounded-full text-2xl text-white
+              font-leOsler bg-primary-1000/50 pointer absolute top-1/2 left-2
+              h-8 w-8 -translate-y-1/2 transform rounded-full text-2xl
+              text-white
               hover:bg-primary-1000/80 hover:font-bold
             `}
           >
@@ -64,8 +67,9 @@ export const ImageCarousel = ({ images = [] }: ImageCarouselProps) => {
             type="button"
             onClick={nextImage}
             className={`
-              font-leOsler bg-primary-1000/50 absolute top-1/2 right-2 h-8 w-8
-              -translate-y-1/2 transform rounded-full text-2xl text-white
+              font-leOsler bg-primary-1000/50 pointer absolute top-1/2 right-2
+              h-8 w-8 -translate-y-1/2 transform rounded-full text-2xl
+              text-white
               hover:bg-primary-1000/80 hover:font-bold
             `}
           >

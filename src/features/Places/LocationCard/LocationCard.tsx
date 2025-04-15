@@ -45,7 +45,7 @@ export const LocationCard = ({
       <Row
         onClick={onClick}
         className={classNames(
-          "border-2 text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-primary-700 w-full h-min shrink-0",
+          "border-2 text-md lg:text-base overflow-x-hidden rounded-md bg-primary-0 dark:bg-cta-800 w-full h-min shrink-0",
           selectedId === id
             ? "border-primary-1000 dark:border-primary-0"
             : "border-transparent"

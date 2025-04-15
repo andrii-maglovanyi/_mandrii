@@ -2,6 +2,7 @@
 
 import { Column, Icon, Phrase, Row, Tooltip } from "@/components";
 import { IconType } from "@/components/Icon/Icon";
+import { useMediaQuery } from "@/hooks";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useNotifications } from "@/hooks/useNotifications";
 import { sendToMixpanel } from "@/lib/mixpanel";
@@ -21,13 +22,16 @@ export const InfoLine = ({
 }: InfoLineProps) => {
   const { showSuccess } = useNotifications();
   const { dict } = useLanguage();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const copyData = () => {
     if (text) {
       sendToMixpanel("copied_data", { data: text });
 
       navigator.clipboard.writeText(text);
-      showSuccess(text, { header: dict["Copied"] });
+      if (!isDesktop) {
+        showSuccess(text, { header: dict["Copied"] });
+      }
     }
   };
 
