@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { MiddlewareFactory } from "./stackHandler";
 
+// Factory
 export const withAdmin: MiddlewareFactory = (next) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const hostname = request.headers.get("host") || "";
